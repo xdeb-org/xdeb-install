@@ -1,1 +1,1 @@
-XDEB_OPTS="-Sde"
+: ${XDEB_OPTS:="-Sde"}

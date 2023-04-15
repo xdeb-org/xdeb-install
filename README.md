@@ -31,3 +31,18 @@ xdeb-install vscode ~/Downloads/code.deb
 Package specifications are located in this repository under [`packages`](./packages). They are used to set package-specific definitions to use both for `xdeb` and for `xdeb-install`. All definitions from the [`packages/default`](./packages/default) specifications can and should be overwritten in other specifications.
 
 If the flag `<package name>` corresponds to a package specification, then the definitions from `packages/default` + `packages/<arch>/<package name>` are used. Otherwise, only those from `packages/default` are used.
+
+## Overwriting Package Specifications
+
+All package definitions can be overwritten by setting them before executing the `xdeb-install` script. For example:
+```
+# defaults
+XDEB_OPTS="-Sdei" xdeb-install vscode
+
+# package-specific
+XDEB_PACKAGE_URL="https://some-different-url.deb" xdeb-install vscode
+
+# or both
+XDEB_OPTS="-Sdei" XDEB_PACKAGE_URL="https://some-different-url.deb" xdeb-install vscode
+```
+Or, of course via `export`.
