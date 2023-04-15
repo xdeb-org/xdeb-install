@@ -1,0 +1,1 @@
+: ${XDEB_PACKAGE_URL:="http://packages.linuxmint.com/pool/main/m/mint-y-icons/mint-y-icons_1.6.4_all.deb"}
