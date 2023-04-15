@@ -4,7 +4,44 @@ Simple script to automatically download, convert, and install packages via the a
 
 ## Installation
 
-Copy the script to `/usr/local/bin/`. The only dependencies to this script are `xdeb` and `curl`.
+1. Make sure the two dependencies are installed on your system: `curl` and `xdeb`.
+2. Clone the repository to a desired location on your host
+3. Adjust your `PATH` accordingly
+
+Like so:
+```
+# step 1 - curl
+sudo xbps-install -S curl
+
+# step 1 - xdeb
+mkdir -p ~/.local/bin
+curl -fsSL -o ~/.local/bin/xdeb https://github.com/toluschr/xdeb/releases/download/1.3/xdeb
+chmod +x ~/.local/bin/xdeb
+
+# step 2
+git clone https://github.com/thetredev/xdeb-install.git ~/.local/share/xdeb-install
+ln -sf ~/.local/share/xdeb-install/xdeb-install ~/.local/bin/xdeb-install
+
+# step 3 - bash
+echo 'export PATH=${PATH}:${HOME}/.local/bin' >> ~/.bashrc
+
+# step 3 - zsh
+echo 'export PATH=${PATH}:${HOME}/.local/bin' >> ~/.zshrc
+```
+
+If you want to use links instead of adjusting your `PATH`, you can do this instead:
+```
+# step 3 - links
+sudo ln -sf ~/.local/bin/xdeb /usr/local/bin/xdeb
+sudo ln -sf ~/.local/bin/xdeb-install /usr/local/bin/xdeb-install
+```
+
+If necessary, checkout a specific tag of the repository:
+```
+cd ~/.local/share/xdeb-install
+git fetch origin <tag>
+git checkout <tag>
+```
 
 ## Help Page
 
