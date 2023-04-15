@@ -30,4 +30,4 @@ xdeb-install vscode ~/Downloads/code.deb
 
 Package specifications are located in this repository under [`packages`](./packages). They are used to set package-specific definitions to use both for `xdeb` and for `xdeb-install`. All definitions from the [`packages/default`](./packages/default) specifications can and should be overwritten in other specifications.
 
-If the flag `<package name>` corresponds to a package specification, then the definitions from `packages/default` + `packages/<package name>` are used. Otherwise, only those from `packages/default` are used.
+If the flag `<package name>` corresponds to a package specification, then the definitions from `packages/default` + `packages/<arch>/<package name>` are used. Otherwise, only those from `packages/default` are used.
