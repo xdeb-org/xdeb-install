@@ -1,0 +1,113 @@
+#!/bin/sh
+
+message() {
+    echo "[xdeb-install] ${@}"
+}
+
+info() {
+    message "INFO: ${@}"
+}
+
+panic() {
+    message "PANIC: ${@}"
+    exit 1
+}
+
+check_package() {
+    local package=${1}
+    local install_message="${2}"
+
+    ${package} -h > /dev/null 2>&1 || panic "${package} not found. Please install ${install_message}."
+}
+
+check_package xdeb "from https://github.com/toluschr/xdeb/releases"
+check_package curl "via XBPS"
+
+
+usage() {
+    message "USAGE: xdeb-install <package name> [FILE]"
+}
+
+
+if [ "${1}" = "-h" ] || [ "${1}" = "--help" ]; then
+    usage
+    exit 0
+fi
+
+
+XDEB_INSTALL_PATH=$(dirname $(realpath ${0}))
+
+XDEB_PACKAGE_URL=""
+. ${XDEB_INSTALL_PATH}/packages/default
+
+
+XDEB_PACKAGE_NAME="${1}"
+XDEB_PACKAGE_FILE="${2}"
+
+XDEB_INSTALL_PACKAGE_TEMP_PATH="/tmp/xdeb"
+XDEB_INSTALL_PACKAGE_ROOT_PATH="${XDEB_INSTALL_PACKAGE_TEMP_PATH}/${XDEB_PACKAGE_NAME}"
+
+mkdir -p ${XDEB_INSTALL_PACKAGE_ROOT_PATH}
+XDEB_PACKAGE_TEMP_PATH="${XDEB_INSTALL_PACKAGE_ROOT_PATH}/${XDEB_PACKAGE_NAME}.deb"
+
+XDEB_INSTALL_CONVERT_LOGS="${XDEB_INSTALL_PACKAGE_ROOT_PATH}/.xdeb-install.log"
+XDEB_INSTALL_PACKAGE_SPEC="${XDEB_INSTALL_PATH}/packages/${XDEB_PACKAGE_NAME}"
+
+if [ -z "${XDEB_PACKAGE_FILE}" ] && [ -f ${XDEB_INSTALL_PACKAGE_SPEC} ]; then
+    . ${XDEB_INSTALL_PACKAGE_SPEC}
+    XDEB_PACKAGE_FILE="${XDEB_PACKAGE_TEMP_PATH}"
+fi
+
+
+download_package() {
+    info "Downloading package ${XDEB_PACKAGE_NAME} from ${XDEB_PACKAGE_URL} to ${XDEB_PACKAGE_FILE} ..."
+    curl -fsSL -o ${XDEB_PACKAGE_FILE} ${XDEB_PACKAGE_URL}
+}
+
+copy_package() {
+    info "Copying package file ${XDEB_PACKAGE_FILE} to ${XDEB_PACKAGE_TEMP_PATH} ..."
+    cp ${XDEB_PACKAGE_FILE} ${XDEB_PACKAGE_TEMP_PATH}
+}
+
+convert_package() {
+    info "Converting package ${XDEB_PACKAGE_TEMP_PATH} to XBPS format via xdeb ..."
+
+    xdeb ${XDEB_OPTS} ${XDEB_PACKAGE_NAME}.deb | tee ${XDEB_INSTALL_CONVERT_LOGS}
+    XDEB_EXIT_CODE=${?}
+
+    if [ ! ${XDEB_EXIT_CODE} ]; then
+        panic "xdeb did not exit successfully. Exiting..."
+    fi
+}
+
+install_package() {
+    local xbps_install_command=$(cat ${XDEB_INSTALL_CONVERT_LOGS} | tail -n 1 | cut -d '`' -f 2)
+
+    info "Installing package ..."
+
+    if [ $(id -u) -eq 0 ]; then
+        ${xbps_install_command}
+    else
+        sudo ${xbps_install_command}
+    fi
+}
+
+cleanup_package() {
+    info "Cleaning up ..."
+    rm -rf ${XDEB_INSTALL_PACKAGE_TEMP_PATH}
+}
+
+
+if [ -n ${XDEB_PACKAGE_URL} ]; then
+    download_package
+else
+    copy_package
+fi
+
+
+cd ${XDEB_INSTALL_PACKAGE_ROOT_PATH}
+convert_package
+install_package
+
+cd - > /dev/null
+cleanup_package
