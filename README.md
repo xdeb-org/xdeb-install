@@ -4,14 +4,14 @@ Simple script to automatically download, convert, and install packages via the a
 
 ## Installation
 
-1. Make sure the two dependencies are installed on your system: `curl` and `xdeb`.
+1. Make sure the two dependencies are installed on your system: `curl`, `yq`, `jq` and `xdeb`.
 2. Clone the repository to a desired location on your host
 3. Adjust your `PATH` accordingly
 
 Like so:
 ```
 # step 1 - curl
-sudo xbps-install -S curl
+sudo xbps-install -S curl yq jq
 
 # step 1 - xdeb
 mkdir -p ~/.local/bin
