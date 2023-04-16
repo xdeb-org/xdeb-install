@@ -54,7 +54,7 @@ XDEB_INSTALL_CONVERT_LOGS="${XDEB_INSTALL_PACKAGE_ROOT_PATH}/.xdeb-install.log"
 
 find_package_spec() {
     local repositories_root_path="${XDEB_INSTALL_PATH}/repositories/$(uname -m)"
-    local repository_data=$(find ${repositories_root_path} -name "*.yaml" -exec cat {} \; | yq ".xdeb.packages[] | select(.name == \"${XDEB_PACKAGE_NAME}\") | with_entries(select(.key == \"url\",.key == \"version\"))")
+    local repository_data=$(find ${repositories_root_path} -name "*.yaml" -exec cat {} \; | yq ".xdeb.packages[] | select(.name == \"${XDEB_PACKAGE_NAME}\") | with_entries(select(.key == \"url\",.key == \"version\",.key == \"options\"))")
 
     if [ "${repository_data}" = "{}" ]; then
         panic "Package ${package} not found."
@@ -72,6 +72,12 @@ if [ -z "${XDEB_PACKAGE_FILE}" ] && [ -z "${XDEB_PACKAGE_URL}" ]; then
 
     XDEB_PACKAGE_URL=$(echo "${_XDEB_PACKAGE_URL}" | sed "s/%version%/${_XDEB_PACKAGE_VERSION}"/)
     XDEB_PACKAGE_FILE="${XDEB_PACKAGE_TEMP_PATH}"
+fi
+
+_XDEB_PACKAGE_OPTIONS=$(echo ${_XDEB_INSTALL_PACKAGE_SPEC} | jq -r .options)
+
+if [ ! "${_XDEB_PACKAGE_OPTIONS}" = "null" ]; then
+    XDEB_OPTS=${_XDEB_PACKAGE_OPTIONS}
 fi
 
 
