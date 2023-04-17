@@ -48,7 +48,6 @@ XDEB_INSTALL_PACKAGE_ROOT_PATH="${XDEB_INSTALL_PACKAGE_TEMP_PATH}/${XDEB_PACKAGE
 
 mkdir -p ${XDEB_INSTALL_PACKAGE_ROOT_PATH}
 XDEB_PACKAGE_TEMP_PATH="${XDEB_INSTALL_PACKAGE_ROOT_PATH}/${XDEB_PACKAGE_NAME}.deb"
-XDEB_INSTALL_CONVERT_LOGS="${XDEB_INSTALL_PACKAGE_ROOT_PATH}/.xdeb-install.log"
 
 
 find_package_spec() {
@@ -93,7 +92,7 @@ copy_package() {
 convert_package() {
     info "Converting package ${XDEB_PACKAGE_TEMP_PATH} to XBPS format via xdeb ..."
 
-    xdeb ${XDEB_OPTS} ${XDEB_PACKAGE_NAME}.deb | tee ${XDEB_INSTALL_CONVERT_LOGS}
+    xdeb ${XDEB_OPTS} ${XDEB_PACKAGE_NAME}.deb
     XDEB_EXIT_CODE=${?}
 
     if [ ! ${XDEB_EXIT_CODE} ]; then
@@ -102,7 +101,9 @@ convert_package() {
 }
 
 install_package() {
-    local xbps_install_command=$(cat ${XDEB_INSTALL_CONVERT_LOGS} | tail -n 1 | cut -d '`' -f 2)
+    local xbps_package=$(ls ${XDEB_INSTALL_PACKAGE_ROOT_PATH}/binpkgs/*.xbps)
+    local xbps_package_basename=$(basename ${xbps_package} ".$(uname -m).xbps")
+    local xbps_install_command="xbps-install -R binpkgs ${xbps_package_basename}"
 
     info "Installing package ..."
 
