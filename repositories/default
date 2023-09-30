@@ -1,2 +1,0 @@
-: ${XDEB_OPTS:="-Sde"}
-: ${XDEB_INSTALL_PACKAGE_TEMP_PATH:="/tmp/xdeb"}
