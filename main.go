@@ -79,7 +79,8 @@ func aptProviders() []string {
 }
 
 func providerDistributions(provider string) []string {
-	entries, err := os.ReadDir(fmt.Sprintf("%s/%s", pathPrefix(), provider))
+	entriesPath := filepath.Join(pathPrefix(), provider)
+	entries, err := os.ReadDir(entriesPath)
 
 	if err != nil {
 		log.Fatalf("Provider distributions not installed. This should never happen.")
@@ -126,7 +127,8 @@ func parseYamlDefinition(path string) (*XdebProviderDefinition, error) {
 }
 
 func findPackage(name string, path string) (*XdebPackageDefinition, error) {
-	globbed, err := filepathx.Glob(fmt.Sprintf("%s/**/*.yaml", path))
+	globPattern := filepath.Join(path, "**", "*.yaml")
+	globbed, err := filepathx.Glob(globPattern)
 
 	if err != nil {
 		return nil, err
@@ -352,7 +354,8 @@ func search(context *cli.Context) error {
 	}
 
 	searchResults := []SearchResult{}
-	globbed, err := filepathx.Glob(fmt.Sprintf("%s/**/*.yaml", pathPrefix()))
+	globPattern := filepath.Join(pathPrefix(), "**", "*.yaml")
+	globbed, err := filepathx.Glob(globPattern)
 
 	if err != nil {
 		return err
@@ -390,7 +393,7 @@ func search(context *cli.Context) error {
 	return err
 }
 
-func parsePackagesFile(url_prefix string, packages_file string) *XdebProviderDefinition {
+func parsePackagesFile(urlPrefix string, packages_file string) *XdebProviderDefinition {
 	definition := XdebProviderDefinition{}
 	packages := strings.Split(packages_file, "\n\n")
 
@@ -417,7 +420,7 @@ func parsePackagesFile(url_prefix string, packages_file string) *XdebProviderDef
 
 			if strings.HasPrefix(line, "Filename:") {
 				suffix := strings.Split(line, ": ")[1]
-				url = fmt.Sprintf("%s/%s", url_prefix, suffix)
+				url = fmt.Sprintf("%s/%s", urlPrefix, suffix)
 				continue
 			}
 
@@ -527,11 +530,7 @@ func dumpPackages(directory string, url string, dist string, component string, a
 	}
 
 	if definition != nil && len(definition.Xdeb) > 0 {
-		filePath := fmt.Sprintf(
-			"%s/%s/%s/%s.yaml",
-			pathPrefix(), directory, dist, component,
-		)
-
+		filePath := filepath.Join(pathPrefix(), directory, dist, fmt.Sprintf("%s.yaml", component))
 		err = os.MkdirAll(filepath.Dir(filePath), os.ModePerm)
 
 		if err != nil {
@@ -660,7 +659,7 @@ func main() {
 				Name:    "temp",
 				Aliases: []string{"t"},
 				Usage:   "temporary xdeb context root path",
-				Value:   fmt.Sprintf("%s/xdeb", os.TempDir()),
+				Value:   filepath.Join(os.TempDir(), "xdeb"),
 			},
 		},
 	}
