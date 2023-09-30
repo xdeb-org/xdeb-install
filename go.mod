@@ -3,6 +3,7 @@ module github.com/thetredev/xdeb-install
 go 1.21.1
 
 require (
+	github.com/ulikunitz/xz v0.5.11
 	github.com/urfave/cli/v2 v2.25.7
 	github.com/yargevad/filepathx v1.0.0
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9
