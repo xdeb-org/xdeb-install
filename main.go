@@ -98,11 +98,14 @@ func providerDistributions(provider string) []string {
 }
 
 type XdebPackageDefinition struct {
-	Name    string `yaml:"name"`
-	Version string `yaml:"version"`
-	Url     string `yaml:"url"`
-	Sha256  string `yaml:"sha256"`
-	Path    string `yaml:"path,omitempty"`
+	Name         string `yaml:"name"`
+	Version      string `yaml:"version"`
+	Url          string `yaml:"url"`
+	Sha256       string `yaml:"sha256"`
+	Path         string `yaml:"path,omitempty"`
+	Provider     string `yaml:"provider,omitempty"`
+	Distribution string `yaml:"distribution,omitempty"`
+	Component    string `yaml:"component,omitempty"`
 }
 
 type XdebProviderDefinition struct {
@@ -126,6 +129,17 @@ func parseYamlDefinition(path string) (*XdebProviderDefinition, error) {
 	return &definition, nil
 }
 
+func packageDefinitionWithMetadata(packageDefinition *XdebPackageDefinition, path string) *XdebPackageDefinition {
+	distPath := filepath.Dir(path)
+
+	packageObject := *packageDefinition
+	packageObject.Component = filepath.Base(strings.TrimSuffix(path, filepath.Ext(path)))
+	packageObject.Distribution = filepath.Base(distPath)
+	packageObject.Provider = filepath.Base(filepath.Dir(distPath))
+
+	return &packageObject
+}
+
 func findPackage(name string, path string) (*XdebPackageDefinition, error) {
 	globPattern := filepath.Join(path, "**", "*.yaml")
 	globbed, err := filepathx.Glob(globPattern)
@@ -143,7 +157,7 @@ func findPackage(name string, path string) (*XdebPackageDefinition, error) {
 
 		for _, packageDefinition := range definition.Xdeb {
 			if packageDefinition.Name == name {
-				return &packageDefinition, nil
+				return packageDefinitionWithMetadata(&packageDefinition, match), nil
 			}
 		}
 	}
@@ -315,8 +329,13 @@ func repository(context *cli.Context) error {
 	packageDefinition, err := findPackage(packageName, path)
 
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
+
+	log.Printf(
+		"Installing %s from %s @ %s/%s\n",
+		packageDefinition.Name, packageDefinition.Provider, packageDefinition.Distribution, packageDefinition.Component,
+	)
 
 	return installRepositoryPackage(packageDefinition, context)
 }
@@ -339,13 +358,6 @@ func file(context *cli.Context) error {
 	}, context)
 }
 
-type SearchResult struct {
-	Provider          string
-	Distribution      string
-	Component         string
-	PackageDefinition XdebPackageDefinition
-}
-
 func search(context *cli.Context) error {
 	packageName := context.Args().First()
 
@@ -353,7 +365,7 @@ func search(context *cli.Context) error {
 		return fmt.Errorf("No package provided to search for.")
 	}
 
-	searchResults := []SearchResult{}
+	packageDefinitions := []XdebPackageDefinition{}
 	globPattern := filepath.Join(pathPrefix(), "**", "*.yaml")
 	globbed, err := filepathx.Glob(globPattern)
 
@@ -370,23 +382,17 @@ func search(context *cli.Context) error {
 
 		for _, packageDefinition := range definition.Xdeb {
 			if packageDefinition.Name == packageName {
-				distribution := filepath.Dir(match)
-				searchResults = append(searchResults, SearchResult{
-					Provider:          filepath.Base(filepath.Dir(distribution)),
-					Distribution:      filepath.Base(distribution),
-					Component:         strings.TrimSuffix(filepath.Base(match), filepath.Ext(match)),
-					PackageDefinition: packageDefinition,
-				})
+				packageDefinitions = append(packageDefinitions, *packageDefinitionWithMetadata(&packageDefinition, match))
 			}
 		}
 	}
 
-	for _, searchResult := range searchResults {
-		fmt.Printf("%s/%s\n", searchResult.Provider, searchResult.Component)
-		fmt.Printf("  distribution: %s\n", searchResult.Distribution)
-		fmt.Printf("  version: %s\n", searchResult.PackageDefinition.Version)
-		fmt.Printf("  url: %s\n", searchResult.PackageDefinition.Url)
-		fmt.Printf("  sha256: %s\n", searchResult.PackageDefinition.Sha256)
+	for _, packageDefinition := range packageDefinitions {
+		fmt.Printf("%s/%s\n", packageDefinition.Provider, packageDefinition.Component)
+		fmt.Printf("  distribution: %s\n", packageDefinition.Distribution)
+		fmt.Printf("  version: %s\n", packageDefinition.Version)
+		fmt.Printf("  url: %s\n", packageDefinition.Url)
+		fmt.Printf("  sha256: %s\n", packageDefinition.Sha256)
 		fmt.Println()
 	}
 
@@ -478,6 +484,7 @@ func pullPackages(url string, dist string, component string, architecture string
 		return nil, nil
 	}
 
+	fmt.Printf("Syncing repository %s\n", requestUrl)
 	var packagesFileContent string
 
 	if strings.HasSuffix(requestUrl, ".xz") {
