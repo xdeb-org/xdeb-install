@@ -172,7 +172,6 @@ func comparePackageChecksums(path string, expected string) error {
 }
 
 func executeCommand(workdir string, args ...string) error {
-	fmt.Printf("%v\n", args)
 	command := exec.Command(args[0], args[1:]...)
 	command.Dir = workdir
 	command.Stdout = os.Stdout
@@ -217,41 +216,47 @@ func installPackage(path string) error {
 	return executeCommand(workdir, args...)
 }
 
-func installRepositoryPackage(packageDefinition *XdebPackageDefinition, path string, xdebArgs string) {
+func installRepositoryPackage(packageDefinition *XdebPackageDefinition, context *cli.Context) error {
+	path := filepath.Join(context.String("temp"), packageDefinition.Name)
+
 	// download
 	fullPath, err := downloadPackage(path, packageDefinition.Url)
 
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
-	// compare checksums
-	err = comparePackageChecksums(fullPath, packageDefinition.Sha256)
+	// compare checksums if available
+	if len(packageDefinition.Sha256) > 0 {
+		err = comparePackageChecksums(fullPath, packageDefinition.Sha256)
 
-	if err != nil {
-		log.Fatal(err)
+		if err != nil {
+			return err
+		}
 	}
 
 	// xdeb convert
-	err = convertPackage(fullPath, xdebArgs)
+	err = convertPackage(fullPath, context.String("options"))
 
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	// xbps-install
 	err = installPackage(fullPath)
 
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	// cleanup
 	err = os.RemoveAll(path)
 
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
+
+	return nil
 }
 
 func repository(context *cli.Context) error {
@@ -292,7 +297,7 @@ func repository(context *cli.Context) error {
 		}
 	}
 
-	packageName := strings.Trim(context.Args().Get(0), " ")
+	packageName := strings.Trim(context.Args().First(), " ")
 
 	if len(packageName) == 0 {
 		log.Fatalf("Please provide a package name to install.")
@@ -304,13 +309,16 @@ func repository(context *cli.Context) error {
 		log.Fatal(err)
 	}
 
-	installRepositoryPackage(packageDefinition, filepath.Join(context.String("temp"), packageName), context.String("options"))
-	return nil
+	return installRepositoryPackage(packageDefinition, context)
 }
 
 func url(context *cli.Context) error {
-	//xdebPath := getXdebPath()
-	return nil
+	downloadUrl := context.Args().First()
+
+	return installRepositoryPackage(&XdebPackageDefinition{
+		Name: strings.TrimSuffix(filepath.Base(downloadUrl), filepath.Ext(downloadUrl)),
+		Url:  downloadUrl,
+	}, context)
 }
 
 func file(context *cli.Context) error {
