@@ -95,6 +95,23 @@ type XdebProviderDefinition struct {
 	Xdeb []XdebPackageDefinition `yaml:"xdeb"`
 }
 
+func parseYamlDefinition(path string) (*XdebProviderDefinition, error) {
+	yamlFile, err := os.ReadFile(path)
+
+	if err != nil {
+		return nil, err
+	}
+
+	definition := XdebProviderDefinition{}
+	err = yaml.Unmarshal(yamlFile, &definition)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &definition, nil
+}
+
 func findPackage(name string, path string) (*XdebPackageDefinition, error) {
 	globbed, err := filepathx.Glob(fmt.Sprintf("%s/**/*.yaml", path))
 
@@ -103,14 +120,7 @@ func findPackage(name string, path string) (*XdebPackageDefinition, error) {
 	}
 
 	for _, match := range globbed {
-		yamlFile, err := os.ReadFile(match)
-
-		if err != nil {
-			return nil, err
-		}
-
-		definition := XdebProviderDefinition{}
-		err = yaml.Unmarshal(yamlFile, &definition)
+		definition, err := parseYamlDefinition(match)
 
 		if err != nil {
 			return nil, err
@@ -323,6 +333,59 @@ func file(context *cli.Context) error {
 	}, context)
 }
 
+type SearchResult struct {
+	Provider          string
+	Distribution      string
+	Component         string
+	PackageDefinition XdebPackageDefinition
+}
+
+func search(context *cli.Context) error {
+	packageName := context.Args().First()
+
+	if len(packageName) == 0 {
+		return fmt.Errorf("No package provided to search for.")
+	}
+
+	searchResults := []SearchResult{}
+	globbed, err := filepathx.Glob(fmt.Sprintf("%s/**/*.yaml", pathPrefix()))
+
+	if err != nil {
+		return err
+	}
+
+	for _, match := range globbed {
+		definition, err := parseYamlDefinition(match)
+
+		if err != nil {
+			return err
+		}
+
+		for _, packageDefinition := range definition.Xdeb {
+			if packageDefinition.Name == packageName {
+				distribution := filepath.Dir(match)
+				searchResults = append(searchResults, SearchResult{
+					Provider:          filepath.Base(filepath.Dir(distribution)),
+					Distribution:      filepath.Base(distribution),
+					Component:         strings.TrimSuffix(filepath.Base(match), filepath.Ext(match)),
+					PackageDefinition: packageDefinition,
+				})
+			}
+		}
+	}
+
+	for _, searchResult := range searchResults {
+		fmt.Printf("%s/%s\n", searchResult.Provider, searchResult.Component)
+		fmt.Printf("  distribution: %s\n", searchResult.Distribution)
+		fmt.Printf("  version: %s\n", searchResult.PackageDefinition.Version)
+		fmt.Printf("  url: %s\n", searchResult.PackageDefinition.Url)
+		fmt.Printf("  sha256: %s\n", searchResult.PackageDefinition.Sha256)
+		fmt.Println()
+	}
+
+	return err
+}
+
 func main() {
 	app := &cli.App{
 		Name:        "xdeb-install",
@@ -344,6 +407,12 @@ func main() {
 						Aliases: []string{"dist", "d"},
 					},
 				},
+			},
+			{
+				Name:    "search",
+				Usage:   "search online APT repositories for a package",
+				Aliases: []string{"s"},
+				Action:  search,
 			},
 			{
 				Name:    "url",
