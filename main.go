@@ -88,6 +88,7 @@ type XdebPackageDefinition struct {
 	Version string `yaml:"version"`
 	Url     string `yaml:"url"`
 	Sha256  string `yaml:"sha256"`
+	Path    string
 }
 
 type XdebProviderDefinition struct {
@@ -218,45 +219,37 @@ func installPackage(path string) error {
 
 func installRepositoryPackage(packageDefinition *XdebPackageDefinition, context *cli.Context) error {
 	path := filepath.Join(context.String("temp"), packageDefinition.Name)
+	fullPath := packageDefinition.Path
 
-	// download
-	fullPath, err := downloadPackage(path, packageDefinition.Url)
-
-	if err != nil {
-		return err
-	}
-
-	// compare checksums if available
-	if len(packageDefinition.Sha256) > 0 {
-		err = comparePackageChecksums(fullPath, packageDefinition.Sha256)
+	// download if an URL is provided
+	if len(packageDefinition.Url) > 0 {
+		var err error
+		fullPath, err = downloadPackage(path, packageDefinition.Url)
 
 		if err != nil {
 			return err
 		}
 	}
 
-	// xdeb convert
-	err = convertPackage(fullPath, context.String("options"))
+	// compare checksums if available
+	if len(packageDefinition.Sha256) > 0 {
+		if err := comparePackageChecksums(fullPath, packageDefinition.Sha256); err != nil {
+			return err
+		}
+	}
 
-	if err != nil {
+	// xdeb convert
+	if err := convertPackage(fullPath, context.String("options")); err != nil {
 		return err
 	}
 
 	// xbps-install
-	err = installPackage(fullPath)
-
-	if err != nil {
+	if err := installPackage(fullPath); err != nil {
 		return err
 	}
 
 	// cleanup
-	err = os.RemoveAll(path)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return os.RemoveAll(path)
 }
 
 func repository(context *cli.Context) error {
@@ -322,8 +315,12 @@ func url(context *cli.Context) error {
 }
 
 func file(context *cli.Context) error {
-	//xdebPath := getXdebPath()
-	return nil
+	filePath := context.Args().First()
+
+	return installRepositoryPackage(&XdebPackageDefinition{
+		Name: strings.TrimSuffix(filepath.Base(filePath), filepath.Ext(filePath)),
+		Path: filePath,
+	}, context)
 }
 
 func main() {
