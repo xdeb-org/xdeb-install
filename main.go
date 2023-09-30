@@ -16,6 +16,7 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/adrg/xdg"
 	"github.com/ulikunitz/xz"
 	"github.com/urfave/cli/v2"
 	"github.com/yargevad/filepathx"
@@ -23,6 +24,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+const APPLICATION_NAME = "xdeb-install"
 const XDEB_URL = "https://github.com/toluschr/xdeb/releases"
 
 var ARCHITECTURE_MAP = map[string]string{
@@ -41,14 +43,21 @@ func getXdebPath() string {
 	return xdebPath
 }
 
-func pathPrefix() string {
+func architecturePath(prefix ...string) string {
 	arch, ok := ARCHITECTURE_MAP[runtime.GOARCH]
 
 	if !ok {
 		log.Fatalf("Architecture %s not supported (yet).", runtime.GOARCH)
 	}
 
-	return fmt.Sprintf("repositories/%s/apt", arch)
+	paths := prefix
+	paths = append(paths, "repositories", arch, "apt")
+
+	return filepath.Join(paths...)
+}
+
+func pathPrefix() string {
+	return architecturePath(xdg.ConfigHome, APPLICATION_NAME)
 }
 
 func aptProviders() []string {
@@ -267,15 +276,6 @@ func installRepositoryPackage(packageDefinition *XdebPackageDefinition, context 
 }
 
 func repository(context *cli.Context) error {
-	//xdebPath := getXdebPath()
-	arch, ok := ARCHITECTURE_MAP[runtime.GOARCH]
-
-	if !ok {
-		log.Fatalf("Architecture %s not supported (yet).", runtime.GOARCH)
-	}
-
-	fmt.Println(arch)
-
 	path := pathPrefix()
 
 	provider := context.String("provider")
@@ -574,7 +574,7 @@ type PackageListsDefinition struct {
 }
 
 func sync(context *cli.Context) error {
-	listsFile := filepath.Join(filepath.Dir(pathPrefix()), "lists.yaml")
+	listsFile := filepath.Join(filepath.Dir(architecturePath()), "lists.yaml")
 	yamlFile, err := os.ReadFile(listsFile)
 
 	if err != nil {
@@ -605,7 +605,7 @@ func sync(context *cli.Context) error {
 
 func main() {
 	app := &cli.App{
-		Name:        "xdeb-install",
+		Name:        APPLICATION_NAME,
 		Usage:       "Automation wrapper for the xdeb utility",
 		Description: "Simple tool to automatically download, convert, and install DEB packages via the awesome xdeb tool.\nBasically just a wrapper to automate the process.",
 		Commands: []*cli.Command{
