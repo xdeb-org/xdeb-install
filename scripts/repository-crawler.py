@@ -88,18 +88,16 @@ def dump_packages(url: str, dist: str, component: str, architecture: str, void_a
     packages = get_packages(url, dist, component, architecture)
 
     doc = {
-        "xdeb": {
-            "packages": [{
-                "name": package.name,
-                "version": str(package.version),
-                "url": package.url,
-                "sha256": package.sha256
-            } for package in packages]
-        }
+        "xdeb": [{
+            "name": package.name,
+            "version": str(package.version),
+            "url": package.url,
+            "sha256": package.sha256
+        } for package in packages]
     }
 
-    if doc["xdeb"]["packages"]:
-        local_file = Path(f"repositories/{void_architecture}/{directory}/{dist}/{component}.yaml")
+    if doc["xdeb"]:
+        local_file = Path(f"repositories/{void_architecture}/apt/{directory}/{dist}/{component}.yaml")
         local_file.parent.mkdir(parents=True, exist_ok=True)
 
         with local_file.open("w") as f:
