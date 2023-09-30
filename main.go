@@ -1,8 +1,12 @@
 package main
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
+	"io"
 	"log"
+	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -121,10 +125,133 @@ func findPackage(name string, path string) (*XdebPackageDefinition, error) {
 	return nil, fmt.Errorf("Could not find package %s", name)
 }
 
-func installRepositoryPackage(packageDefinition *XdebPackageDefinition) {
+func downloadPackage(path string, url string) (string, error) {
+	err := os.MkdirAll(path, os.ModePerm)
+
+	if err != nil {
+		return "", fmt.Errorf("Could not create path %s", path)
+	}
+
+	fullPath := filepath.Join(path, filepath.Base(url))
+	out, err := os.Create(fullPath)
+
+	if err != nil {
+		return "", fmt.Errorf("Could not create file %s", fullPath)
+	}
+
+	defer out.Close()
+
+	resp, err := http.Get(url)
+
+	if err != nil {
+		return "", fmt.Errorf("Could not download file %s", url)
+	}
+
+	defer resp.Body.Close()
+
+	_, err = io.Copy(out, resp.Body)
+	return fullPath, err
+}
+
+func comparePackageChecksums(path string, expected string) error {
+	hasher := sha256.New()
+	contents, err := os.ReadFile(path)
+
+	if err != nil {
+		return err
+	}
+
+	hasher.Write(contents)
+	actual := hex.EncodeToString(hasher.Sum(nil))
+
+	if actual != expected {
+		return fmt.Errorf("Checksums don't match: actual=%s expected=%s", actual, expected)
+	}
+
+	return nil
+}
+
+func executeCommand(workdir string, args ...string) error {
+	fmt.Printf("%v\n", args)
+	command := exec.Command(args[0], args[1:]...)
+	command.Dir = workdir
+	command.Stdout = os.Stdout
+	command.Stderr = os.Stderr
+
+	return command.Run()
+}
+
+func convertPackage(path string, xdebArgs string) error {
+	if strings.Contains(xdebArgs, "i") {
+		xdebArgs = strings.ReplaceAll(xdebArgs, "i", "")
+	}
+
+	return executeCommand(filepath.Dir(path), getXdebPath(), xdebArgs, path)
+}
+
+func installPackage(path string) error {
+	workdir := filepath.Dir(path)
+	binpkgs := filepath.Join(workdir, "binpkgs")
+
+	files, err := filepath.Glob(filepath.Join(binpkgs, "*.xbps"))
+
+	if err != nil {
+		return err
+	}
+
+	if len(files) == 0 {
+		return fmt.Errorf("Could not find any XBPS packages to install within %s.", binpkgs)
+	}
+
+	xbps := filepath.Base(files[0])
+	xbps = strings.TrimSuffix(xbps, filepath.Ext(xbps))
+	xbps = strings.TrimSuffix(xbps, filepath.Ext(xbps))
+
+	args := []string{}
+
+	if os.Getuid() > 0 {
+		args = append(args, "sudo")
+	}
+
+	args = append(args, "xbps-install", "-R", "binpkgs", "-y", xbps)
+	return executeCommand(workdir, args...)
+}
+
+func installRepositoryPackage(packageDefinition *XdebPackageDefinition, path string, xdebArgs string) {
 	// download
-	// install
+	fullPath, err := downloadPackage(path, packageDefinition.Url)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// compare checksums
+	err = comparePackageChecksums(fullPath, packageDefinition.Sha256)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// xdeb convert
+	err = convertPackage(fullPath, xdebArgs)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// xbps-install
+	err = installPackage(fullPath)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// cleanup
+	err = os.RemoveAll(path)
+
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func repository(context *cli.Context) error {
@@ -177,7 +304,7 @@ func repository(context *cli.Context) error {
 		log.Fatal(err)
 	}
 
-	installRepositoryPackage(packageDefinition)
+	installRepositoryPackage(packageDefinition, filepath.Join(context.String("temp"), packageName), context.String("options"))
 	return nil
 }
 
@@ -230,7 +357,7 @@ func main() {
 			&cli.StringFlag{
 				Name:    "options",
 				Aliases: []string{"o"},
-				Usage:   "override XDEB_OPTS",
+				Usage:   "override XDEB_OPTS, '-i' will be removed if provided",
 				Value:   "-Sde",
 			},
 			&cli.StringFlag{
