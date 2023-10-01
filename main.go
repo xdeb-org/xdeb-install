@@ -134,7 +134,7 @@ func search(context *cli.Context) error {
 		return fmt.Errorf("No package provided to search for.")
 	}
 
-	packageDefinitions := []xdeb.XdebPackageDefinition{}
+	packageDefinitions := []*xdeb.XdebPackageDefinition{}
 	path, err := pathPrefix()
 
 	if err != nil {
@@ -157,7 +157,7 @@ func search(context *cli.Context) error {
 
 		for _, packageDefinition := range definition.Xdeb {
 			if packageDefinition.Name == packageName {
-				packageDefinitions = append(packageDefinitions, *xdeb.PackageDefinitionWithMetadata(&packageDefinition, match))
+				packageDefinitions = append(packageDefinitions, xdeb.PackageDefinitionWithMetadata(&packageDefinition, match))
 			}
 		}
 	}
