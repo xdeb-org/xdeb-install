@@ -28,42 +28,18 @@ func pathPrefix() (string, error) {
 	return filepath.Join(xdg.ConfigHome, APPLICATION_NAME, "repositories", arch), nil
 }
 
-func aptProviders() ([]string, error) {
+func readPath(subdir string) ([]string, error) {
 	path, err := pathPrefix()
 
 	if err != nil {
 		return nil, err
 	}
 
-	entries, err := os.ReadDir(path)
-
-	if err != nil {
-		return nil, fmt.Errorf("APT providers not installed. This should never happen.")
-	}
-
-	subdirs := []string{}
-
-	for _, entry := range entries {
-		if entry.IsDir() {
-			subdirs = append(subdirs, entry.Name())
-		}
-	}
-
-	return subdirs, nil
-}
-
-func providerDistributions(provider string) ([]string, error) {
-	path, err := pathPrefix()
-
-	if err != nil {
-		return nil, err
-	}
-
-	entriesPath := filepath.Join(path, provider)
+	entriesPath := filepath.Join(path, subdir)
 	entries, err := os.ReadDir(entriesPath)
 
 	if err != nil {
-		return nil, fmt.Errorf("Provider distributions not installed. This should never happen.")
+		return nil, fmt.Errorf("No entries found. Please sync the repositories first.")
 	}
 
 	subdirs := []string{}
@@ -88,7 +64,7 @@ func repository(context *cli.Context) error {
 	distribution := context.String("distribution")
 
 	if len(provider) > 0 {
-		providers, err := aptProviders()
+		providers, err := readPath("")
 
 		if err != nil {
 			return err
@@ -101,7 +77,7 @@ func repository(context *cli.Context) error {
 		path = filepath.Join(path, provider)
 
 		if len(distribution) > 0 {
-			distributions, err := providerDistributions(provider)
+			distributions, err := readPath(provider)
 
 			if err != nil {
 				return err
