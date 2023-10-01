@@ -262,7 +262,20 @@ func prepare(context *cli.Context) error {
 		return err
 	}
 
-	return os.RemoveAll(filepath.Dir(xdebFile))
+	err = os.RemoveAll(filepath.Dir(xdebFile))
+
+	if err != nil {
+		return err
+	}
+
+	args = make([]string, 0)
+
+	if os.Getuid() > 0 {
+		args = append(args, "sudo")
+	}
+
+	args = append(args, "xbps-install", "-Sy", "binutils", "tar", "curl", "xz")
+	return xdeb.ExecuteCommand("", args...)
 }
 
 func main() {
@@ -273,7 +286,7 @@ func main() {
 		Commands: []*cli.Command{
 			{
 				Name:   "xdeb",
-				Usage:  "installs the xdeb utility to the system",
+				Usage:  "installs the xdeb utility to the system along with its dependencies",
 				Action: prepare,
 			},
 			{

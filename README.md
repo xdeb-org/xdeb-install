@@ -34,7 +34,7 @@ DESCRIPTION:
    Basically just a wrapper to automate the process.
 
 COMMANDS:
-   xdeb           installs the xdeb utility to the system
+   xdeb           installs the xdeb utility to the system along with its dependencies
    repository, r  install a package from an online APT repository
    search, s      search online APT repositories for a package
    sync           sync online APT repositories
