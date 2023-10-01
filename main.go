@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 
 	"golang.org/x/exp/slices"
@@ -19,20 +18,15 @@ import (
 
 const APPLICATION_NAME = "xdeb-install"
 
-var ARCHITECTURE_MAP = map[string]string{
-	"amd64": "x86_64",
-	//"386":   "i386",
-}
-
 func architecturePath(prefix ...string) string {
-	arch, ok := ARCHITECTURE_MAP[runtime.GOARCH]
+	arch, err := xdeb.FindArchitecture()
 
-	if !ok {
-		log.Fatalf("Architecture %s not supported (yet).", runtime.GOARCH)
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	paths := prefix
-	paths = append(paths, "repositories", arch, "apt")
+	paths = append(paths, "repositories", arch)
 
 	return filepath.Join(paths...)
 }
@@ -172,9 +166,17 @@ func search(context *cli.Context) error {
 	for _, packageDefinition := range packageDefinitions {
 		fmt.Printf("%s/%s\n", packageDefinition.Provider, packageDefinition.Component)
 		fmt.Printf("  distribution: %s\n", packageDefinition.Distribution)
-		fmt.Printf("  version: %s\n", packageDefinition.Version)
+
+		if len(packageDefinition.Version) > 0 {
+			fmt.Printf("  version: %s\n", packageDefinition.Version)
+		}
+
 		fmt.Printf("  url: %s\n", packageDefinition.Url)
-		fmt.Printf("  sha256: %s\n", packageDefinition.Sha256)
+
+		if len(packageDefinition.Sha256) > 0 {
+			fmt.Printf("  sha256: %s\n", packageDefinition.Sha256)
+		}
+
 		fmt.Println()
 	}
 
@@ -182,7 +184,7 @@ func search(context *cli.Context) error {
 }
 
 func sync(context *cli.Context) error {
-	listsFile := filepath.Join(filepath.Dir(architecturePath()), "lists.yaml")
+	listsFile := filepath.Join(architecturePath(), "lists.yaml")
 	yamlFile, err := os.ReadFile(listsFile)
 
 	if err != nil {
@@ -195,6 +197,8 @@ func sync(context *cli.Context) error {
 	if err != nil {
 		return err
 	}
+
+	xdeb.DumpCustomRepositories(pathPrefix())
 
 	for _, provider := range lists.Providers {
 		for _, distribution := range provider.Distributions {

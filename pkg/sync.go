@@ -16,6 +16,28 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+const CUSTOM_REPOSITORIES_URL_PREFIX = "https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/main/repositories"
+
+type CustomRepository struct {
+	Provider           string
+	PackageDefinitions []string
+}
+
+var CUSTOM_REPOSITORIES = []CustomRepository{
+	{
+		Provider: "microsoft.com",
+		PackageDefinitions: []string{
+			"vscode.yaml",
+		},
+	},
+	{
+		Provider: "google.com",
+		PackageDefinitions: []string{
+			"google-chrome.yaml",
+		},
+	},
+}
+
 type PackageListsProvider struct {
 	Name          string   `yaml:"name"`
 	Url           string   `yaml:"url"`
@@ -113,6 +135,8 @@ func pullPackagFile(url string, dist string, component string, architecture stri
 		return nil, nil
 	}
 
+	defer packagesFile.Body.Close()
+
 	fmt.Printf("Syncing repository %s\n", requestUrl)
 	var packagesFileContent string
 
@@ -158,6 +182,25 @@ func pullPackagFile(url string, dist string, component string, architecture stri
 	return parsePackagesFile(url, packagesFileContent), nil
 }
 
+func dumpDefinitionFile(path string, bytes []byte) error {
+	err := os.MkdirAll(filepath.Dir(path), os.ModePerm)
+
+	if err != nil {
+		return err
+	}
+
+	fileDump, err := os.Create(path)
+
+	if err != nil {
+		return err
+	}
+
+	defer fileDump.Close()
+	_, err = fileDump.Write(bytes)
+
+	return err
+}
+
 func DumpPackageFile(directory string, url string, dist string, component string, architecture string) error {
 	definition, err := pullPackagFile(url, dist, component, architecture)
 
@@ -167,29 +210,52 @@ func DumpPackageFile(directory string, url string, dist string, component string
 
 	if definition != nil && len(definition.Xdeb) > 0 {
 		filePath := filepath.Join(directory, dist, fmt.Sprintf("%s.yaml", component))
-		err = os.MkdirAll(filepath.Dir(filePath), os.ModePerm)
-
-		if err != nil {
-			return err
-		}
-
 		bytes, err := yaml.Marshal(definition)
 
 		if err != nil {
 			return err
 		}
 
-		fileDump, err := os.Create(filePath)
-
-		if err != nil {
+		if err = dumpDefinitionFile(filePath, bytes); err != nil {
 			return err
 		}
+	}
 
-		defer fileDump.Close()
-		_, err = fileDump.Write(bytes)
+	return nil
+}
 
-		if err != nil {
-			return err
+func DumpCustomRepositories(directory string) error {
+	arch, err := FindArchitecture()
+
+	if err != nil {
+		return err
+	}
+
+	for _, customRepository := range CUSTOM_REPOSITORIES {
+		for _, packageDefinition := range customRepository.PackageDefinitions {
+			url := fmt.Sprintf("%s/%s/%s/%s", CUSTOM_REPOSITORIES_URL_PREFIX, arch, customRepository.Provider, packageDefinition)
+			client := &http.Client{}
+
+			response, err := client.Get(url)
+
+			if err != nil {
+				return err
+			}
+
+			defer response.Body.Close()
+
+			fmt.Printf("Syncing repository %s\n", url)
+			data, err := io.ReadAll(response.Body)
+
+			if err != nil {
+				return err
+			}
+
+			filePath := filepath.Join(directory, customRepository.Provider, "current", packageDefinition)
+
+			if err = dumpDefinitionFile(filePath, data); err != nil {
+				return err
+			}
 		}
 	}
 
