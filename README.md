@@ -79,7 +79,7 @@ You can also specify the provider and distribution, for example `debian.org` and
 $ xdeb-install repository --provider debian.org --distribution bookworm speedcrunch
 ```
 
-## Install DEB packages directly from an URL
+## Install DEB packages directly from a URL
 
 Let's stay with the `speedcrunch` example:
 ```
