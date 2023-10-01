@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/urfave/cli/v2"
 )
@@ -69,11 +70,26 @@ func installPackage(path string) error {
 }
 
 func InstallPackage(packageDefinition *XdebPackageDefinition, context *cli.Context) error {
-	log.Printf(
-		"Installing %s from %s @ %s/%s\n",
-		packageDefinition.Name, packageDefinition.Provider,
-		packageDefinition.Distribution, packageDefinition.Component,
-	)
+	provider := packageDefinition.Provider
+	distribution := packageDefinition.Distribution
+	component := packageDefinition.Component
+
+	if len(packageDefinition.Path) > 0 {
+		// local file
+		provider = "localhost"
+		distribution = fmt.Sprintf("file:///%s", strings.TrimPrefix(packageDefinition.Path, "/"))
+		component = packageDefinition.Path
+	}
+
+	if len(provider) == 0 {
+		// direct URL
+		log.Printf("Installing %s from %s\n", packageDefinition.Name, packageDefinition.Url)
+	} else {
+		log.Printf(
+			"Installing %s from %s @ %s/%s\n",
+			packageDefinition.Name, provider, distribution, component,
+		)
+	}
 
 	path := filepath.Join(context.String("temp"), packageDefinition.Name)
 	fullPath := packageDefinition.Path
