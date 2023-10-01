@@ -69,7 +69,7 @@ The package repository lists are stored at `$XDG_CONFIG_HOME/xdeb-install/reposi
 
 See https://github.com/thetredev/xdeb-install-repositories for details.
 
-## Install DEB packages from APT repositories
+## Install DEB packages from remote repositories
 
 To install `speedcrunch`, for example, type:
 ```
