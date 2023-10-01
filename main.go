@@ -20,7 +20,7 @@ import (
 
 const APPLICATION_NAME = "xdeb-install"
 
-func pathPrefix() (string, error) {
+func repositoryPath() (string, error) {
 	arch, err := xdeb.FindArchitecture()
 
 	if err != nil {
@@ -31,7 +31,7 @@ func pathPrefix() (string, error) {
 }
 
 func readPath(subdir string) ([]string, error) {
-	path, err := pathPrefix()
+	path, err := repositoryPath()
 
 	if err != nil {
 		return nil, err
@@ -56,7 +56,7 @@ func readPath(subdir string) ([]string, error) {
 }
 
 func repository(context *cli.Context) error {
-	path, err := pathPrefix()
+	path, err := repositoryPath()
 
 	if err != nil {
 		return nil
@@ -136,7 +136,7 @@ func search(context *cli.Context) error {
 		return fmt.Errorf("No package provided to search for.")
 	}
 
-	path, err := pathPrefix()
+	path, err := repositoryPath()
 
 	if err != nil {
 		return err
@@ -211,7 +211,7 @@ func sync(context *cli.Context) error {
 	url := fmt.Sprintf("%s/%s/lists.yaml", xdeb.CUSTOM_REPOSITORIES_URL_PREFIX, arch)
 	fmt.Printf("Syncing lists: %s\n", url)
 
-	path, err := pathPrefix()
+	path, err := repositoryPath()
 
 	if err != nil {
 		return err
