@@ -99,7 +99,7 @@ func installPackage(path string) error {
 	return executeCommand(workdir, args...)
 }
 
-func InstallRepositoryPackage(packageDefinition *XdebPackageDefinition, context *cli.Context) error {
+func InstallPackage(packageDefinition *XdebPackageDefinition, context *cli.Context) error {
 	log.Printf(
 		"Installing %s from %s @ %s/%s\n",
 		packageDefinition.Name, packageDefinition.Provider,

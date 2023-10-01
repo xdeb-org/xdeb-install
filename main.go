@@ -119,13 +119,13 @@ func repository(context *cli.Context) error {
 		return err
 	}
 
-	return xdeb.InstallRepositoryPackage(packageDefinition, context)
+	return xdeb.InstallPackage(packageDefinition, context)
 }
 
 func url(context *cli.Context) error {
 	downloadUrl := context.Args().First()
 
-	return xdeb.InstallRepositoryPackage(&xdeb.XdebPackageDefinition{
+	return xdeb.InstallPackage(&xdeb.XdebPackageDefinition{
 		Name: strings.TrimSuffix(filepath.Base(downloadUrl), filepath.Ext(downloadUrl)),
 		Url:  downloadUrl,
 	}, context)
@@ -134,7 +134,7 @@ func url(context *cli.Context) error {
 func file(context *cli.Context) error {
 	filePath := context.Args().First()
 
-	return xdeb.InstallRepositoryPackage(&xdeb.XdebPackageDefinition{
+	return xdeb.InstallPackage(&xdeb.XdebPackageDefinition{
 		Name: strings.TrimSuffix(filepath.Base(filePath), filepath.Ext(filePath)),
 		Path: filePath,
 	}, context)
