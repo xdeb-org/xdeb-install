@@ -71,15 +71,15 @@ func FindPackage(name string, path string) (*XdebPackageDefinition, error) {
 	return nil, fmt.Errorf("Could not find package %s", name)
 }
 
-func getXdebPath() string {
+func getXdebPath() (string, error) {
 	xdebPath, err := exec.LookPath("xdeb")
 
 	if err != nil {
-		log.Fatalf("Package xdeb not found. Please install from %s.", XDEB_URL)
+		return "", fmt.Errorf("Package xdeb not found. Please install from %s.", XDEB_URL)
 	}
 
 	log.Printf("Package xdeb found: %s", xdebPath)
-	return xdebPath
+	return xdebPath, nil
 }
 
 func convertPackage(path string, xdebArgs string) error {
@@ -87,5 +87,11 @@ func convertPackage(path string, xdebArgs string) error {
 		xdebArgs = strings.ReplaceAll(xdebArgs, "i", "")
 	}
 
-	return ExecuteCommand(filepath.Dir(path), getXdebPath(), xdebArgs, path)
+	xdebPath, err := getXdebPath()
+
+	if err != nil {
+		return err
+	}
+
+	return ExecuteCommand(filepath.Dir(path), xdebPath, xdebArgs, path)
 }

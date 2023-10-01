@@ -18,21 +18,27 @@ import (
 
 const APPLICATION_NAME = "xdeb-install"
 
-func pathPrefix() string {
+func pathPrefix() (string, error) {
 	arch, err := xdeb.FindArchitecture()
 
 	if err != nil {
-		log.Fatal(err)
+		return "", err
 	}
 
-	return filepath.Join(xdg.ConfigHome, APPLICATION_NAME, "repositories", arch)
+	return filepath.Join(xdg.ConfigHome, APPLICATION_NAME, "repositories", arch), nil
 }
 
-func aptProviders() []string {
-	entries, err := os.ReadDir(pathPrefix())
+func aptProviders() ([]string, error) {
+	path, err := pathPrefix()
 
 	if err != nil {
-		log.Fatalf("APT providers not installed. This should never happen.")
+		return nil, err
+	}
+
+	entries, err := os.ReadDir(path)
+
+	if err != nil {
+		return nil, fmt.Errorf("APT providers not installed. This should never happen.")
 	}
 
 	subdirs := []string{}
@@ -43,15 +49,21 @@ func aptProviders() []string {
 		}
 	}
 
-	return subdirs
+	return subdirs, nil
 }
 
-func providerDistributions(provider string) []string {
-	entriesPath := filepath.Join(pathPrefix(), provider)
+func providerDistributions(provider string) ([]string, error) {
+	path, err := pathPrefix()
+
+	if err != nil {
+		return nil, err
+	}
+
+	entriesPath := filepath.Join(path, provider)
 	entries, err := os.ReadDir(entriesPath)
 
 	if err != nil {
-		log.Fatalf("Provider distributions not installed. This should never happen.")
+		return nil, fmt.Errorf("Provider distributions not installed. This should never happen.")
 	}
 
 	subdirs := []string{}
@@ -62,29 +74,41 @@ func providerDistributions(provider string) []string {
 		}
 	}
 
-	return subdirs
+	return subdirs, nil
 }
 
 func repository(context *cli.Context) error {
-	path := pathPrefix()
+	path, err := pathPrefix()
+
+	if err != nil {
+		return nil
+	}
 
 	provider := context.String("provider")
 	distribution := context.String("distribution")
 
 	if len(provider) > 0 {
-		providers := aptProviders()
+		providers, err := aptProviders()
+
+		if err != nil {
+			return err
+		}
 
 		if !slices.Contains(providers, provider) {
-			log.Fatalf("APT provider %s not supported. Omit or use any of %v", provider, providers)
+			return fmt.Errorf("APT provider %s not supported. Omit or use any of %v", provider, providers)
 		}
 
 		path = filepath.Join(path, provider)
 
 		if len(distribution) > 0 {
-			distributions := providerDistributions(provider)
+			distributions, err := providerDistributions(provider)
+
+			if err != nil {
+				return err
+			}
 
 			if !slices.Contains(distributions, distribution) {
-				log.Fatalf(
+				return fmt.Errorf(
 					"APT provider %s does not support distribution %s. Omit or use any of %v",
 					provider, distribution, distributions,
 				)
@@ -97,7 +121,7 @@ func repository(context *cli.Context) error {
 	packageName := strings.Trim(context.Args().First(), " ")
 
 	if len(packageName) == 0 {
-		log.Fatalf("Please provide a package name to install.")
+		return fmt.Errorf("Please provide a package name to install.")
 	}
 
 	packageDefinition, err := xdeb.FindPackage(packageName, path)
@@ -135,7 +159,13 @@ func search(context *cli.Context) error {
 	}
 
 	packageDefinitions := []xdeb.XdebPackageDefinition{}
-	globPattern := filepath.Join(pathPrefix(), "**", "*.yaml")
+	path, err := pathPrefix()
+
+	if err != nil {
+		return err
+	}
+
+	globPattern := filepath.Join(path, "**", "*.yaml")
 	globbed, err := filepathx.Glob(globPattern)
 
 	if err != nil {
@@ -173,20 +203,26 @@ func search(context *cli.Context) error {
 		fmt.Println()
 	}
 
-	return err
+	return nil
 }
 
 func sync(context *cli.Context) error {
 	arch, err := xdeb.FindArchitecture()
 
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	url := fmt.Sprintf("%s/%s/lists.yaml", xdeb.CUSTOM_REPOSITORIES_URL_PREFIX, arch)
 	fmt.Printf("Syncing lists: %s\n", url)
 
-	listsFile, err := xdeb.DownloadFile(pathPrefix(), url, true)
+	path, err := pathPrefix()
+
+	if err != nil {
+		return err
+	}
+
+	listsFile, err := xdeb.DownloadFile(path, url, true)
 	yamlFile, err := os.ReadFile(listsFile)
 
 	if err != nil {
@@ -200,12 +236,12 @@ func sync(context *cli.Context) error {
 		return err
 	}
 
-	xdeb.DumpCustomRepositories(pathPrefix())
+	xdeb.DumpCustomRepositories(path)
 
 	for _, provider := range lists.Providers {
 		for _, distribution := range provider.Distributions {
 			for _, component := range provider.Components {
-				err = xdeb.DumpPackageFile(filepath.Join(pathPrefix(), provider.Name), provider.Url, distribution, component, provider.Architecture)
+				err = xdeb.DumpPackageFile(filepath.Join(path, provider.Name), provider.Url, distribution, component, provider.Architecture)
 
 				if err != nil {
 					return err
