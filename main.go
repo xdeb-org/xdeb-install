@@ -119,11 +119,6 @@ func repository(context *cli.Context) error {
 		return err
 	}
 
-	log.Printf(
-		"Installing %s from %s @ %s/%s\n",
-		packageDefinition.Name, packageDefinition.Provider, packageDefinition.Distribution, packageDefinition.Component,
-	)
-
 	return xdeb.InstallRepositoryPackage(packageDefinition, context)
 }
 

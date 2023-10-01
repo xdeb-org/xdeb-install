@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -99,6 +100,12 @@ func installPackage(path string) error {
 }
 
 func InstallRepositoryPackage(packageDefinition *XdebPackageDefinition, context *cli.Context) error {
+	log.Printf(
+		"Installing %s from %s @ %s/%s\n",
+		packageDefinition.Name, packageDefinition.Provider,
+		packageDefinition.Distribution, packageDefinition.Component,
+	)
+
 	path := filepath.Join(context.String("temp"), packageDefinition.Name)
 	fullPath := packageDefinition.Path
 
