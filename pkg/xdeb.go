@@ -2,7 +2,6 @@ package xdeb
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -12,9 +11,6 @@ import (
 	version "github.com/knqyf263/go-deb-version"
 	"gopkg.in/yaml.v2"
 )
-
-const XDEB_URL = "https://github.com/toluschr/xdeb/releases"
-const XDEB_INSTALL_REPOSITORIES_URL = "https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/main/repositories/%s/lists.yaml"
 
 type XdebPackageDefinition struct {
 	Name         string `yaml:"name"`
@@ -49,6 +45,8 @@ func ParseYamlDefinition(path string) (*XdebProviderDefinition, error) {
 }
 
 func FindPackage(name string, path string, provider string, distribution string) ([]*XdebPackageDefinition, error) {
+	LogMessage("Looking for package %s via provider %s and distribution %s ...", name, provider, distribution)
+
 	globPattern := filepath.Join(path, provider, distribution, "*.yaml")
 	globbed, err := filepath.Glob(globPattern)
 
@@ -106,7 +104,7 @@ func getXdebPath() (string, error) {
 		return "", fmt.Errorf("Package xdeb not found. Please install from %s.", XDEB_URL)
 	}
 
-	log.Printf("Package xdeb found: %s", xdebPath)
+	LogMessage("Package xdeb found: %s", xdebPath)
 	return xdebPath, nil
 }
 

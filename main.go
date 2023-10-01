@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -14,8 +13,6 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-const APPLICATION_NAME = "xdeb-install"
-
 func repositoryPath() (string, error) {
 	arch, err := xdeb.FindArchitecture()
 
@@ -23,7 +20,7 @@ func repositoryPath() (string, error) {
 		return "", err
 	}
 
-	return filepath.Join(xdg.ConfigHome, APPLICATION_NAME, "repositories", arch), nil
+	return filepath.Join(xdg.ConfigHome, xdeb.APPLICATION_NAME, "repositories", arch), nil
 }
 
 func readPath(subdir string) ([]string, error) {
@@ -120,6 +117,14 @@ func url(context *cli.Context) error {
 func file(context *cli.Context) error {
 	filePath := context.Args().First()
 
+	if _, err := os.Stat(filePath); err != nil {
+		if os.IsNotExist(err) {
+			return fmt.Errorf("File %s does not exist.", filePath)
+		}
+
+		return err
+	}
+
 	return xdeb.InstallPackage(&xdeb.XdebPackageDefinition{
 		Name: xdeb.TrimPathExtension(filepath.Base(filePath)),
 		Path: filePath,
@@ -209,11 +214,15 @@ func prepare(context *cli.Context) error {
 	if len(version) == 0 {
 		// install master
 		url = "https://raw.githubusercontent.com/toluschr/xdeb/master/xdeb"
+		version = "master"
 	} else {
 		url = fmt.Sprintf("https://github.com/toluschr/xdeb/releases/download/%s/xdeb", version)
 	}
 
-	xdebFile, err := xdeb.DownloadFile(filepath.Join(os.TempDir(), "xdeb-download"), url, false)
+	path := filepath.Join(os.TempDir(), "xdeb-download")
+
+	xdeb.LogMessage("Downloading xdeb [%s] from %s to %s ...", version, url, path)
+	xdebFile, err := xdeb.DownloadFile(path, url, false)
 
 	if err != nil {
 		return err
@@ -223,11 +232,13 @@ func prepare(context *cli.Context) error {
 	args := []string{}
 
 	if os.Getuid() > 0 {
+		xdeb.LogMessage("Detected non-root user, appending 'sudo' to command")
 		args = append(args, "sudo")
 	}
 
 	targetFile := "/usr/local/bin/xdeb"
 	args = append(args, "mv", xdebFile, targetFile)
+
 	err = xdeb.ExecuteCommand("", args...)
 
 	if err != nil {
@@ -237,6 +248,7 @@ func prepare(context *cli.Context) error {
 	args = make([]string, 0)
 
 	if os.Getuid() > 0 {
+		xdeb.LogMessage("Detected non-root user, appending 'sudo' to command")
 		args = append(args, "sudo")
 	}
 
@@ -247,7 +259,10 @@ func prepare(context *cli.Context) error {
 		return err
 	}
 
-	err = os.RemoveAll(filepath.Dir(xdebFile))
+	path = filepath.Dir(xdebFile)
+
+	xdeb.LogMessage("Removing temporary download location %s ...", path)
+	err = os.RemoveAll(path)
 
 	if err != nil {
 		return err
@@ -270,6 +285,7 @@ func clean(context *cli.Context) error {
 		return fmt.Errorf("Please provide a temporary xdeb context root path.")
 	}
 
+	xdeb.LogMessage("Cleaning up temporary xdeb context root path: %s", tempPath)
 	err := os.RemoveAll(tempPath)
 
 	if err != nil {
@@ -283,6 +299,7 @@ func clean(context *cli.Context) error {
 			return err
 		}
 
+		xdeb.LogMessage("Cleaning up repository path: %s", path)
 		return os.RemoveAll(path)
 	}
 
@@ -291,7 +308,7 @@ func clean(context *cli.Context) error {
 
 func main() {
 	app := &cli.App{
-		Name:        APPLICATION_NAME,
+		Name:        xdeb.APPLICATION_NAME,
 		Usage:       "Automation wrapper for the xdeb utility",
 		Description: "Simple tool to automatically download, convert, and install DEB packages via the awesome xdeb tool.\nBasically just a wrapper to automate the process.",
 		Commands: []*cli.Command{
@@ -371,6 +388,7 @@ func main() {
 	}
 
 	if err := app.Run(os.Args); err != nil {
-		log.Fatal(err)
+		xdeb.LogMessage(err.Error())
+		os.Exit(1)
 	}
 }

@@ -4,7 +4,6 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -83,10 +82,10 @@ func InstallPackage(packageDefinition *XdebPackageDefinition, context *cli.Conte
 
 	if len(provider) == 0 {
 		// direct URL
-		log.Printf("Installing %s from %s\n", packageDefinition.Name, packageDefinition.Url)
+		LogMessage("Installing %s from %s", packageDefinition.Name, packageDefinition.Url)
 	} else {
-		log.Printf(
-			"Installing %s from %s @ %s/%s\n",
+		LogMessage(
+			"Installing %s from %s @ %s/%s",
 			packageDefinition.Name, provider, distribution, component,
 		)
 	}

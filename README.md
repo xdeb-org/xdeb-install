@@ -55,13 +55,13 @@ To sync package repositories, type:
 ```
 $ xdeb-install sync
 Syncing lists: https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/main/repositories/x86_64/lists.yaml
-Syncing repository debian.org/contrib @ bookworm
-Syncing repository debian.org/main @ bookworm
-Syncing repository debian.org/non-free @ bookworm
-Syncing repository debian.org/non-free-firmware @ bookworm
+[xdeb-install] Syncing repository debian.org/contrib @ bookworm
+[xdeb-install] Syncing repository debian.org/main @ bookworm
+[xdeb-install] Syncing repository debian.org/non-free @ bookworm
+[xdeb-install] Syncing repository debian.org/non-free-firmware @ bookworm
 ...
-Syncing repository microsoft.com/vscode.yaml @ current
-Syncing repository google.com/google-chrome.yaml @ current
+[xdeb-install] Syncing repository microsoft.com/vscode.yaml @ current
+[xdeb-install] Syncing repository google.com/google-chrome.yaml @ current
 ```
 
 The package repository lists are stored at `$XDG_CONFIG_HOME/xdeb-install/repositories/<arch>`, where `$XDG_CONFIG_HOME` typically translates to `$HOME/.config`.
@@ -104,8 +104,21 @@ You can search for a specific package by its name, let's stay with `speedcrunch`
 
 ```
 $ xdeb-install search speedcrunch
+[xdeb-install] Looking for package speedcrunch via provider * and distribution * ...
 debian.org/main
   distribution: bookworm
+  version: 0.12.0-6
+  url: http://ftp.debian.org/debian/pool/main/s/speedcrunch/speedcrunch_0.12.0-6_amd64.deb
+  sha256: a306a478bdf923ad1206a1a76fdc1b2d6a745939663419b360febfa6350e96b6
+
+debian.org/main
+  distribution: sid
+  version: 0.12.0-6
+  url: http://ftp.debian.org/debian/pool/main/s/speedcrunch/speedcrunch_0.12.0-6_amd64.deb
+  sha256: a306a478bdf923ad1206a1a76fdc1b2d6a745939663419b360febfa6350e96b6
+
+debian.org/main
+  distribution: testing
   version: 0.12.0-6
   url: http://ftp.debian.org/debian/pool/main/s/speedcrunch/speedcrunch_0.12.0-6_amd64.deb
   sha256: a306a478bdf923ad1206a1a76fdc1b2d6a745939663419b360febfa6350e96b6
@@ -121,16 +134,4 @@ debian.org/main
   version: 0.12.0-4
   url: http://ftp.debian.org/debian/pool/main/s/speedcrunch/speedcrunch_0.12.0-4_amd64.deb
   sha256: 8681da5ca651a6a7f5abb479c673d33ce3525212e34a2a33afcec7ad75c28aea
-
-debian.org/main
-  distribution: sid
-  version: 0.12.0-6
-  url: http://ftp.debian.org/debian/pool/main/s/speedcrunch/speedcrunch_0.12.0-6_amd64.deb
-  sha256: a306a478bdf923ad1206a1a76fdc1b2d6a745939663419b360febfa6350e96b6
-
-debian.org/main
-  distribution: testing
-  version: 0.12.0-6
-  url: http://ftp.debian.org/debian/pool/main/s/speedcrunch/speedcrunch_0.12.0-6_amd64.deb
-  sha256: a306a478bdf923ad1206a1a76fdc1b2d6a745939663419b360febfa6350e96b6
 ```

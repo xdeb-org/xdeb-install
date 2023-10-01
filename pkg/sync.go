@@ -152,7 +152,7 @@ func pullAptRepository(directory string, url string, dist string, component stri
 	}
 
 	if definition != nil && len(definition.Xdeb) > 0 {
-		fmt.Printf("Syncing repository %s/%s @ %s\n", filepath.Base(directory), component, dist)
+		LogMessage("Syncing repository %s/%s @ %s", filepath.Base(directory), component, dist)
 
 		filePath := filepath.Join(directory, dist, fmt.Sprintf("%s.yaml", component))
 		bytes, err := yaml.Marshal(definition)
@@ -170,7 +170,7 @@ func pullAptRepository(directory string, url string, dist string, component stri
 }
 
 func pullCustomRepository(directory string, urlPrefix string, dist string, component string) error {
-	fmt.Printf("Syncing repository %s/%s @ %s\n", filepath.Base(urlPrefix), component, dist)
+	LogMessage("Syncing repository %s/%s @ %s", filepath.Base(urlPrefix), component, dist)
 
 	url := fmt.Sprintf("%s/%s/%s", urlPrefix, dist, component)
 	_, err := DownloadFile(filepath.Join(directory, dist), url, false)
@@ -180,7 +180,7 @@ func pullCustomRepository(directory string, urlPrefix string, dist string, compo
 
 func ParsePackageLists(path string, arch string) (*PackageListsDefinition, error) {
 	url := fmt.Sprintf(XDEB_INSTALL_REPOSITORIES_URL, arch)
-	fmt.Printf("Syncing lists: %s\n", url)
+	LogMessage("Syncing lists: %s", url)
 
 	listsFile, err := DownloadFile(path, url, true)
 

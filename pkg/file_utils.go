@@ -44,6 +44,10 @@ func DownloadFile(path string, url string, followRedirects bool) (string, error)
 		}
 	}
 
+	if resp.StatusCode != 200 {
+		return "", fmt.Errorf("Could not download file %s", url)
+	}
+
 	defer resp.Body.Close()
 
 	fullPath := filepath.Join(path, filepath.Base(url))
