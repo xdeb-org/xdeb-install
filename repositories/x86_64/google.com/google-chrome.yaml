@@ -1,8 +1,0 @@
-xdeb:
-  - name: google-chrome
-    url: https://dl.google.com/linux/direct/google-chrome-%version%_amd64.deb
-    version: stable_current
-
-  - name: google-chrome-unstable
-    url: https://dl.google.com/linux/direct/google-chrome-%version%_amd64.deb
-    version: unstable_current
