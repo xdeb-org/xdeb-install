@@ -71,15 +71,6 @@ func FindPackage(name string, path string) (*XdebPackageDefinition, error) {
 	return nil, fmt.Errorf("Could not find package %s", name)
 }
 
-func executeCommand(workdir string, args ...string) error {
-	command := exec.Command(args[0], args[1:]...)
-	command.Dir = workdir
-	command.Stdout = os.Stdout
-	command.Stderr = os.Stderr
-
-	return command.Run()
-}
-
 func getXdebPath() string {
 	xdebPath, err := exec.LookPath("xdeb")
 
@@ -96,5 +87,5 @@ func convertPackage(path string, xdebArgs string) error {
 		xdebArgs = strings.ReplaceAll(xdebArgs, "i", "")
 	}
 
-	return executeCommand(filepath.Dir(path), getXdebPath(), xdebArgs, path)
+	return ExecuteCommand(filepath.Dir(path), getXdebPath(), xdebArgs, path)
 }

@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 )
 
-func DownloadFile(path string, url string) (string, error) {
+func DownloadFile(path string, url string, followRedirects bool) (string, error) {
 	client := &http.Client{}
 	resp, err := client.Get(url)
 
@@ -16,11 +16,13 @@ func DownloadFile(path string, url string) (string, error) {
 		return "", fmt.Errorf("Could not download file %s", url)
 	}
 
-	finalUrl := resp.Request.URL.String()
-	resp, err = client.Get(finalUrl)
+	if followRedirects {
+		url = resp.Request.URL.String()
+		resp, err = client.Get(url)
 
-	if err != nil {
-		return "", fmt.Errorf("Could not download file %s", url)
+		if err != nil {
+			return "", fmt.Errorf("Could not download file %s", url)
+		}
 	}
 
 	defer resp.Body.Close()
@@ -31,7 +33,7 @@ func DownloadFile(path string, url string) (string, error) {
 		return "", fmt.Errorf("Could not create path %s", path)
 	}
 
-	fullPath := filepath.Join(path, filepath.Base(finalUrl))
+	fullPath := filepath.Join(path, filepath.Base(url))
 	out, err := os.Create(fullPath)
 
 	if err != nil {

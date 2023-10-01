@@ -4,7 +4,7 @@ Simple tool to automatically download, convert, and install DEB packages via the
 
 ## Installation
 
-First, install [`xdeb`](https://github.com/toluschr/xdeb). Then either use [Go](https://go.dev/) or download a release to install `xdeb-install`.
+You can either use [Go](https://go.dev/) or download a release to install `xdeb-install`. You can install `xdeb` using `xdeb-install` later, see [Help Page](#help-page).
 
 ### Using Go
 
@@ -34,6 +34,7 @@ DESCRIPTION:
    Basically just a wrapper to automate the process.
 
 COMMANDS:
+   xdeb           installs the xdeb utility to the system
    repository, r  install a package from an online APT repository
    search, s      search online APT repositories for a package
    sync           sync online APT repositories

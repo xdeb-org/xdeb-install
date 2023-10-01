@@ -66,7 +66,7 @@ func installPackage(path string) error {
 	}
 
 	args = append(args, "xbps-install", "-R", "binpkgs", "-y", xbps)
-	return executeCommand(workdir, args...)
+	return ExecuteCommand(workdir, args...)
 }
 
 func InstallPackage(packageDefinition *XdebPackageDefinition, context *cli.Context) error {
@@ -82,7 +82,7 @@ func InstallPackage(packageDefinition *XdebPackageDefinition, context *cli.Conte
 	// download if an URL is provided
 	if len(packageDefinition.Url) > 0 {
 		var err error
-		fullPath, err = DownloadFile(path, packageDefinition.Url)
+		fullPath, err = DownloadFile(path, packageDefinition.Url, true)
 
 		if err != nil {
 			return err

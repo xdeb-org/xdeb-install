@@ -186,7 +186,7 @@ func sync(context *cli.Context) error {
 	url := fmt.Sprintf("%s/%s/lists.yaml", xdeb.CUSTOM_REPOSITORIES_URL_PREFIX, arch)
 	fmt.Printf("Syncing lists: %s\n", url)
 
-	listsFile, err := xdeb.DownloadFile(pathPrefix(), url)
+	listsFile, err := xdeb.DownloadFile(pathPrefix(), url, true)
 	yamlFile, err := os.ReadFile(listsFile)
 
 	if err != nil {
@@ -217,12 +217,65 @@ func sync(context *cli.Context) error {
 	return nil
 }
 
+func prepare(context *cli.Context) error {
+	version := context.Args().First()
+	var url string
+
+	if len(version) == 0 {
+		// install master
+		url = "https://raw.githubusercontent.com/toluschr/xdeb/master/xdeb"
+	} else {
+		url = fmt.Sprintf("https://github.com/toluschr/xdeb/releases/download/%s/xdeb", version)
+	}
+
+	targetFile := "/usr/local/bin/xdeb"
+	xdebFile, err := xdeb.DownloadFile(filepath.Join(os.TempDir(), "xdeb-download"), url, false)
+
+	if err != nil {
+		return err
+	}
+
+	// move to /usr/local/bin
+	args := []string{}
+
+	if os.Getuid() > 0 {
+		args = append(args, "sudo")
+	}
+
+	args = append(args, "mv", xdebFile, targetFile)
+	err = xdeb.ExecuteCommand("", args...)
+
+	if err != nil {
+		return err
+	}
+
+	args = make([]string, 0)
+
+	if os.Getuid() > 0 {
+		args = append(args, "sudo")
+	}
+
+	args = append(args, "chmod", "u+x", targetFile)
+	err = xdeb.ExecuteCommand("", args...)
+
+	if err != nil {
+		return err
+	}
+
+	return os.RemoveAll(filepath.Dir(xdebFile))
+}
+
 func main() {
 	app := &cli.App{
 		Name:        APPLICATION_NAME,
 		Usage:       "Automation wrapper for the xdeb utility",
 		Description: "Simple tool to automatically download, convert, and install DEB packages via the awesome xdeb tool.\nBasically just a wrapper to automate the process.",
 		Commands: []*cli.Command{
+			{
+				Name:   "xdeb",
+				Usage:  "installs the xdeb utility to the system",
+				Action: prepare,
+			},
 			{
 				Name:    "repository",
 				Usage:   "install a package from an online APT repository",
