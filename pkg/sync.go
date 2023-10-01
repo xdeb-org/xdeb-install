@@ -1,12 +1,9 @@
 package xdeb
 
 import (
-	"bufio"
-	"bytes"
 	"compress/gzip"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -98,88 +95,75 @@ func parsePackagesFile(urlPrefix string, packages_file string) *XdebProviderDefi
 	return &definition
 }
 
-func pullPackagesFile(url string, dist string, component string, architecture string) (*XdebProviderDefinition, error) {
-	packagesFileUrl := fmt.Sprintf(
+func pullPackagesFile(urlPrefix string, dist string, component string, architecture string) (*XdebProviderDefinition, error) {
+	url := fmt.Sprintf(
 		"%s/dists/%s/%s/binary-%s/Packages",
-		url, dist, component, architecture,
+		urlPrefix, dist, component, architecture,
 	)
 
-	packagesFile, err := http.Get(packagesFileUrl)
+	resp, err := http.Get(url)
 
 	if err != nil {
 		return nil, err
 	}
 
-	if packagesFile.StatusCode != 200 {
-		packagesFile, err = http.Get(fmt.Sprintf("%s.xz", packagesFileUrl))
+	if resp.StatusCode != 200 {
+		resp, err = http.Get(fmt.Sprintf("%s.xz", url))
 
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	if packagesFile.StatusCode != 200 {
-		packagesFile, err = http.Get(fmt.Sprintf("%s.gz", packagesFileUrl))
+	if resp.StatusCode != 200 {
+		resp, err = http.Get(fmt.Sprintf("%s.gz", url))
 
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	requestUrl := fmt.Sprintf(
-		"%s://%s%s",
-		packagesFile.Request.URL.Scheme, packagesFile.Request.URL.Host, packagesFile.Request.URL.Path,
-	)
-
-	if packagesFile.StatusCode != 200 {
+	if resp.StatusCode != 200 {
 		return nil, nil
 	}
 
-	defer packagesFile.Body.Close()
+	defer resp.Body.Close()
+
+	requestUrl := fmt.Sprintf(
+		"%s://%s%s",
+		resp.Request.URL.Scheme, resp.Request.URL.Host, resp.Request.URL.Path,
+	)
 
 	fmt.Printf("Syncing repository %s\n", requestUrl)
-	var packagesFileContent string
+	var reader io.Reader
 
 	if strings.HasSuffix(requestUrl, ".xz") {
-		reader, err := xz.NewReader(packagesFile.Body)
+		reader, err = xz.NewReader(resp.Body)
 
 		if err != nil {
-			log.Fatalf("NewReader error %s", err)
+			return nil, err
 		}
-
-		var outputBuffer bytes.Buffer
-		outputWriter := bufio.NewWriter(&outputBuffer)
-
-		if _, err = io.Copy(outputWriter, reader); err != nil {
-			log.Fatalf("io.Copy error %s", err)
-		}
-
-		packagesFileContent = outputBuffer.String()
 	} else if strings.HasSuffix(requestUrl, ".gz") {
-		reader, err := gzip.NewReader(packagesFile.Body)
+		reader, err = gzip.NewReader(resp.Body)
 
 		if err != nil {
 			return nil, err
 		}
-
-		output, err := io.ReadAll(reader)
-
-		if err != nil {
-			return nil, err
-		}
-
-		packagesFileContent = string(output)
 	} else {
-		output, err := io.ReadAll(packagesFile.Body)
+		reader = resp.Body
 
 		if err != nil {
 			return nil, err
 		}
-
-		packagesFileContent = string(output)
 	}
 
-	return parsePackagesFile(url, packagesFileContent), nil
+	output, err := io.ReadAll(reader)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return parsePackagesFile(urlPrefix, string(output)), nil
 }
 
 func dumpDefinitionFile(path string, bytes []byte) error {
