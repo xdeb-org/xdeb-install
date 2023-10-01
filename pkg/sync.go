@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -175,6 +176,32 @@ func pullCustomRepository(directory string, urlPrefix string, dist string, compo
 	_, err := DownloadFile(filepath.Join(directory, dist), url, false)
 
 	return err
+}
+
+func ParsePackageLists(path string, arch string) (*PackageListsDefinition, error) {
+	url := fmt.Sprintf(XDEB_INSTALL_REPOSITORIES_URL, arch)
+	fmt.Printf("Syncing lists: %s\n", url)
+
+	listsFile, err := DownloadFile(path, url, true)
+
+	if err != nil {
+		return nil, err
+	}
+
+	yamlFile, err := os.ReadFile(listsFile)
+
+	if err != nil {
+		return nil, err
+	}
+
+	lists := &PackageListsDefinition{}
+	err = yaml.Unmarshal(yamlFile, lists)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return lists, nil
 }
 
 func DumpRepository(directory string, url string, dist string, component string, architecture string, custom bool) error {

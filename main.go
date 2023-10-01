@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"golang.org/x/exp/slices"
-	"gopkg.in/yaml.v2"
 
 	"github.com/adrg/xdg"
 	xdeb "github.com/thetredev/xdeb-install/pkg"
@@ -173,24 +172,13 @@ func sync(context *cli.Context) error {
 		return err
 	}
 
-	url := fmt.Sprintf(xdeb.XDEB_INSTALL_REPOSITORIES_URL, arch)
-	fmt.Printf("Syncing lists: %s\n", url)
-
 	path, err := repositoryPath()
 
 	if err != nil {
 		return err
 	}
 
-	listsFile, err := xdeb.DownloadFile(path, url, true)
-	yamlFile, err := os.ReadFile(listsFile)
-
-	if err != nil {
-		return err
-	}
-
-	lists := xdeb.PackageListsDefinition{}
-	err = yaml.Unmarshal(yamlFile, &lists)
+	lists, err := xdeb.ParsePackageLists(path, arch)
 
 	if err != nil {
 		return err
