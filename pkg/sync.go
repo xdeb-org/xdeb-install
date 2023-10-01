@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -166,25 +165,6 @@ func pullPackagesFile(urlPrefix string, dist string, component string, architect
 	return parsePackagesFile(urlPrefix, string(output)), nil
 }
 
-func dumpDefinitionFile(path string, bytes []byte) error {
-	err := os.MkdirAll(filepath.Dir(path), os.ModePerm)
-
-	if err != nil {
-		return err
-	}
-
-	fileDump, err := os.Create(path)
-
-	if err != nil {
-		return err
-	}
-
-	defer fileDump.Close()
-	_, err = fileDump.Write(bytes)
-
-	return err
-}
-
 func DumpPackageFile(directory string, url string, dist string, component string, architecture string) error {
 	definition, err := pullPackagesFile(url, dist, component, architecture)
 
@@ -200,7 +180,7 @@ func DumpPackageFile(directory string, url string, dist string, component string
 			return err
 		}
 
-		if err = dumpDefinitionFile(filePath, bytes); err != nil {
+		if err = writeFile(filePath, bytes); err != nil {
 			return err
 		}
 	}
@@ -237,7 +217,7 @@ func DumpCustomRepositories(directory string) error {
 
 			filePath := filepath.Join(directory, customRepository.Provider, "current", packageDefinition)
 
-			if err = dumpDefinitionFile(filePath, data); err != nil {
+			if err = writeFile(filePath, data); err != nil {
 				return err
 			}
 		}

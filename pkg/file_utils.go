@@ -8,6 +8,25 @@ import (
 	"path/filepath"
 )
 
+func writeFile(path string, bytes []byte) error {
+	err := os.MkdirAll(filepath.Dir(path), os.ModePerm)
+
+	if err != nil {
+		return err
+	}
+
+	file, err := os.Create(path)
+
+	if err != nil {
+		return err
+	}
+
+	defer file.Close()
+	_, err = file.Write(bytes)
+
+	return err
+}
+
 func DownloadFile(path string, url string, followRedirects bool) (string, error) {
 	client := &http.Client{}
 	resp, err := client.Get(url)
@@ -27,21 +46,12 @@ func DownloadFile(path string, url string, followRedirects bool) (string, error)
 
 	defer resp.Body.Close()
 
-	err = os.MkdirAll(path, os.ModePerm)
-
-	if err != nil {
-		return "", fmt.Errorf("Could not create path %s", path)
-	}
-
 	fullPath := filepath.Join(path, filepath.Base(url))
-	out, err := os.Create(fullPath)
+	bytes, err := io.ReadAll(resp.Body)
 
 	if err != nil {
-		return "", fmt.Errorf("Could not create file %s", fullPath)
+		return "", err
 	}
 
-	defer out.Close()
-
-	_, err = io.Copy(out, resp.Body)
-	return fullPath, err
+	return fullPath, writeFile(fullPath, bytes)
 }
