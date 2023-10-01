@@ -306,7 +306,7 @@ func prepare(context *cli.Context) error {
 		args = append(args, "sudo")
 	}
 
-	args = append(args, "xbps-install", "-Sy", "binutils", "tar", "curl", "xz")
+	args = append(args, "xbps-install", "-S", "binutils", "tar", "curl", "xz")
 	return xdeb.ExecuteCommand("", args...)
 }
 

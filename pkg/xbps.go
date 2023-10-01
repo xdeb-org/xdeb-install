@@ -65,7 +65,7 @@ func installPackage(path string) error {
 		args = append(args, "sudo")
 	}
 
-	args = append(args, "xbps-install", "-R", "binpkgs", "-y", xbps)
+	args = append(args, "xbps-install", "-R", "binpkgs", xbps)
 	return ExecuteCommand(workdir, args...)
 }
 

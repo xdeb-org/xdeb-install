@@ -10,6 +10,7 @@ func ExecuteCommand(workdir string, args ...string) error {
 	command.Dir = workdir
 	command.Stdout = os.Stdout
 	command.Stderr = os.Stderr
+	command.Stdin = os.Stdin
 
 	return command.Run()
 }
