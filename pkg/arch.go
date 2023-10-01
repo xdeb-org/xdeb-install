@@ -7,7 +7,8 @@ import (
 
 var ARCHITECTURE_MAP = map[string]string{
 	"amd64": "x86_64",
-	//"386":   "i386",
+	"arm64": "aarch64",
+	"386":   "i686",
 }
 
 func FindArchitecture() (string, error) {
