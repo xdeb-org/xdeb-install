@@ -5,12 +5,14 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 
 	"golang.org/x/exp/slices"
 	"gopkg.in/yaml.v2"
 
 	"github.com/adrg/xdg"
+	version "github.com/knqyf263/go-deb-version"
 	xdeb "github.com/thetredev/xdeb-install/pkg"
 	"github.com/urfave/cli/v2"
 	"github.com/yargevad/filepathx"
@@ -162,6 +164,22 @@ func search(context *cli.Context) error {
 			}
 		}
 	}
+
+	sort.Slice(packageDefinitions, func(i int, j int) bool {
+		versionA, err := version.NewVersion(packageDefinitions[i].Version)
+
+		if err != nil {
+			return false
+		}
+
+		versionB, err := version.NewVersion(packageDefinitions[j].Version)
+
+		if err != nil {
+			return false
+		}
+
+		return versionA.GreaterThan(versionB)
+	})
 
 	for _, packageDefinition := range packageDefinitions {
 		fmt.Printf("%s/%s\n", packageDefinition.Provider, packageDefinition.Component)
