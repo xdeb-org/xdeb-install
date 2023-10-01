@@ -169,31 +169,13 @@ func pullAptRepository(directory string, url string, dist string, component stri
 }
 
 func pullCustomRepository(directory string, urlPrefix string, dist string, component string) error {
+	fmt.Printf("Syncing repository %s/%s @ %s\n", filepath.Base(urlPrefix), component, dist)
+
 	url := fmt.Sprintf("%s/%s/%s", urlPrefix, dist, component)
-	response, err := http.Get(url)
-
-	if err != nil {
-		return err
-	}
-
-	defer response.Body.Close()
-
-	provider := filepath.Base(urlPrefix)
-	fmt.Printf("Syncing repository %s/%s @ %s\n", provider, component, dist)
-
-	data, err := io.ReadAll(response.Body)
-
-	if err != nil {
-		return err
-	}
-
 	filePath := filepath.Join(directory, dist, component)
 
-	if err = writeFile(filePath, data); err != nil {
-		return err
-	}
-
-	return nil
+	_, err := DownloadFile(filepath.Dir(filePath), url, false)
+	return err
 }
 
 func DumpRepository(directory string, url string, dist string, component string, architecture string, custom bool) error {
