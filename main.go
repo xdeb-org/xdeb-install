@@ -263,6 +263,32 @@ func prepare(context *cli.Context) error {
 	return xdeb.ExecuteCommand("", args...)
 }
 
+func clean(context *cli.Context) error {
+	tempPath := context.String("temp")
+
+	if len(tempPath) == 0 {
+		return fmt.Errorf("Please provide a temporary xdeb context root path.")
+	}
+
+	err := os.RemoveAll(tempPath)
+
+	if err != nil {
+		return err
+	}
+
+	if context.Bool("lists") {
+		path, err := repositoryPath()
+
+		if err != nil {
+			return err
+		}
+
+		return os.RemoveAll(path)
+	}
+
+	return nil
+}
+
 func main() {
 	app := &cli.App{
 		Name:        APPLICATION_NAME,
@@ -312,6 +338,20 @@ func main() {
 				Usage:   "install a package from a local DEB file",
 				Aliases: []string{"f"},
 				Action:  file,
+			},
+			{
+				Name:    "clean",
+				Usage:   "cleanup temporary xdeb context root path, optionally the repository lists as well",
+				Aliases: []string{"c"},
+				Action:  clean,
+				Flags: []cli.Flag{
+					&cli.BoolFlag{
+						Name:    "lists",
+						Aliases: []string{"l"},
+						Usage:   "cleanup repository lists as well",
+						Value:   false,
+					},
+				},
 			},
 		},
 		Flags: []cli.Flag{

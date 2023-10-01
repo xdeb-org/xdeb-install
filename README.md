@@ -41,6 +41,7 @@ COMMANDS:
    url, u         install a package from a URL directly
    file, f        install a package from a local DEB file
    help, h        Shows a list of commands or help for one command
+   clean, c       cleanup temporary xdeb context root path, optionally the repository lists as well
 
 GLOBAL OPTIONS:
    --options value, -o value  override XDEB_OPTS, '-i' will be removed if provided (default: "-Sde")
