@@ -113,7 +113,7 @@ func url(context *cli.Context) error {
 	downloadUrl := context.Args().First()
 
 	return xdeb.InstallPackage(&xdeb.XdebPackageDefinition{
-		Name: strings.TrimSuffix(filepath.Base(downloadUrl), filepath.Ext(downloadUrl)),
+		Name: xdeb.TrimPathExtension(filepath.Base(downloadUrl)),
 		Url:  downloadUrl,
 	}, context)
 }
@@ -122,7 +122,7 @@ func file(context *cli.Context) error {
 	filePath := context.Args().First()
 
 	return xdeb.InstallPackage(&xdeb.XdebPackageDefinition{
-		Name: strings.TrimSuffix(filepath.Base(filePath), filepath.Ext(filePath)),
+		Name: xdeb.TrimPathExtension(filepath.Base(filePath)),
 		Path: filePath,
 	}, context)
 }

@@ -7,7 +7,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/urfave/cli/v2"
 )
@@ -16,7 +15,7 @@ func PackageDefinitionWithMetadata(packageDefinition *XdebPackageDefinition, pat
 	distPath := filepath.Dir(path)
 
 	packageObject := *packageDefinition
-	packageObject.Component = filepath.Base(strings.TrimSuffix(path, filepath.Ext(path)))
+	packageObject.Component = TrimPathExtension(filepath.Base(path))
 	packageObject.Distribution = filepath.Base(distPath)
 	packageObject.Provider = filepath.Base(filepath.Dir(distPath))
 
@@ -56,8 +55,8 @@ func installPackage(path string) error {
 	}
 
 	xbps := filepath.Base(files[0])
-	xbps = strings.TrimSuffix(xbps, filepath.Ext(xbps))
-	xbps = strings.TrimSuffix(xbps, filepath.Ext(xbps))
+	xbps = TrimPathExtension(xbps)
+	xbps = TrimPathExtension(xbps)
 
 	args := []string{}
 
