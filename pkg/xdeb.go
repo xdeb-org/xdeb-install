@@ -6,9 +6,10 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"sort"
 	"strings"
 
-	"github.com/yargevad/filepathx"
+	version "github.com/knqyf263/go-deb-version"
 	"gopkg.in/yaml.v2"
 )
 
@@ -47,13 +48,19 @@ func ParseYamlDefinition(path string) (*XdebProviderDefinition, error) {
 	return &definition, nil
 }
 
-func FindPackage(name string, path string) (*XdebPackageDefinition, error) {
-	globPattern := filepath.Join(path, "**", "*.yaml")
-	globbed, err := filepathx.Glob(globPattern)
+func FindPackage(name string, path string, provider string, distribution string) ([]*XdebPackageDefinition, error) {
+	globPattern := filepath.Join(path, provider, distribution, "*.yaml")
+	globbed, err := filepath.Glob(globPattern)
 
 	if err != nil {
 		return nil, err
 	}
+
+	if len(globbed) == 0 {
+		return nil, fmt.Errorf("No repositories present on the system. Please sync repositories first.")
+	}
+
+	packageDefinitions := []*XdebPackageDefinition{}
 
 	for _, match := range globbed {
 		definition, err := ParseYamlDefinition(match)
@@ -64,12 +71,32 @@ func FindPackage(name string, path string) (*XdebPackageDefinition, error) {
 
 		for _, packageDefinition := range definition.Xdeb {
 			if packageDefinition.Name == name {
-				return PackageDefinitionWithMetadata(&packageDefinition, match), nil
+				packageDefinitions = append(packageDefinitions, PackageDefinitionWithMetadata(&packageDefinition, match))
 			}
 		}
 	}
 
-	return nil, fmt.Errorf("Could not find package %s", name)
+	if len(packageDefinitions) == 0 {
+		return nil, fmt.Errorf("Could not find package %s", name)
+	}
+
+	sort.Slice(packageDefinitions, func(i int, j int) bool {
+		versionA, err := version.NewVersion(packageDefinitions[i].Version)
+
+		if err != nil {
+			return false
+		}
+
+		versionB, err := version.NewVersion(packageDefinitions[j].Version)
+
+		if err != nil {
+			return false
+		}
+
+		return versionA.GreaterThan(versionB)
+	})
+
+	return packageDefinitions, nil
 }
 
 func getXdebPath() (string, error) {

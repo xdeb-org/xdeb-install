@@ -76,7 +76,7 @@ To install `speedcrunch`, for example, type:
 $ xdeb-install repository speedcrunch
 ```
 
-This will install the package from the first provider and distribution it can find.
+This will install the most recent version of the package from the first provider and distribution it can find.
 
 You can also specify the provider and distribution, for example `debian.org` and `bookworm`, respectively:
 ```

@@ -172,9 +172,8 @@ func pullCustomRepository(directory string, urlPrefix string, dist string, compo
 	fmt.Printf("Syncing repository %s/%s @ %s\n", filepath.Base(urlPrefix), component, dist)
 
 	url := fmt.Sprintf("%s/%s/%s", urlPrefix, dist, component)
-	filePath := filepath.Join(directory, dist, component)
+	_, err := DownloadFile(filepath.Join(directory, dist), url, false)
 
-	_, err := DownloadFile(filepath.Dir(filePath), url, false)
 	return err
 }
 

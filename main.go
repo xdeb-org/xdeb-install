@@ -5,17 +5,14 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"sort"
 	"strings"
 
 	"golang.org/x/exp/slices"
 	"gopkg.in/yaml.v2"
 
 	"github.com/adrg/xdg"
-	version "github.com/knqyf263/go-deb-version"
 	xdeb "github.com/thetredev/xdeb-install/pkg"
 	"github.com/urfave/cli/v2"
-	"github.com/yargevad/filepathx"
 )
 
 const APPLICATION_NAME = "xdeb-install"
@@ -76,8 +73,6 @@ func repository(context *cli.Context) error {
 			return fmt.Errorf("APT provider %s not supported. Omit or use any of %v", provider, providers)
 		}
 
-		path = filepath.Join(path, provider)
-
 		if len(distribution) > 0 {
 			distributions, err := readPath(provider)
 
@@ -91,9 +86,12 @@ func repository(context *cli.Context) error {
 					provider, distribution, distributions,
 				)
 			}
-
-			path = filepath.Join(path, distribution)
+		} else {
+			distribution = "*"
 		}
+	} else {
+		provider = "*"
+		distribution = "*"
 	}
 
 	packageName := strings.Trim(context.Args().First(), " ")
@@ -102,13 +100,13 @@ func repository(context *cli.Context) error {
 		return fmt.Errorf("Please provide a package name to install.")
 	}
 
-	packageDefinition, err := xdeb.FindPackage(packageName, path)
+	packageDefinitions, err := xdeb.FindPackage(packageName, path, provider, distribution)
 
 	if err != nil {
 		return err
 	}
 
-	return xdeb.InstallPackage(packageDefinition, context)
+	return xdeb.InstallPackage(packageDefinitions[0], context)
 }
 
 func url(context *cli.Context) error {
@@ -142,44 +140,11 @@ func search(context *cli.Context) error {
 		return err
 	}
 
-	globPattern := filepath.Join(path, "**", "*.yaml")
-	globbed, err := filepathx.Glob(globPattern)
+	packageDefinitions, err := xdeb.FindPackage(packageName, path, "*", "*")
 
 	if err != nil {
 		return err
 	}
-
-	packageDefinitions := []*xdeb.XdebPackageDefinition{}
-
-	for _, match := range globbed {
-		definition, err := xdeb.ParseYamlDefinition(match)
-
-		if err != nil {
-			return err
-		}
-
-		for _, packageDefinition := range definition.Xdeb {
-			if packageDefinition.Name == packageName {
-				packageDefinitions = append(packageDefinitions, xdeb.PackageDefinitionWithMetadata(&packageDefinition, match))
-			}
-		}
-	}
-
-	sort.Slice(packageDefinitions, func(i int, j int) bool {
-		versionA, err := version.NewVersion(packageDefinitions[i].Version)
-
-		if err != nil {
-			return false
-		}
-
-		versionB, err := version.NewVersion(packageDefinitions[j].Version)
-
-		if err != nil {
-			return false
-		}
-
-		return versionA.GreaterThan(versionB)
-	})
 
 	for _, packageDefinition := range packageDefinitions {
 		fmt.Printf("%s/%s\n", packageDefinition.Provider, packageDefinition.Component)

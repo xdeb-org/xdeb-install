@@ -7,7 +7,6 @@ require (
 	github.com/knqyf263/go-deb-version v0.0.0-20230223133812-3ed183d23422
 	github.com/ulikunitz/xz v0.5.11
 	github.com/urfave/cli/v2 v2.25.7
-	github.com/yargevad/filepathx v1.0.0
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9
 	gopkg.in/yaml.v2 v2.4.0
 )
