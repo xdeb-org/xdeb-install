@@ -1,6 +1,4 @@
----
 xdeb:
-  packages:
-    - name: vscode
-      url: https://code.visualstudio.com/sha/download?build=%version%&os=linux-deb-x64
-      version: stable
+  - name: vscode
+    url: https://code.visualstudio.com/sha/download?build=%version%&os=linux-deb-x64
+    version: stable
