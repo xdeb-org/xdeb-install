@@ -264,7 +264,6 @@ func prepare(context *cli.Context) error {
 		url = fmt.Sprintf("https://github.com/toluschr/xdeb/releases/download/%s/xdeb", version)
 	}
 
-	targetFile := "/usr/local/bin/xdeb"
 	xdebFile, err := xdeb.DownloadFile(filepath.Join(os.TempDir(), "xdeb-download"), url, false)
 
 	if err != nil {
@@ -278,6 +277,7 @@ func prepare(context *cli.Context) error {
 		args = append(args, "sudo")
 	}
 
+	targetFile := "/usr/local/bin/xdeb"
 	args = append(args, "mv", xdebFile, targetFile)
 	err = xdeb.ExecuteCommand("", args...)
 
