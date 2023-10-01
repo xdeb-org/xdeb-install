@@ -1,0 +1,52 @@
+# Copied and modified from k0sctl: https://github.com/k0sproject/k0sctl/blob/main/.github/workflows/release.yaml
+
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    name: release
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v4
+
+      # Ugly hack to get the tag name
+      # github.ref gives the full reference like refs.tags.v0.0.1-beta1
+      - name: Branch name
+        id: branch_name
+        run: |
+          echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> ${GITHUB_OUTPUT}
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version-file: go.mod
+          check-latest: true
+
+      - name: Build binaries
+        env:
+          TAG_NAME: ${{ steps.branch_name.outputs.TAG_NAME }}
+          CGO_ENABLED: 0
+          GOOS: linux
+          # currently only amd64 is supported
+          GOARCH: amd64
+        run: ./build.sh
+
+      - name: Create release and upload binaries
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            bin/*
+          body_path: bin/checksums.md
+          tag_name: ${{ steps.branch_name.outputs.TAG_NAME }}
+          name: ${{ steps.branch_name.outputs.TAG_NAME }}
+          draft: true # So we can manually edit before publishing
+          prerelease: ${{ contains(steps.branch_name.outputs.TAG_NAME, '-') }} # v0.1.2-beta1, 1.2.3-rc1
