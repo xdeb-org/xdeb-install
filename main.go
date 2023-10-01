@@ -18,21 +18,14 @@ import (
 
 const APPLICATION_NAME = "xdeb-install"
 
-func architecturePath(prefix ...string) string {
+func pathPrefix() string {
 	arch, err := xdeb.FindArchitecture()
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	paths := prefix
-	paths = append(paths, "repositories", arch)
-
-	return filepath.Join(paths...)
-}
-
-func pathPrefix() string {
-	return architecturePath(xdg.ConfigHome, APPLICATION_NAME)
+	return filepath.Join(xdg.ConfigHome, APPLICATION_NAME, "repositories", arch)
 }
 
 func aptProviders() []string {
@@ -184,7 +177,16 @@ func search(context *cli.Context) error {
 }
 
 func sync(context *cli.Context) error {
-	listsFile := filepath.Join(architecturePath(), "lists.yaml")
+	arch, err := xdeb.FindArchitecture()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	url := fmt.Sprintf("%s/%s/lists.yaml", xdeb.CUSTOM_REPOSITORIES_URL_PREFIX, arch)
+	fmt.Printf("Syncing lists: %s\n", url)
+
+	listsFile, err := xdeb.DownloadFile(pathPrefix(), url)
 	yamlFile, err := os.ReadFile(listsFile)
 
 	if err != nil {

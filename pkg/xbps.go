@@ -4,9 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
-	"io"
 	"log"
-	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
@@ -23,42 +21,6 @@ func PackageDefinitionWithMetadata(packageDefinition *XdebPackageDefinition, pat
 	packageObject.Provider = filepath.Base(filepath.Dir(distPath))
 
 	return &packageObject
-}
-
-func downloadPackage(path string, url string) (string, error) {
-	client := &http.Client{}
-	resp, err := client.Get(url)
-
-	if err != nil {
-		return "", fmt.Errorf("Could not download file %s", url)
-	}
-
-	finalUrl := resp.Request.URL.String()
-	resp, err = client.Get(finalUrl)
-
-	if err != nil {
-		return "", fmt.Errorf("Could not download file %s", url)
-	}
-
-	defer resp.Body.Close()
-
-	err = os.MkdirAll(path, os.ModePerm)
-
-	if err != nil {
-		return "", fmt.Errorf("Could not create path %s", path)
-	}
-
-	fullPath := filepath.Join(path, filepath.Base(finalUrl))
-	out, err := os.Create(fullPath)
-
-	if err != nil {
-		return "", fmt.Errorf("Could not create file %s", fullPath)
-	}
-
-	defer out.Close()
-
-	_, err = io.Copy(out, resp.Body)
-	return fullPath, err
 }
 
 func comparePackageChecksums(path string, expected string) error {
@@ -120,7 +82,7 @@ func InstallPackage(packageDefinition *XdebPackageDefinition, context *cli.Conte
 	// download if an URL is provided
 	if len(packageDefinition.Url) > 0 {
 		var err error
-		fullPath, err = downloadPackage(path, packageDefinition.Url)
+		fullPath, err = DownloadFile(path, packageDefinition.Url)
 
 		if err != nil {
 			return err
