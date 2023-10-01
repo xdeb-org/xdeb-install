@@ -208,7 +208,7 @@ func sync(context *cli.Context) error {
 		return err
 	}
 
-	url := fmt.Sprintf("%s/%s/lists.yaml", xdeb.CUSTOM_REPOSITORIES_URL_PREFIX, arch)
+	url := fmt.Sprintf(xdeb.XDEB_INSTALL_REPOSITORIES_URL, arch)
 	fmt.Printf("Syncing lists: %s\n", url)
 
 	path, err := repositoryPath()
@@ -231,12 +231,13 @@ func sync(context *cli.Context) error {
 		return err
 	}
 
-	xdeb.DumpCustomRepositories(path)
-
 	for _, provider := range lists.Providers {
 		for _, distribution := range provider.Distributions {
 			for _, component := range provider.Components {
-				err = xdeb.DumpPackageFile(filepath.Join(path, provider.Name), provider.Url, distribution, component, provider.Architecture)
+				err = xdeb.DumpRepository(
+					filepath.Join(path, provider.Name), provider.Url, distribution,
+					component, provider.Architecture, provider.Custom,
+				)
 
 				if err != nil {
 					return err

@@ -12,30 +12,9 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-const CUSTOM_REPOSITORIES_URL_PREFIX = "https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/main/repositories"
-
-type CustomRepository struct {
-	Provider           string
-	PackageDefinitions []string
-}
-
-var CUSTOM_REPOSITORIES = []CustomRepository{
-	{
-		Provider: "microsoft.com",
-		PackageDefinitions: []string{
-			"vscode.yaml",
-		},
-	},
-	{
-		Provider: "google.com",
-		PackageDefinitions: []string{
-			"google-chrome.yaml",
-		},
-	},
-}
-
 type PackageListsProvider struct {
 	Name          string   `yaml:"name"`
+	Custom        bool     `yaml:"custom"`
 	Url           string   `yaml:"url"`
 	Architecture  string   `yaml:"architecture"`
 	Components    []string `yaml:"components"`
@@ -165,7 +144,7 @@ func pullPackagesFile(urlPrefix string, dist string, component string, architect
 	return parsePackagesFile(urlPrefix, string(output)), nil
 }
 
-func DumpPackageFile(directory string, url string, dist string, component string, architecture string) error {
+func pullAptRepository(directory string, url string, dist string, component string, architecture string) error {
 	definition, err := pullPackagesFile(url, dist, component, architecture)
 
 	if err != nil {
@@ -188,40 +167,36 @@ func DumpPackageFile(directory string, url string, dist string, component string
 	return nil
 }
 
-func DumpCustomRepositories(directory string) error {
-	arch, err := FindArchitecture()
+func pullCustomRepository(directory string, urlPrefix string, dist string, component string) error {
+	url := fmt.Sprintf("%s/%s/%s", urlPrefix, dist, component)
+	response, err := http.Get(url)
 
 	if err != nil {
 		return err
 	}
 
-	for _, customRepository := range CUSTOM_REPOSITORIES {
-		for _, packageDefinition := range customRepository.PackageDefinitions {
-			url := fmt.Sprintf("%s/%s/%s/%s", CUSTOM_REPOSITORIES_URL_PREFIX, arch, customRepository.Provider, packageDefinition)
-			client := &http.Client{}
+	defer response.Body.Close()
 
-			response, err := client.Get(url)
+	fmt.Printf("Syncing repository %s\n", url)
+	data, err := io.ReadAll(response.Body)
 
-			if err != nil {
-				return err
-			}
+	if err != nil {
+		return err
+	}
 
-			defer response.Body.Close()
+	filePath := filepath.Join(directory, dist, component)
 
-			fmt.Printf("Syncing repository %s\n", url)
-			data, err := io.ReadAll(response.Body)
-
-			if err != nil {
-				return err
-			}
-
-			filePath := filepath.Join(directory, customRepository.Provider, "current", packageDefinition)
-
-			if err = writeFile(filePath, data); err != nil {
-				return err
-			}
-		}
+	if err = writeFile(filePath, data); err != nil {
+		return err
 	}
 
 	return nil
+}
+
+func DumpRepository(directory string, url string, dist string, component string, architecture string, custom bool) error {
+	if custom {
+		return pullCustomRepository(directory, url, dist, component)
+	}
+
+	return pullAptRepository(directory, url, dist, component, architecture)
 }

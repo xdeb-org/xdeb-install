@@ -13,6 +13,7 @@ import (
 )
 
 const XDEB_URL = "https://github.com/toluschr/xdeb/releases"
+const XDEB_INSTALL_REPOSITORIES_URL = "https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/main/repositories/%s/lists.yaml"
 
 type XdebPackageDefinition struct {
 	Name         string `yaml:"name"`
