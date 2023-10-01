@@ -112,7 +112,6 @@ func pullPackagesFile(urlPrefix string, dist string, component string, architect
 		resp.Request.URL.Scheme, resp.Request.URL.Host, resp.Request.URL.Path,
 	)
 
-	fmt.Printf("Syncing repository %s\n", requestUrl)
 	var reader io.Reader
 
 	if strings.HasSuffix(requestUrl, ".xz") {
@@ -152,6 +151,8 @@ func pullAptRepository(directory string, url string, dist string, component stri
 	}
 
 	if definition != nil && len(definition.Xdeb) > 0 {
+		fmt.Printf("Syncing repository %s/%s @ %s\n", filepath.Base(directory), component, dist)
+
 		filePath := filepath.Join(directory, dist, fmt.Sprintf("%s.yaml", component))
 		bytes, err := yaml.Marshal(definition)
 
@@ -177,7 +178,9 @@ func pullCustomRepository(directory string, urlPrefix string, dist string, compo
 
 	defer response.Body.Close()
 
-	fmt.Printf("Syncing repository %s\n", url)
+	provider := filepath.Base(urlPrefix)
+	fmt.Printf("Syncing repository %s/%s @ %s\n", provider, component, dist)
+
 	data, err := io.ReadAll(response.Body)
 
 	if err != nil {

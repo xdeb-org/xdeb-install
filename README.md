@@ -54,11 +54,13 @@ To sync package repositories, type:
 ```
 $ xdeb-install sync
 Syncing lists: https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/main/repositories/x86_64/lists.yaml
-Syncing repository https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/main/repositories/x86_64/microsoft.com/vscode.yaml
-Syncing repository https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/main/repositories/x86_64/google.com/google-chrome.yaml
-Syncing repository http://ftp.debian.org/debian/dists/bookworm/contrib/binary-amd64/Packages.xz
-Syncing repository http://ftp.debian.org/debian/dists/bookworm/main/binary-amd64/Packages.xz
+Syncing repository debian.org/contrib @ bookworm
+Syncing repository debian.org/main @ bookworm
+Syncing repository debian.org/non-free @ bookworm
+Syncing repository debian.org/non-free-firmware @ bookworm
 ...
+Syncing repository microsoft.com/vscode.yaml @ current
+Syncing repository google.com/google-chrome.yaml @ current
 ```
 
 This pulls the repository lists file for your host machine architecture from https://github.com/thetredev/xdeb-install-repositories @ `repositories/<arch>/lists.yaml`.
