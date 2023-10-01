@@ -158,7 +158,7 @@ func pullPackagFile(url string, dist string, component string, architecture stri
 	return parsePackagesFile(url, packagesFileContent), nil
 }
 
-func DumpPackages(directory string, url string, dist string, component string, architecture string) error {
+func DumpPackageFile(directory string, url string, dist string, component string, architecture string) error {
 	definition, err := pullPackagFile(url, dist, component, architecture)
 
 	if err != nil {

@@ -199,7 +199,7 @@ func sync(context *cli.Context) error {
 	for _, provider := range lists.Providers {
 		for _, distribution := range provider.Distributions {
 			for _, component := range provider.Components {
-				err = xdeb.DumpPackages(filepath.Join(pathPrefix(), provider.Name), provider.Url, distribution, component, provider.Architecture)
+				err = xdeb.DumpPackageFile(filepath.Join(pathPrefix(), provider.Name), provider.Url, distribution, component, provider.Architecture)
 
 				if err != nil {
 					return err
