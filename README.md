@@ -63,9 +63,11 @@ Syncing repository microsoft.com/vscode.yaml @ current
 Syncing repository google.com/google-chrome.yaml @ current
 ```
 
-This pulls the repository lists file for your host machine architecture from https://github.com/thetredev/xdeb-install-repositories @ `repositories/<arch>/lists.yaml`.
-
 The package repository lists are stored at `$XDG_CONFIG_HOME/xdeb-install/repositories/<arch>`, where `$XDG_CONFIG_HOME` typically translates to `$HOME/.config`.
+
+## Supported repositories
+
+See https://github.com/thetredev/xdeb-install-repositories for details.
 
 ## Install DEB packages from APT repositories
 
@@ -131,7 +133,3 @@ debian.org/main
   url: http://ftp.debian.org/debian/pool/main/s/speedcrunch/speedcrunch_0.12.0-6_amd64.deb
   sha256: a306a478bdf923ad1206a1a76fdc1b2d6a745939663419b360febfa6350e96b6
 ```
-
-## Supported repositories
-
-See https://github.com/thetredev/xdeb-install-repositories for details.
