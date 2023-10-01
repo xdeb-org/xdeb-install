@@ -130,10 +130,6 @@ debian.org/main
   sha256: a306a478bdf923ad1206a1a76fdc1b2d6a745939663419b360febfa6350e96b6
 ```
 
-## Supported APT repositories
+## Supported repositories
 
-Currently, only `debian.org` and `linuxmit.com` are supported. I cannot get `ubuntu.com` to work at the moment.
-
-## Custom package repositories
-
-Besides APT repositories, custom repositories are provided over at https://github.com/thetredev/xdeb-install-repositories. Currently, `microsoft.com` and `google.com` are available with a limited amount of packages.
+See https://github.com/thetredev/xdeb-install-repositories for details.
