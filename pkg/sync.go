@@ -76,7 +76,7 @@ func parsePackagesFile(urlPrefix string, packages_file string) *XdebProviderDefi
 	return &definition
 }
 
-func pullPackages(url string, dist string, component string, architecture string) (*XdebProviderDefinition, error) {
+func pullPackagFile(url string, dist string, component string, architecture string) (*XdebProviderDefinition, error) {
 	packagesFileUrl := fmt.Sprintf(
 		"%s/dists/%s/%s/binary-%s/Packages",
 		url, dist, component, architecture,
@@ -159,7 +159,7 @@ func pullPackages(url string, dist string, component string, architecture string
 }
 
 func DumpPackages(directory string, url string, dist string, component string, architecture string) error {
-	definition, err := pullPackages(url, dist, component, architecture)
+	definition, err := pullPackagFile(url, dist, component, architecture)
 
 	if err != nil {
 		return err
