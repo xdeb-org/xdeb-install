@@ -65,7 +65,7 @@ This pulls the repository lists file for your host machine architecture from htt
 
 The package repository lists are stored at `$XDG_CONFIG_HOME/xdeb-install/repositories/<arch>`, where `$XDG_CONFIG_HOME` typically translates to `$HOME/.config`.
 
-## Install DEB packages from remote repositories
+## Install DEB packages from APT repositories
 
 To install `speedcrunch`, for example, type:
 ```
