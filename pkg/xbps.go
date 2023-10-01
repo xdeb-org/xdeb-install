@@ -92,6 +92,12 @@ func InstallPackage(packageDefinition *XdebPackageDefinition, context *cli.Conte
 	}
 
 	path := filepath.Join(context.String("temp"), packageDefinition.Name)
+
+	// prepare xdeb directory
+	if err := os.RemoveAll(path); err != nil {
+		return err
+	}
+
 	fullPath := packageDefinition.Path
 
 	// download if an URL is provided
