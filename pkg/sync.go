@@ -211,3 +211,28 @@ func SyncRepository(directory string, url string, dist string, component string,
 
 	return pullAptRepository(directory, url, dist, component, architecture)
 }
+
+func SyncRepositories(path string, arch string) error {
+	lists, err := ParsePackageLists(path, arch)
+
+	if err != nil {
+		return err
+	}
+
+	for _, provider := range lists.Providers {
+		for _, distribution := range provider.Distributions {
+			for _, component := range provider.Components {
+				err = SyncRepository(
+					filepath.Join(path, provider.Name), provider.Url, distribution,
+					component, provider.Architecture, provider.Custom,
+				)
+
+				if err != nil {
+					return err
+				}
+			}
+		}
+	}
+
+	return nil
+}

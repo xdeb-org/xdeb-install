@@ -183,28 +183,7 @@ func sync(context *cli.Context) error {
 		return err
 	}
 
-	lists, err := xdeb.ParsePackageLists(path, arch)
-
-	if err != nil {
-		return err
-	}
-
-	for _, provider := range lists.Providers {
-		for _, distribution := range provider.Distributions {
-			for _, component := range provider.Components {
-				err = xdeb.SyncRepository(
-					filepath.Join(path, provider.Name), provider.Url, distribution,
-					component, provider.Architecture, provider.Custom,
-				)
-
-				if err != nil {
-					return err
-				}
-			}
-		}
-	}
-
-	return nil
+	return xdeb.SyncRepositories(path, arch)
 }
 
 func prepare(context *cli.Context) error {
