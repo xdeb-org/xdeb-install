@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 
 	"github.com/ulikunitz/xz"
 	"gopkg.in/yaml.v2"
@@ -204,14 +205,6 @@ func parsePackageLists(path string, arch string) (*PackageListsDefinition, error
 	return lists, nil
 }
 
-func syncRepository(directory string, url string, dist string, component string, architecture string, custom bool) error {
-	if custom {
-		return pullCustomRepository(directory, url, dist, component)
-	}
-
-	return pullAptRepository(directory, url, dist, component, architecture)
-}
-
 func SyncRepositories(path string, arch string) error {
 	lists, err := parsePackageLists(path, arch)
 
@@ -219,18 +212,46 @@ func SyncRepositories(path string, arch string) error {
 		return err
 	}
 
+	operations := 0
+
+	for _, provider := range lists.Providers {
+		for range provider.Distributions {
+			for range provider.Components {
+				operations++
+			}
+		}
+	}
+
+	errors := make(chan error, operations)
+	var wg sync.WaitGroup
+
 	for _, provider := range lists.Providers {
 		for _, distribution := range provider.Distributions {
 			for _, component := range provider.Components {
-				err = syncRepository(
-					filepath.Join(path, provider.Name), provider.Url, distribution,
-					component, provider.Architecture, provider.Custom,
-				)
+				wg.Add(1)
 
-				if err != nil {
-					return err
-				}
+				go func(p PackageListsProvider, d string, c string) {
+					defer wg.Done()
+					directory := filepath.Join(path, p.Name)
+
+					if p.Custom {
+						errors <- pullCustomRepository(directory, p.Url, d, c)
+					} else {
+						errors <- pullAptRepository(directory, p.Url, d, c, p.Architecture)
+					}
+				}(provider, distribution, component)
 			}
+		}
+	}
+
+	wg.Wait()
+	close(errors)
+
+	for i := 0; i < operations; i++ {
+		err := <-errors
+
+		if err != nil {
+			return err
 		}
 	}
 
