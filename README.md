@@ -1,6 +1,6 @@
 # xdeb-install
 
-Simple tool to automatically download, convert, and install DEB packages via the awesome [`xdeb`](https://github.com/toluschr/xdeb) tool. Basically just a wrapper to automate the process.
+Simple tool to automatically download, convert, and install DEB packages on [Void Linux](https://voidlinux.org) via the awesome [`xdeb`](https://github.com/toluschr/xdeb) tool. Basically just a wrapper to automate the process.
 
 ## Installation
 
