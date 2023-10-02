@@ -204,7 +204,7 @@ func ParsePackageLists(path string, arch string) (*PackageListsDefinition, error
 	return lists, nil
 }
 
-func SyncRepository(directory string, url string, dist string, component string, architecture string, custom bool) error {
+func syncRepository(directory string, url string, dist string, component string, architecture string, custom bool) error {
 	if custom {
 		return pullCustomRepository(directory, url, dist, component)
 	}
@@ -222,7 +222,7 @@ func SyncRepositories(path string, arch string) error {
 	for _, provider := range lists.Providers {
 		for _, distribution := range provider.Distributions {
 			for _, component := range provider.Components {
-				err = SyncRepository(
+				err = syncRepository(
 					filepath.Join(path, provider.Name), provider.Url, distribution,
 					component, provider.Architecture, provider.Custom,
 				)
