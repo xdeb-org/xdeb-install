@@ -153,3 +153,15 @@ debian.org/main
   url: http://ftp.debian.org/debian/pool/main/s/speedcrunch/speedcrunch_0.12.0-4_amd64.deb
   sha256: 8681da5ca651a6a7f5abb479c673d33ce3525212e34a2a33afcec7ad75c28aea
 ```
+
+Filtering search results is also supported via `--provider <provider> [--distribution <distribution>]`:
+
+```
+$ xdeb-install search --provider ubuntu.com --distribution bionic speedcrunch
+[xdeb-install] Looking for package speedcrunch via provider ubuntu.com and distribution bionic ...
+ubuntu.com/universe
+  distribution: bionic
+  version: 0.12.0-3
+  url: http://archive.ubuntu.com/ubuntu/pool/universe/s/speedcrunch/speedcrunch_0.12.0-3_amd64.deb
+  sha256: 0206f112ac503393c984088817488aa21589c1c5f16f67df8d8836612f27f810
+```

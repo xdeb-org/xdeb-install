@@ -48,6 +48,45 @@ func readPath(subdir string) ([]string, error) {
 	return subdirs, nil
 }
 
+func findDistribution(provider string, distribution string) (string, error) {
+	if len(distribution) > 0 && distribution != "*" {
+		distributions, err := readPath(provider)
+
+		if err != nil {
+			return "", err
+		}
+
+		if !slices.Contains(distributions, distribution) {
+			return "", fmt.Errorf(
+				"APT provider %s does not support distribution %s. Omit or use any of %v",
+				provider, distribution, distributions,
+			)
+		}
+
+		return distribution, nil
+	}
+
+	return "*", nil
+}
+
+func findProvider(provider string) (string, error) {
+	if len(provider) > 0 {
+		providers, err := readPath("")
+
+		if err != nil {
+			return "", err
+		}
+
+		if !slices.Contains(providers, provider) {
+			return "", fmt.Errorf("APT provider %s not supported. Omit or use any of %v", provider, providers)
+		}
+
+		return provider, nil
+	}
+
+	return "*", nil
+}
+
 func repository(context *cli.Context) error {
 	path, err := repositoryPath()
 
@@ -55,39 +94,16 @@ func repository(context *cli.Context) error {
 		return nil
 	}
 
-	provider := context.String("provider")
-	distribution := context.String("distribution")
+	provider, err := findProvider(context.String("provider"))
 
-	if len(provider) > 0 {
-		providers, err := readPath("")
+	if err != nil {
+		return err
+	}
 
-		if err != nil {
-			return err
-		}
+	distribution, err := findDistribution(provider, context.String("distribution"))
 
-		if !slices.Contains(providers, provider) {
-			return fmt.Errorf("APT provider %s not supported. Omit or use any of %v", provider, providers)
-		}
-
-		if len(distribution) > 0 {
-			distributions, err := readPath(provider)
-
-			if err != nil {
-				return err
-			}
-
-			if !slices.Contains(distributions, distribution) {
-				return fmt.Errorf(
-					"APT provider %s does not support distribution %s. Omit or use any of %v",
-					provider, distribution, distributions,
-				)
-			}
-		} else {
-			distribution = "*"
-		}
-	} else {
-		provider = "*"
-		distribution = "*"
+	if err != nil {
+		return err
 	}
 
 	packageName := strings.Trim(context.Args().First(), " ")
@@ -144,7 +160,19 @@ func search(context *cli.Context) error {
 		return err
 	}
 
-	packageDefinitions, err := xdeb.FindPackage(packageName, path, "*", "*")
+	provider, err := findProvider(context.String("provider"))
+
+	if err != nil {
+		return err
+	}
+
+	distribution, err := findDistribution(provider, context.String("distribution"))
+
+	if err != nil {
+		return err
+	}
+
+	packageDefinitions, err := xdeb.FindPackage(packageName, path, provider, distribution)
 
 	if err != nil {
 		return err
@@ -317,6 +345,16 @@ func main() {
 				Usage:   "search online APT repositories for a package",
 				Aliases: []string{"s"},
 				Action:  search,
+				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name:    "provider",
+						Aliases: []string{"p"},
+					},
+					&cli.StringFlag{
+						Name:    "distribution",
+						Aliases: []string{"dist", "d"},
+					},
+				},
 			},
 			{
 				Name:   "sync",
