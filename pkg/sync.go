@@ -178,7 +178,7 @@ func pullCustomRepository(directory string, urlPrefix string, dist string, compo
 	return err
 }
 
-func ParsePackageLists(path string, arch string) (*PackageListsDefinition, error) {
+func parsePackageLists(path string, arch string) (*PackageListsDefinition, error) {
 	url := fmt.Sprintf(XDEB_INSTALL_REPOSITORIES_URL, XDEB_INSTALL_REPOSITORIES_TAG, arch)
 	LogMessage("Syncing lists: %s", url)
 
@@ -213,7 +213,7 @@ func syncRepository(directory string, url string, dist string, component string,
 }
 
 func SyncRepositories(path string, arch string) error {
-	lists, err := ParsePackageLists(path, arch)
+	lists, err := parsePackageLists(path, arch)
 
 	if err != nil {
 		return err
