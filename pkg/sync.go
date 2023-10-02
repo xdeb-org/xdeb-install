@@ -222,10 +222,10 @@ func SyncRepositories(path string, arch string) error {
 		}
 	}
 
-	errors := make(chan error, operations)
-	var wg sync.WaitGroup
-
 	for _, provider := range lists.Providers {
+		errors := make(chan error, operations)
+		var wg sync.WaitGroup
+
 		for _, distribution := range provider.Distributions {
 			for _, component := range provider.Components {
 				wg.Add(1)
@@ -242,16 +242,16 @@ func SyncRepositories(path string, arch string) error {
 				}(provider, distribution, component)
 			}
 		}
-	}
 
-	wg.Wait()
-	close(errors)
+		wg.Wait()
+		close(errors)
 
-	for i := 0; i < operations; i++ {
-		err := <-errors
+		for i := 0; i < operations; i++ {
+			err := <-errors
 
-		if err != nil {
-			return err
+			if err != nil {
+				return err
+			}
 		}
 	}
 
