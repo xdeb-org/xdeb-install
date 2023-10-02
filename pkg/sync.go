@@ -179,7 +179,7 @@ func pullCustomRepository(directory string, urlPrefix string, dist string, compo
 }
 
 func ParsePackageLists(path string, arch string) (*PackageListsDefinition, error) {
-	url := fmt.Sprintf(XDEB_INSTALL_REPOSITORIES_URL, arch)
+	url := fmt.Sprintf(XDEB_INSTALL_REPOSITORIES_URL, XDEB_INSTALL_REPOSITORIES_TAG, arch)
 	LogMessage("Syncing lists: %s", url)
 
 	listsFile, err := DownloadFile(path, url, true)
