@@ -33,11 +33,9 @@ jobs:
       - name: Build binaries
         env:
           TAG_NAME: ${{ steps.branch_name.outputs.TAG_NAME }}
-          CGO_ENABLED: 0
-          GOOS: linux
-          # currently only amd64 is supported
-          GOARCH: amd64
-        run: ./build.sh
+        run: |
+          ./scripts/build.sh
+          ./scripts/checksums.sh
 
       - name: Create release and upload binaries
         uses: softprops/action-gh-release@v1

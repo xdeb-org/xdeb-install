@@ -1,8 +1,5 @@
 #!/bin/bash
 
-go get
-go build -ldflags="-extldflags=-static" -o bin/xdeb-install-linux-$(uname -m)
-
 echo "# What's Changed" > bin/checksums.md
 echo >> bin/checksums.md
 
