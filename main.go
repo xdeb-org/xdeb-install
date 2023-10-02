@@ -192,7 +192,7 @@ func sync(context *cli.Context) error {
 	for _, provider := range lists.Providers {
 		for _, distribution := range provider.Distributions {
 			for _, component := range provider.Components {
-				err = xdeb.DumpRepository(
+				err = xdeb.SyncRepository(
 					filepath.Join(path, provider.Name), provider.Url, distribution,
 					component, provider.Architecture, provider.Custom,
 				)

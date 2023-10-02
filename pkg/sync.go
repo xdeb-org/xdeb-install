@@ -204,7 +204,7 @@ func ParsePackageLists(path string, arch string) (*PackageListsDefinition, error
 	return lists, nil
 }
 
-func DumpRepository(directory string, url string, dist string, component string, architecture string, custom bool) error {
+func SyncRepository(directory string, url string, dist string, component string, architecture string, custom bool) error {
 	if custom {
 		return pullCustomRepository(directory, url, dist, component)
 	}
