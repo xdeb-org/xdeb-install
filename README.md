@@ -17,24 +17,12 @@ You can install `xdeb` using `xdeb-install` later, see [Help Page](#help-page).
 
 Since [my PR over at void-linux/void-packages](https://github.com/void-linux/void-packages/pull/46352) didn't make it, you can't install the tool using any official XBPS repositories.
 
-To work around that problem, I created my own unofficial XBPS repository at https://thetredev.github.io/voidlinux-repository. To add it to your system, create new a `.conf` file in the `/etc/xbps.d` containing the repository URL:
-```
-# /etc/xbps.d/99-thetredev.conf
+To work around that problem, I created my own unofficial XBPS repository at https://thetredev.github.io/voidlinux-repository. See https://github.com/thetredev/voidlinux-repository for instructions on how to install it to your system.
 
-repository=https://thetredev.github.io/voidlinux-repository
-```
-
-Then, synchronize the XBPS repositories: `xbps-install -S` (prefix with `sudo` if needed). XBPS will ask you to import the my RSA key. **Double check** the correctness of the key:
-```
-Signed-by: Timo Reichl <thetredev@gmail.com>
-Fingerprint: a9:e3:1f:07:e6:ff:c8:74:2a:f5:b6:22:5c:6d:d4:16
-```
-
-After importing the key, you can execute `xbps-install xdeb-install` to install the tool.
+Afterwards, you can execute `xbps-install xdeb-install` to install the tool.
 
 **Notes**:
-  - You can view the source code of the repository creation process here: https://github.com/thetredev/voidlinux-repository
-  - Altough support for more achitectures is technically available alreay, only the `x86_64` binary is currently published
+  - All binary architectures for release 1.0.1 are available: `x86_64`, `i686`, `aarch64`
 
 ### Using Go
 
