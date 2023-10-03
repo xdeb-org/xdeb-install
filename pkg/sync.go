@@ -28,9 +28,9 @@ type PackageListsDefinition struct {
 	Providers []PackageListsProvider `yaml:"providers"`
 }
 
-func parsePackagesFile(urlPrefix string, packages_file string) *XdebProviderDefinition {
+func parsePackagesFile(urlPrefix string, packagesFile string) *XdebProviderDefinition {
 	definition := XdebProviderDefinition{}
-	packages := strings.Split(packages_file, "\n\n")
+	packages := strings.Split(packagesFile, "\n\n")
 
 	for _, packageData := range packages {
 		if len(packageData) == 0 {
