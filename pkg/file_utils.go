@@ -70,45 +70,38 @@ func decompressFile(path string) ([]byte, error) {
 	return buffer.Bytes(), nil
 }
 
-func writeFile(path string, data []byte, compress bool) (string, error) {
-	var fullPath string
-	var fileData []byte
-
-	if compress {
-		reader := bytes.NewReader(data)
-
-		var compressedBytes bytes.Buffer
-		writer := bufio.NewWriter(&compressedBytes)
-
-		if err := compressData(reader, writer); err != nil {
-			return "", err
-		}
-
-		if err := writer.Flush(); err != nil {
-			return "", err
-		}
-
-		fileData = compressedBytes.Bytes()
-		fullPath = fmt.Sprintf("%s.zst", path)
-	} else {
-		fileData = data
-		fullPath = path
-	}
-
+func writeFile(path string, data []byte) (string, error) {
 	if err := os.MkdirAll(filepath.Dir(path), os.ModePerm); err != nil {
 		return "", err
 	}
 
-	file, err := os.Create(fullPath)
+	file, err := os.Create(path)
 
 	if err != nil {
 		return "", err
 	}
 
 	defer file.Close()
-	_, err = file.Write(fileData)
+	_, err = file.Write(data)
 
-	return fullPath, err
+	return path, err
+}
+
+func writeFileCompressed(path string, data []byte) (string, error) {
+	reader := bytes.NewReader(data)
+
+	var compressedData bytes.Buffer
+	writer := bufio.NewWriter(&compressedData)
+
+	if err := compressData(reader, writer); err != nil {
+		return "", err
+	}
+
+	if err := writer.Flush(); err != nil {
+		return "", err
+	}
+
+	return writeFile(fmt.Sprintf("%s.zst", path), compressedData.Bytes())
 }
 
 func DownloadFile(path string, url string, followRedirects bool, compress bool) (string, error) {
@@ -141,5 +134,10 @@ func DownloadFile(path string, url string, followRedirects bool, compress bool) 
 	}
 
 	fullPath := filepath.Join(path, filepath.Base(url))
-	return writeFile(fullPath, body, compress)
+
+	if compress {
+		return writeFileCompressed(fullPath, body)
+	}
+
+	return writeFile(fullPath, body)
 }

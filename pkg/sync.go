@@ -155,7 +155,7 @@ func pullAptRepository(directory string, url string, dist string, component stri
 			return err
 		}
 
-		if _, err = writeFile(filePath, data, true); err != nil {
+		if _, err = writeFileCompressed(filePath, data); err != nil {
 			return err
 		}
 	}
