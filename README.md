@@ -72,7 +72,7 @@ GLOBAL OPTIONS:
 To sync package repositories, type:
 ```
 $ xdeb-install sync
-Syncing lists: https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/main/repositories/x86_64/lists.yaml
+Syncing lists: https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/v1.0.0/repositories/x86_64/lists.yaml
 [xdeb-install] Syncing repository debian.org/contrib @ bookworm
 [xdeb-install] Syncing repository debian.org/main @ bookworm
 [xdeb-install] Syncing repository debian.org/non-free @ bookworm
