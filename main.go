@@ -211,10 +211,18 @@ func sync(context *cli.Context) error {
 		return err
 	}
 
-	err = xdeb.SyncRepositories(path, arch)
+	args := context.Args()
+	providerNames := []string{}
+
+	for i := 0; i < args.Len(); i++ {
+		providerName := args.Get(i)
+		providerNames = append(providerNames, providerName)
+	}
+
+	err = xdeb.SyncRepositories(path, arch, providerNames...)
 
 	if err != nil {
-		return nil
+		return err
 	}
 
 	xdeb.LogMessage("Finished syncing: %s", strings.ReplaceAll(path, os.Getenv("HOME"), "~"))

@@ -11,6 +11,7 @@ import (
 	"sync"
 
 	"github.com/ulikunitz/xz"
+	"golang.org/x/exp/slices"
 	"gopkg.in/yaml.v2"
 )
 
@@ -205,16 +206,40 @@ func parsePackageLists(path string, arch string) (*PackageListsDefinition, error
 	return lists, nil
 }
 
-func SyncRepositories(path string, arch string) error {
+func SyncRepositories(path string, arch string, providerNames ...string) error {
 	lists, err := parsePackageLists(path, arch)
 
 	if err != nil {
 		return err
 	}
 
-	operations := 0
+	availableProviderNames := []string{}
 
 	for _, provider := range lists.Providers {
+		availableProviderNames = append(availableProviderNames, provider.Name)
+	}
+
+	for _, providerName := range providerNames {
+		if !slices.Contains(availableProviderNames, providerName) {
+			return fmt.Errorf("Provider %s not supported. Omit or use any of %v", providerName, availableProviderNames)
+		}
+	}
+
+	providers := []PackageListsProvider{}
+
+	if len(providerNames) > 0 {
+		for _, provider := range lists.Providers {
+			if slices.Contains(providerNames, provider.Name) {
+				providers = append(providers, provider)
+			}
+		}
+	} else {
+		providers = append(providers, lists.Providers...)
+	}
+
+	operations := 0
+
+	for _, provider := range providers {
 		for range provider.Distributions {
 			for range provider.Components {
 				operations++
@@ -222,7 +247,7 @@ func SyncRepositories(path string, arch string) error {
 		}
 	}
 
-	for _, provider := range lists.Providers {
+	for _, provider := range providers {
 		errors := make(chan error, operations)
 		var wg sync.WaitGroup
 

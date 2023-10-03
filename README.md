@@ -82,6 +82,25 @@ Syncing lists: https://raw.githubusercontent.com/thetredev/xdeb-install-reposito
 [xdeb-install] Syncing repository google.com/google-chrome.yaml @ current
 ```
 
+You can also filter the providers to sync, like so:
+```
+$ xdeb-install sync ubuntu.com
+[xdeb-install] Syncing lists: https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/v1.0.0/repositories/x86_64/lists.yaml
+[xdeb-install] Syncing repository ubuntu.com/restricted @ bionic
+[xdeb-install] Syncing repository ubuntu.com/restricted @ focal
+[xdeb-install] Syncing repository ubuntu.com/multiverse @ focal
+[xdeb-install] Syncing repository ubuntu.com/multiverse @ bionic
+[xdeb-install] Syncing repository ubuntu.com/restricted @ jammy
+[xdeb-install] Syncing repository ubuntu.com/multiverse @ jammy
+[xdeb-install] Syncing repository ubuntu.com/main @ focal
+[xdeb-install] Syncing repository ubuntu.com/main @ bionic
+[xdeb-install] Syncing repository ubuntu.com/main @ jammy
+[xdeb-install] Syncing repository ubuntu.com/universe @ bionic
+[xdeb-install] Syncing repository ubuntu.com/universe @ focal
+[xdeb-install] Syncing repository ubuntu.com/universe @ jammy
+[xdeb-install] Finished syncing: ~/.config/xdeb-install/repositories/x86_64
+```
+
 The package repository lists are stored at `$XDG_CONFIG_HOME/xdeb-install/repositories/<arch>`, where `$XDG_CONFIG_HOME` typically translates to `$HOME/.config`.
 
 ## Supported repositories
