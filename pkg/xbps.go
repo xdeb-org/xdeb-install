@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/urfave/cli/v2"
 )
@@ -69,40 +68,31 @@ func installPackage(path string) error {
 }
 
 func InstallPackage(packageDefinition *XdebPackageDefinition, context *cli.Context) error {
-	provider := packageDefinition.Provider
-	distribution := packageDefinition.Distribution
-	component := packageDefinition.Component
+	packageDefinition.Configure(context.String("temp"))
 
-	if len(packageDefinition.Path) > 0 {
-		// local file
-		provider = "localhost"
-		distribution = fmt.Sprintf("file:///%s", strings.TrimPrefix(packageDefinition.Path, "/"))
-		component = packageDefinition.Path
-	}
-
-	if len(provider) == 0 {
-		// direct URL
-		LogMessage("Installing %s from %s", packageDefinition.Name, packageDefinition.Url)
+	if packageDefinition.Provider == "localhost" {
+		if len(packageDefinition.Url) > 0 {
+			// direct URL
+			LogMessage("Installing %s from %s", packageDefinition.Name, packageDefinition.Url)
+		} else {
+			LogMessage("Installing %s from %s", packageDefinition.Name, packageDefinition.FilePath)
+		}
 	} else {
 		LogMessage(
 			"Installing %s from %s @ %s/%s",
-			packageDefinition.Name, provider, distribution, TrimPathExtension(component),
+			packageDefinition.Name, packageDefinition.Provider, packageDefinition.Distribution, packageDefinition.Component,
 		)
 	}
 
-	path := filepath.Join(context.String("temp"), packageDefinition.Name)
-
-	// prepare xdeb directory
-	if err := os.RemoveAll(path); err != nil {
-		return err
-	}
-
-	fullPath := packageDefinition.Path
-
 	// download if an URL is provided
 	if len(packageDefinition.Url) > 0 {
-		var err error
-		fullPath, err = DownloadFile(path, packageDefinition.Url, true, false)
+		err := os.RemoveAll(packageDefinition.Path)
+
+		if err != nil {
+			return err
+		}
+
+		packageDefinition.FilePath, err = DownloadFile(packageDefinition.Path, packageDefinition.Url, true, false)
 
 		if err != nil {
 			return err
@@ -111,21 +101,21 @@ func InstallPackage(packageDefinition *XdebPackageDefinition, context *cli.Conte
 
 	// compare checksums if available
 	if len(packageDefinition.Sha256) > 0 {
-		if err := comparePackageChecksums(fullPath, packageDefinition.Sha256); err != nil {
+		if err := comparePackageChecksums(packageDefinition.FilePath, packageDefinition.Sha256); err != nil {
 			return err
 		}
 	}
 
 	// xdeb convert
-	if err := convertPackage(fullPath, context.String("options")); err != nil {
+	if err := convertPackage(packageDefinition.FilePath, context.String("options")); err != nil {
 		return err
 	}
 
 	// xbps-install
-	if err := installPackage(fullPath); err != nil {
+	if err := installPackage(packageDefinition.FilePath); err != nil {
 		return err
 	}
 
 	// cleanup
-	return os.RemoveAll(path)
+	return os.RemoveAll(packageDefinition.Path)
 }

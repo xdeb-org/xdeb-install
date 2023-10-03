@@ -141,10 +141,34 @@ func file(context *cli.Context) error {
 		return err
 	}
 
-	return xdeb.InstallPackage(&xdeb.XdebPackageDefinition{
+	if !strings.HasSuffix(filePath, ".deb") {
+		return fmt.Errorf("File %s is not a valid DEB package.", filePath)
+	}
+
+	packageDefinition := xdeb.XdebPackageDefinition{
 		Name: xdeb.TrimPathExtension(filepath.Base(filePath)),
-		Path: filePath,
-	}, context)
+	}
+
+	packageDefinition.Configure(context.String("temp"))
+
+	if filePath != packageDefinition.FilePath {
+		// copy file to temporary xdeb context path
+		if err := os.MkdirAll(packageDefinition.Path, os.ModePerm); err != nil {
+			return err
+		}
+
+		data, err := os.ReadFile(filePath)
+
+		if err != nil {
+			return err
+		}
+
+		if err = os.WriteFile(packageDefinition.FilePath, data, os.ModePerm); err != nil {
+			return err
+		}
+	}
+
+	return xdeb.InstallPackage(&packageDefinition, context)
 }
 
 func search(context *cli.Context) error {
