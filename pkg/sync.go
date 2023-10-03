@@ -127,10 +127,6 @@ func pullPackagesFile(urlPrefix string, dist string, component string, architect
 		}
 	} else {
 		reader = resp.Body
-
-		if err != nil {
-			return nil, err
-		}
 	}
 
 	output, err := io.ReadAll(reader)
