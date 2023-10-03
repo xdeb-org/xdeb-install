@@ -4,11 +4,11 @@ Simple tool to automatically download, convert, and install DEB packages on [Voi
 
 ## Table of Contents
 
+- [Help Page](#help-page)
 - [Installation](#installation)
   - [Using XBPS](#using-xbps)
   - [Using Go](#using-go)
   - [Manually](#manually)
-- [Help Page](#help-page)
 - [List available providers](#list-available-providers)
 - [Package repositories](#package-repositories)
   - [Sync package repositories](#sync-package-repositories)
@@ -21,41 +21,6 @@ Simple tool to automatically download, convert, and install DEB packages on [Voi
   - [General instructions](#general-instructions)
   - [Search filtering by provider/distribution](#search-filtering-by-providerdistribution)
   - [Inexact matches](#inexact-matches)
-
-## Installation
-
-There are three ways you can install the tool:
-  - [using XBPS](#using-xbps)
-  - [using Go](#using-go)
-  - [manually downloading a release binary](#manually)
-
-You can install `xdeb` using `xdeb-install` later, see [Help Page](#help-page).
-
-### Using XBPS
-
-*Before you continue reading this section*, read up on https://docs.voidlinux.org/xbps/repositories/custom.html. You have been warned.
-
-Since [my PR over at void-linux/void-packages](https://github.com/void-linux/void-packages/pull/46352) didn't make it, you can't install the tool using any official XBPS repositories.
-
-To work around that problem, I created my own unofficial XBPS repository at https://thetredev.github.io/voidlinux-repository. See https://github.com/thetredev/voidlinux-repository for instructions on how to install it to your system.
-
-Afterwards, you can execute `xbps-install xdeb-install` to install the tool.
-
-**Notes**:
-  - All binary architectures for release 1.0.1 are available: `x86_64`, `i686`, `aarch64`
-
-### Using Go
-
-If you have [Go](https://go.dev) installed, simply execute:
-```
-go install github.com/thetredev/xdeb-install
-```
-
-As long as the `GOPATH` is within your `PATH`, that's it.
-
-### Manually
-
-Head over to the [releases](https://github.com/thetredev/xdeb-install/releases) page and download a release binary. Then move it to some place within your `PATH`, like `/usr/local/bin`. Make sure to make it executable afterwards: `sudo chmod +x /usr/local/bin/xdeb-install`.
 
 ## Help Page
 
@@ -93,6 +58,41 @@ GLOBAL OPTIONS:
    --temp value, -t value     temporary xdeb context root path (default: "/tmp/xdeb")
    --help, -h                 show help
 ```
+
+## Installation
+
+There are three ways you can install the tool:
+  - [using XBPS](#using-xbps)
+  - [using Go](#using-go)
+  - [manually downloading a release binary](#manually)
+
+You can install `xdeb` using `xdeb-install` later, see [Help Page](#help-page).
+
+### Using XBPS
+
+*Before you continue reading this section*, read up on https://docs.voidlinux.org/xbps/repositories/custom.html. You have been warned.
+
+Since [my PR over at void-linux/void-packages](https://github.com/void-linux/void-packages/pull/46352) didn't make it, you can't install the tool using any official XBPS repositories.
+
+To work around that problem, I created my own unofficial XBPS repository at https://thetredev.github.io/voidlinux-repository. See https://github.com/thetredev/voidlinux-repository for instructions on how to install it to your system.
+
+Afterwards, you can execute `xbps-install xdeb-install` to install the tool.
+
+**Notes**:
+  - All binary architectures for release 1.0.1 are available: `x86_64`, `i686`, `aarch64`
+
+### Using Go
+
+If you have [Go](https://go.dev) installed, simply execute:
+```
+go install github.com/thetredev/xdeb-install
+```
+
+As long as the `GOPATH` is within your `PATH`, that's it.
+
+### Manually
+
+Head over to the [releases](https://github.com/thetredev/xdeb-install/releases) page and download a release binary. Then move it to some place within your `PATH`, like `/usr/local/bin`. Make sure to make it executable afterwards: `sudo chmod +x /usr/local/bin/xdeb-install`.
 
 ## List available providers
 
