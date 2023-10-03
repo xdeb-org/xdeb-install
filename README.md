@@ -280,6 +280,7 @@ $ xdeb-install file $HOME/Downloads/speedcrunch.deb
 
 ## Search for a DEB package
 
+### General instructions
 You can search for a specific package by its name, let's stay with `speedcrunch`:
 ```
 $ xdeb-install search speedcrunch
@@ -345,6 +346,7 @@ ubuntu.com/universe
   sha256: 0206f112ac503393c984088817488aa21589c1c5f16f67df8d8836612f27f81
 ```
 
+### Search filtering by provider/distribution
 Filtering search results is also supported via `--provider <provider> [--distribution <distribution>]`:
 ```
 $ xdeb-install search --provider ubuntu.com --distribution bionic speedcrunch
@@ -361,6 +363,7 @@ ubuntu.com/universe
   sha256: 0206f112ac503393c984088817488aa21589c1c5f16f67df8d8836612f27f810
 ```
 
+### Inexact matches
 Futhermore, the flag `--exact` (or `-e`) specifies whether the search will look for a package of the exact name as provided:
 ```
 $ xdeb-install search --exact google-chrome
