@@ -1,6 +1,7 @@
 package xdeb
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"strings"
@@ -14,7 +15,10 @@ func ExecuteCommand(workdir string, args ...string) error {
 	command.Stdout = os.Stdout
 	command.Stderr = os.Stderr
 	command.Stdin = os.Stdin
-	command.Env = append(command.Environ(), "XDEB_PKGROOT=" + workdir)
+
+	if args[0] == "xdeb" {
+		command.Env = append(command.Env, fmt.Sprintf("XDEB_PKGROOT=%s", workdir))
+	}
 
 	return command.Run()
 }
