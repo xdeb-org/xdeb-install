@@ -40,7 +40,6 @@ Head over to the [releases](https://github.com/thetredev/xdeb-install/releases) 
 ## Help Page
 
 To display the help page, type:
-
 ```
 $ xdeb-install -h
 ```
@@ -282,14 +281,13 @@ $ xdeb-install file $HOME/Downloads/speedcrunch.deb
 ## Search for a DEB package
 
 You can search for a specific package by its name, let's stay with `speedcrunch`:
-
 ```
 $ xdeb-install search speedcrunch
 ```
 
 Output:
 ```
-[xdeb-install] Looking for package speedcrunch via provider * and distribution * ...
+[xdeb-install] Looking for package speedcrunch (exact: false) via provider * and distribution * ...
 debian.org/main
   package: speedcrunch
   distribution: bookworm
@@ -348,14 +346,13 @@ ubuntu.com/universe
 ```
 
 Filtering search results is also supported via `--provider <provider> [--distribution <distribution>]`:
-
 ```
 $ xdeb-install search --provider ubuntu.com --distribution bionic speedcrunch
 ```
 
 Output:
 ```
-[xdeb-install] Looking for package speedcrunch via provider ubuntu.com and distribution bionic ...
+[xdeb-install] Looking for package speedcrunch  (exact: false) via provider ubuntu.com and distribution bionic ...
 ubuntu.com/universe
   package: speedcrunch
   distribution: bionic
@@ -363,3 +360,34 @@ ubuntu.com/universe
   url: http://archive.ubuntu.com/ubuntu/pool/universe/s/speedcrunch/speedcrunch_0.12.0-3_amd64.deb
   sha256: 0206f112ac503393c984088817488aa21589c1c5f16f67df8d8836612f27f810
 ```
+
+Futhermore, the flag `--exact` (or `-e`) specifies whether the search will look for a package of the exact name as provided:
+```
+$ xdeb-install search --exact google-chrome
+```
+
+Output:
+```
+[xdeb-install] Looking for package google-chrome (exact: true) via provider * and distribution * ...
+google.com/google-chrome
+  package: google-chrome
+  distribution: current
+  url: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+```
+
+Omitting `--exact` yields:
+```
+$ xdeb-install search google-chrome
+[xdeb-install] Looking for package google-chrome (exact: false) via provider * and distribution * ...
+google.com/google-chrome
+  package: google-chrome
+  distribution: current
+  url: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+
+google.com/google-chrome
+  package: google-chrome-unstable
+  distribution: current
+  url: https://dl.google.com/linux/direct/google-chrome-unstable_current_amd64.deb
+```
+
+Currently, the only pattern available is `startsWith`, effectively matching `google-chrome*` in the example above.

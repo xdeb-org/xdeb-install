@@ -5,6 +5,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/adrg/xdg"
@@ -89,8 +90,8 @@ func ParseYamlDefinition(path string) (*XdebProviderDefinition, error) {
 	return &definition, nil
 }
 
-func FindPackage(name string, path string, provider string, distribution string) ([]*XdebPackageDefinition, error) {
-	LogMessage("Looking for package %s via provider %s and distribution %s ...", name, provider, distribution)
+func FindPackage(name string, path string, provider string, distribution string, exact bool) ([]*XdebPackageDefinition, error) {
+	LogMessage("Looking for package %s (exact: %s) via provider %s and distribution %s ...", name, strconv.FormatBool(exact), provider, distribution)
 
 	globPattern := filepath.Join(path, provider, distribution, "*.yaml.zst")
 	globbed, err := filepath.Glob(globPattern)
@@ -113,7 +114,7 @@ func FindPackage(name string, path string, provider string, distribution string)
 		}
 
 		for index := range definition.Xdeb {
-			if definition.Xdeb[index].Name == name {
+			if (exact && definition.Xdeb[index].Name == name) || (!exact && strings.HasPrefix(definition.Xdeb[index].Name, name)) {
 				distPath := filepath.Dir(match)
 
 				definition.Xdeb[index].Component = TrimPathExtension(filepath.Base(match), 2)

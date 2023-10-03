@@ -102,7 +102,7 @@ func repository(context *cli.Context) error {
 		return fmt.Errorf("No package provided to install.")
 	}
 
-	packageDefinitions, err := xdeb.FindPackage(packageName, path, provider, distribution)
+	packageDefinitions, err := xdeb.FindPackage(packageName, path, provider, distribution, true)
 
 	if err != nil {
 		return err
@@ -186,7 +186,7 @@ func search(context *cli.Context) error {
 		return err
 	}
 
-	packageDefinitions, err := xdeb.FindPackage(packageName, path, provider, distribution)
+	packageDefinitions, err := xdeb.FindPackage(packageName, path, provider, distribution, context.Bool("exact"))
 
 	if err != nil {
 		return err
@@ -404,6 +404,10 @@ func main() {
 				Aliases: []string{"s"},
 				Action:  search,
 				Flags: []cli.Flag{
+					&cli.BoolFlag{
+						Name:    "exact",
+						Aliases: []string{"e"},
+					},
 					&cli.StringFlag{
 						Name:    "provider",
 						Aliases: []string{"p"},
