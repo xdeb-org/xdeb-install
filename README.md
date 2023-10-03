@@ -39,8 +39,14 @@ Head over to the [releases](https://github.com/thetredev/xdeb-install/releases) 
 
 ## Help Page
 
+To display the help page, type:
+
 ```
 $ xdeb-install -h
+```
+
+Output:
+```
 NAME:
    xdeb-install - Automation wrapper for the xdeb utility
 
@@ -72,6 +78,10 @@ GLOBAL OPTIONS:
 To sync package repositories, type:
 ```
 $ xdeb-install sync
+```
+
+Output:
+```
 [xdeb-install] Syncing lists: https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/v1.0.0/repositories/x86_64/lists.yaml
 [xdeb-install] Syncing repository debian.org/bullseye: contrib
 [xdeb-install] Syncing repository debian.org/bookworm: contrib
@@ -98,6 +108,10 @@ The log output is not in order because syncing is parallelized.
 You can also filter the providers to sync, like so:
 ```
 $ xdeb-install sync ubuntu.com
+```
+
+Output:
+```
 [xdeb-install] Syncing lists: https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/v1.0.0/repositories/x86_64/lists.yaml
 [xdeb-install] Syncing repository ubuntu.com/bionic: restricted
 [xdeb-install] Syncing repository ubuntu.com/focal: restricted
@@ -154,6 +168,10 @@ You can search for a specific package by its name, let's stay with `speedcrunch`
 
 ```
 $ xdeb-install search speedcrunch
+```
+
+Output:
+```
 [xdeb-install] Looking for package speedcrunch via provider * and distribution * ...
 debian.org/main
   distribution: bookworm
@@ -190,6 +208,10 @@ Filtering search results is also supported via `--provider <provider> [--distrib
 
 ```
 $ xdeb-install search --provider ubuntu.com --distribution bionic speedcrunch
+```
+
+Output:
+```
 [xdeb-install] Looking for package speedcrunch via provider ubuntu.com and distribution bionic ...
 ubuntu.com/universe
   distribution: bionic
