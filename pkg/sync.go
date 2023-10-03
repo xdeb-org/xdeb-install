@@ -153,7 +153,7 @@ func pullAptRepository(directory string, url string, dist string, component stri
 	}
 
 	if definition != nil && len(definition.Xdeb) > 0 {
-		LogMessage("Syncing repository %s/%s @ %s", filepath.Base(directory), component, dist)
+		LogMessage("Syncing repository %s/%s: %s", filepath.Base(directory), dist, component)
 
 		filePath := filepath.Join(directory, dist, fmt.Sprintf("%s.yaml", component))
 		data, err := yaml.Marshal(definition)
@@ -171,7 +171,7 @@ func pullAptRepository(directory string, url string, dist string, component stri
 }
 
 func pullCustomRepository(directory string, urlPrefix string, dist string, component string) error {
-	LogMessage("Syncing repository %s/%s @ %s", filepath.Base(urlPrefix), component, dist)
+	LogMessage("Syncing repository %s/%s: %s", filepath.Base(urlPrefix), dist, component)
 
 	url := fmt.Sprintf("%s/%s/%s", urlPrefix, dist, component)
 	_, err := DownloadFile(filepath.Join(directory, dist), url, false, true)
@@ -179,7 +179,7 @@ func pullCustomRepository(directory string, urlPrefix string, dist string, compo
 	return err
 }
 
-func parsePackageLists(path string, arch string) (*PackageListsDefinition, error) {
+func ParsePackageLists(path string, arch string) (*PackageListsDefinition, error) {
 	url := fmt.Sprintf(XDEB_INSTALL_REPOSITORIES_URL, XDEB_INSTALL_REPOSITORIES_TAG, arch)
 	LogMessage("Syncing lists: %s", url)
 
@@ -205,13 +205,7 @@ func parsePackageLists(path string, arch string) (*PackageListsDefinition, error
 	return lists, nil
 }
 
-func SyncRepositories(path string, arch string, providerNames ...string) error {
-	lists, err := parsePackageLists(path, arch)
-
-	if err != nil {
-		return err
-	}
-
+func SyncRepositories(path string, lists *PackageListsDefinition, providerNames ...string) error {
 	availableProviderNames := []string{}
 
 	for _, provider := range lists.Providers {

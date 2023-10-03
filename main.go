@@ -243,7 +243,13 @@ func sync(context *cli.Context) error {
 		providerNames = append(providerNames, providerName)
 	}
 
-	err = xdeb.SyncRepositories(path, arch, providerNames...)
+	lists, err := xdeb.ParsePackageLists(path, arch)
+
+	if err != nil {
+		return err
+	}
+
+	err = xdeb.SyncRepositories(path, lists, providerNames...)
 
 	if err != nil {
 		return err
