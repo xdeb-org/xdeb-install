@@ -1,6 +1,7 @@
 package xdeb
 
 import (
+	"bufio"
 	"compress/gzip"
 	"fmt"
 	"io"
@@ -38,8 +39,11 @@ func parsePackagesFile(urlPrefix string, packagesFile string) *XdebProviderDefin
 		}
 
 		packageDefinition := XdebPackageDefinition{}
+		scanner := bufio.NewScanner(strings.NewReader(packageData))
 
-		for _, line := range strings.Split(packageData, "\n") {
+		for scanner.Scan() {
+			line := scanner.Text()
+
 			if strings.HasPrefix(line, "Package:") {
 				packageDefinition.Name = line[strings.Index(line, ":")+2:]
 				continue
