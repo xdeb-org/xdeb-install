@@ -244,14 +244,10 @@ func SyncRepositories(lists *PackageListsDefinition, providerNames ...string) er
 		providers = append(providers, lists.Providers...)
 	}
 
-	operations := 0
+	operations := len(providers)
 
 	for _, provider := range providers {
-		for range provider.Distributions {
-			for range provider.Components {
-				operations++
-			}
-		}
+		operations += len(provider.Distributions) * len(provider.Components)
 	}
 
 	for _, provider := range providers {
