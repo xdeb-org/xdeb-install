@@ -11,5 +11,5 @@ for build_arch in ${BUILD_ARCHITECTURES}; do
     export GOARCH=$(echo "${build_arch}" | cut -d '/' -f 1)
     void_arch=$(echo "${build_arch}" | cut -d '/' -f 2)
 
-    go build -ldflags="-extldflags=-static" -o bin/xdeb-install-linux-${void_arch}
+    go build -ldflags="-extldflags=-static -w -s" -o bin/xdeb-install-linux-${void_arch}
 done
