@@ -71,12 +71,9 @@ func InstallPackage(packageDefinition *XdebPackageDefinition, context *cli.Conte
 	packageDefinition.Configure(context.String("temp"))
 
 	if packageDefinition.Provider == "localhost" {
-		if len(packageDefinition.Url) > 0 {
-			// direct URL
-			LogMessage("Installing %s from %s", packageDefinition.Name, packageDefinition.Url)
-		} else {
-			LogMessage("Installing %s from %s", packageDefinition.Name, packageDefinition.FilePath)
-		}
+		LogMessage("Installing %s from %s", packageDefinition.Name, packageDefinition.FilePath)
+	} else if packageDefinition.Provider == "remote" {
+		LogMessage("Installing %s from %s", packageDefinition.Name, packageDefinition.Url)
 	} else {
 		LogMessage(
 			"Installing %s from %s @ %s/%s",

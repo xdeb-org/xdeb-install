@@ -24,25 +24,19 @@ type XdebPackageDefinition struct {
 	IsConfigured bool   `yaml:"is_configured,omitempty"`
 }
 
-func (this *XdebPackageDefinition) setPaths(rootPath string) {
-	this.Path = filepath.Join(rootPath, this.Name)
-
-	if len(this.Url) > 0 {
-		this.FilePath = filepath.Join(this.Path, filepath.Base(this.Url))
-	} else {
-		this.FilePath = filepath.Join(this.Path, fmt.Sprintf("%s.deb", this.Name))
-	}
-}
-
 func (this *XdebPackageDefinition) setProvider() {
 	if len(this.Provider) == 0 {
-		this.Provider = "localhost"
+		if len(this.Url) == 0 {
+			this.Provider = "localhost"
+		} else {
+			this.Provider = "remote"
+		}
 	}
 }
 
 func (this *XdebPackageDefinition) setDistribution() {
-	if this.Provider == "localhost" {
-		this.Distribution = fmt.Sprintf("file:///%s", strings.TrimPrefix(this.FilePath, "/"))
+	if this.Provider == "localhost" || this.Provider == "remote" {
+		this.Distribution = "file"
 	}
 }
 
@@ -52,12 +46,22 @@ func (this *XdebPackageDefinition) setComponent() {
 	}
 }
 
+func (this *XdebPackageDefinition) setPaths(rootPath string) {
+	this.Path = filepath.Join(rootPath, this.Provider, this.Distribution, this.Component, this.Name)
+
+	if len(this.Url) > 0 {
+		this.FilePath = filepath.Join(this.Path, filepath.Base(this.Url))
+	} else {
+		this.FilePath = filepath.Join(this.Path, fmt.Sprintf("%s.deb", this.Name))
+	}
+}
+
 func (this *XdebPackageDefinition) Configure(rootPath string) {
 	if !this.IsConfigured {
-		this.setPaths(rootPath)
 		this.setProvider()
 		this.setDistribution()
 		this.setComponent()
+		this.setPaths(rootPath)
 
 		this.IsConfigured = true
 	}
