@@ -370,20 +370,9 @@ func main() {
 				Action: prepare,
 			},
 			{
-				Name:    "repository",
-				Usage:   "install a package from an remote repository",
-				Aliases: []string{"r"},
-				Action:  repository,
-				Flags: []cli.Flag{
-					&cli.StringFlag{
-						Name:    "provider",
-						Aliases: []string{"p"},
-					},
-					&cli.StringFlag{
-						Name:    "distribution",
-						Aliases: []string{"dist", "d"},
-					},
-				},
+				Name:   "sync",
+				Usage:  "sync remote repositories",
+				Action: sync,
 			},
 			{
 				Name:    "search",
@@ -402,9 +391,20 @@ func main() {
 				},
 			},
 			{
-				Name:   "sync",
-				Usage:  "sync remote repositories",
-				Action: sync,
+				Name:    "repository",
+				Usage:   "install a package from an remote repository",
+				Aliases: []string{"r"},
+				Action:  repository,
+				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name:    "provider",
+						Aliases: []string{"p"},
+					},
+					&cli.StringFlag{
+						Name:    "distribution",
+						Aliases: []string{"dist", "d"},
+					},
+				},
 			},
 			{
 				Name:    "url",

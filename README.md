@@ -59,9 +59,9 @@ DESCRIPTION:
 
 COMMANDS:
    xdeb           installs the xdeb utility to the system along with its dependencies
-   repository, r  install a package from an remote repository
-   search, s      search remote repositories for a package
    sync           sync remote repositories
+   search, s      search remote repositories for a package
+   repository, r  install a package from an remote repository
    url, u         install a package from a URL directly
    file, f        install a package from a local DEB file
    clean, c       cleanup temporary xdeb context root path, optionally the repository lists as well
