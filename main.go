@@ -58,7 +58,7 @@ func findDistribution(provider string, distribution string) (string, error) {
 
 		if !slices.Contains(distributions, distribution) {
 			return "", fmt.Errorf(
-				"APT provider %s does not support distribution %s. Omit or use any of %v",
+				"Provider %s does not support distribution %s. Omit or use any of %v",
 				provider, distribution, distributions,
 			)
 		}
@@ -78,7 +78,7 @@ func findProvider(provider string) (string, error) {
 		}
 
 		if !slices.Contains(providers, provider) {
-			return "", fmt.Errorf("APT provider %s not supported. Omit or use any of %v", provider, providers)
+			return "", fmt.Errorf("Provider %s not supported. Omit or use any of %v", provider, providers)
 		}
 
 		return provider, nil
@@ -341,7 +341,7 @@ func main() {
 			},
 			{
 				Name:    "repository",
-				Usage:   "install a package from an online APT repository",
+				Usage:   "install a package from an remote repository",
 				Aliases: []string{"r"},
 				Action:  repository,
 				Flags: []cli.Flag{
@@ -357,7 +357,7 @@ func main() {
 			},
 			{
 				Name:    "search",
-				Usage:   "search online APT repositories for a package",
+				Usage:   "search remote repositories for a package",
 				Aliases: []string{"s"},
 				Action:  search,
 				Flags: []cli.Flag{
@@ -373,7 +373,7 @@ func main() {
 			},
 			{
 				Name:   "sync",
-				Usage:  "sync online APT repositories",
+				Usage:  "sync remote repositories",
 				Action: sync,
 			},
 			{

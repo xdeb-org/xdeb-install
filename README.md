@@ -53,13 +53,13 @@ DESCRIPTION:
 
 COMMANDS:
    xdeb           installs the xdeb utility to the system along with its dependencies
-   repository, r  install a package from an online APT repository
-   search, s      search online APT repositories for a package
-   sync           sync online APT repositories
+   repository, r  install a package from an remote repository
+   search, s      search remote repositories for a package
+   sync           sync remote repositories
    url, u         install a package from a URL directly
    file, f        install a package from a local DEB file
-   help, h        Shows a list of commands or help for one command
    clean, c       cleanup temporary xdeb context root path, optionally the repository lists as well
+   help, h        Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
    --options value, -o value  override XDEB_OPTS, '-i' will be removed if provided (default: "-Sde")
