@@ -111,9 +111,15 @@ func FindPackage(name string, path string, provider string, distribution string)
 			return nil, err
 		}
 
-		for _, packageDefinition := range definition.Xdeb {
-			if packageDefinition.Name == name {
-				packageDefinitions = append(packageDefinitions, packageDefinitionWithMetadata(&packageDefinition, match))
+		for index := range definition.Xdeb {
+			if definition.Xdeb[index].Name == name {
+				distPath := filepath.Dir(match)
+
+				definition.Xdeb[index].Component = TrimPathExtension(TrimPathExtension(filepath.Base(match)))
+				definition.Xdeb[index].Distribution = filepath.Base(distPath)
+				definition.Xdeb[index].Provider = filepath.Base(filepath.Dir(distPath))
+
+				packageDefinitions = append(packageDefinitions, &definition.Xdeb[index])
 			}
 		}
 	}

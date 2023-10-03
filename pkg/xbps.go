@@ -10,17 +10,6 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func packageDefinitionWithMetadata(packageDefinition *XdebPackageDefinition, path string) *XdebPackageDefinition {
-	distPath := filepath.Dir(path)
-
-	packageObject := *packageDefinition
-	packageObject.Component = TrimPathExtension(TrimPathExtension(filepath.Base(path)))
-	packageObject.Distribution = filepath.Base(distPath)
-	packageObject.Provider = filepath.Base(filepath.Dir(distPath))
-
-	return &packageObject
-}
-
 func comparePackageChecksums(path string, expected string) error {
 	hasher := sha256.New()
 	contents, err := os.ReadFile(path)
