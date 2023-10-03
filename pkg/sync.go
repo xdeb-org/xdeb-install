@@ -32,8 +32,8 @@ func parsePackagesFile(urlPrefix string, packages_file string) *XdebProviderDefi
 	definition := XdebProviderDefinition{}
 	packages := strings.Split(packages_file, "\n\n")
 
-	for _, package_data := range packages {
-		if len(package_data) == 0 {
+	for _, packageData := range packages {
+		if len(packageData) == 0 {
 			continue
 		}
 
@@ -42,7 +42,7 @@ func parsePackagesFile(urlPrefix string, packages_file string) *XdebProviderDefi
 		var url string
 		var sha256 string
 
-		for _, line := range strings.Split(package_data, "\n") {
+		for _, line := range strings.Split(packageData, "\n") {
 			if strings.HasPrefix(line, "Package:") {
 				name = strings.Split(line, ": ")[1]
 				continue
