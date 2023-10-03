@@ -13,14 +13,14 @@ Simple tool to automatically download, convert, and install DEB packages on [Voi
 - [Package repositories](#package-repositories)
   - [Sync package repositories](#sync-package-repositories)
   - [Supported package repositories](#supported-package-repositories)
-- [Installing DEB packages](#installing-deb-packages)
-  - [From remote repositories](#from-remote-repositories)
-  - [Directly from a URL](#directly-from-a-url)
-  - [Directly from a local file](#directly-from-a-local-file)
 - [Searching for DEB packages](#searching-for-deb-packages)
   - [General instructions](#general-instructions)
   - [Search filtering by provider/distribution](#search-filtering-by-providerdistribution)
   - [Inexact matches](#inexact-matches)
+- [Installing DEB packages](#installing-deb-packages)
+  - [From remote repositories](#from-remote-repositories)
+  - [Directly from a URL](#directly-from-a-url)
+  - [Directly from a local file](#directly-from-a-local-file)
 
 ## Help Page
 
@@ -272,36 +272,6 @@ The package repository lists are stored at `$XDG_CONFIG_HOME/xdeb-install/reposi
 
 See https://github.com/thetredev/xdeb-install-repositories for details.
 
-## Installing DEB packages
-
-### From remote repositories
-
-To install `speedcrunch`, for example, type:
-```
-$ xdeb-install repository speedcrunch
-```
-
-This will install the most recent version of the package from the first provider and distribution it can find.
-
-You can also specify the provider and distribution, for example `debian.org` and `bookworm`, respectively:
-```
-$ xdeb-install repository --provider debian.org --distribution bookworm speedcrunch
-```
-
-### Directly from a URL
-
-Let's stay with the `speedcrunch` example:
-```
-$ xdeb-install url http://ftp.debian.org/debian/pool/main/s/speedcrunch/speedcrunch_0.12.0-6_amd64.deb
-```
-
-### Directly from a local file
-
-First, obviously download a DEB file from a remote location. Let's stay it's stored at `$HOME/Downloads/speedcrunch.deb`:
-```
-$ xdeb-install file $HOME/Downloads/speedcrunch.deb
-```
-
 ## Searching for DEB packages
 
 ### General instructions
@@ -418,3 +388,33 @@ google.com/google-chrome
 ```
 
 Currently, the only pattern available is `startsWith`, effectively matching `google-chrome*` in the example above.
+
+## Installing DEB packages
+
+### From remote repositories
+
+To install `speedcrunch`, for example, type:
+```
+$ xdeb-install repository speedcrunch
+```
+
+This will install the most recent version of the package from the first provider and distribution it can find.
+
+You can also specify the provider and distribution, for example `debian.org` and `bookworm`, respectively:
+```
+$ xdeb-install repository --provider debian.org --distribution bookworm speedcrunch
+```
+
+### Directly from a URL
+
+Let's stay with the `speedcrunch` example:
+```
+$ xdeb-install url http://ftp.debian.org/debian/pool/main/s/speedcrunch/speedcrunch_0.12.0-6_amd64.deb
+```
+
+### Directly from a local file
+
+First, obviously download a DEB file from a remote location. Let's stay it's stored at `$HOME/Downloads/speedcrunch.deb`:
+```
+$ xdeb-install file $HOME/Downloads/speedcrunch.deb
+```
