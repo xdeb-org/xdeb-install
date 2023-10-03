@@ -62,7 +62,7 @@ func parsePackagesFile(urlPrefix string, packagesFile string) *XdebProviderDefin
 			}
 		}
 
-		definition.Xdeb = append(definition.Xdeb, packageDefinition)
+		definition.Xdeb = append(definition.Xdeb, &packageDefinition)
 	}
 
 	return &definition

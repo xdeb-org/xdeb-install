@@ -69,7 +69,7 @@ func (this *XdebPackageDefinition) Configure(rootPath string) {
 }
 
 type XdebProviderDefinition struct {
-	Xdeb []XdebPackageDefinition `yaml:"xdeb"`
+	Xdeb []*XdebPackageDefinition `yaml:"xdeb"`
 }
 
 func ParseYamlDefinition(path string) (*XdebProviderDefinition, error) {
@@ -120,7 +120,7 @@ func FindPackage(name string, path string, provider string, distribution string)
 				definition.Xdeb[index].Distribution = filepath.Base(distPath)
 				definition.Xdeb[index].Provider = filepath.Base(filepath.Dir(distPath))
 
-				packageDefinitions = append(packageDefinitions, &definition.Xdeb[index])
+				packageDefinitions = append(packageDefinitions, definition.Xdeb[index])
 			}
 		}
 	}
