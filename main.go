@@ -99,7 +99,7 @@ func repository(context *cli.Context) error {
 	packageName := strings.Trim(context.Args().First(), " ")
 
 	if len(packageName) == 0 {
-		return fmt.Errorf("Please provide a package name to install.")
+		return fmt.Errorf("No package provided to install.")
 	}
 
 	packageDefinitions, err := xdeb.FindPackage(packageName, path, provider, distribution)
