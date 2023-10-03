@@ -5,16 +5,18 @@ Simple tool to automatically download, convert, and install DEB packages on [Voi
 ## Table of Contents
 
 - [Installation](#installation)
-- [XBPS](#xbps)
+  - [XBPS](#xbps)
   - [Using Go](#using-go)
   - [Manually](#manually)
 - [Help Page](#help-page)
 - [List available providers](#list-available-providers)
-- [Sync package repositories](#sync-package-repositories)
-- [Supported repositories](#supported-repositories)
-- [Install DEB packages from remote repositories](#install-deb-packages-from-remote-repositories)
-- [Install DEB packages directly from a URL](#install-deb-packages-directly-from-a-url)
-- [Install DEB packages from a local DEB file](#install-deb-packages-from-a-local-deb-file)
+- [Package repositories](#package-repositories)
+  - [Sync package repositories](#sync-package-repositories)
+  - [Supported package repositories](#supported-package-repositories)
+- [Installing DEB packages](#installing-deb-packages)
+  - [From remote repositories](#from-remote-repositories)
+  - [Directly from a URL](#directly-from-a-url)
+  - [Directly from a local file](#directly-from-a-local-file)
 - [Search for a DEB package](#search-for-a-deb-package)
   - [General instructions](#general-instructions)
   - [Search filtering by provider/distribution](#search-filtering-by-providerdistribution)
@@ -29,7 +31,7 @@ There are three ways you can install the tool:
 
 You can install `xdeb` using `xdeb-install` later, see [Help Page](#help-page).
 
-## XBPS
+### XBPS
 
 *Before you continue reading this section*, read up on https://docs.voidlinux.org/xbps/repositories/custom.html. You have been warned.
 
@@ -207,7 +209,9 @@ google.com
       component: google-chrome.yaml
 ```
 
-## Sync package repositories
+## Package repositories
+
+### Sync package repositories
 
 To sync package repositories, type:
 ```
@@ -264,11 +268,13 @@ Output:
 
 The package repository lists are stored at `$XDG_CONFIG_HOME/xdeb-install/repositories/<arch>`, where `$XDG_CONFIG_HOME` typically translates to `$HOME/.config`.
 
-## Supported repositories
+### Supported package repositories
 
 See https://github.com/thetredev/xdeb-install-repositories for details.
 
-## Install DEB packages from remote repositories
+## Installing DEB packages
+
+### From remote repositories
 
 To install `speedcrunch`, for example, type:
 ```
@@ -282,14 +288,14 @@ You can also specify the provider and distribution, for example `debian.org` and
 $ xdeb-install repository --provider debian.org --distribution bookworm speedcrunch
 ```
 
-## Install DEB packages directly from a URL
+### Directly from a URL
 
 Let's stay with the `speedcrunch` example:
 ```
 $ xdeb-install url http://ftp.debian.org/debian/pool/main/s/speedcrunch/speedcrunch_0.12.0-6_amd64.deb
 ```
 
-## Install DEB packages from a local DEB file
+### Directly from a local file
 
 First, obviously download a DEB file from a remote location. Let's stay it's stored at `$HOME/Downloads/speedcrunch.deb`:
 ```
