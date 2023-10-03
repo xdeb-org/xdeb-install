@@ -244,7 +244,7 @@ func prepare(context *cli.Context) error {
 	path := filepath.Join(os.TempDir(), "xdeb-download")
 
 	xdeb.LogMessage("Downloading xdeb [%s] from %s to %s ...", version, url, path)
-	xdebFile, err := xdeb.DownloadFile(path, url, false)
+	xdebFile, err := xdeb.DownloadFile(path, url, false, false)
 
 	if err != nil {
 		return err

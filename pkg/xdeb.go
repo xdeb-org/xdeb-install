@@ -2,7 +2,6 @@ package xdeb
 
 import (
 	"fmt"
-	"os"
 	"os/exec"
 	"path/filepath"
 	"sort"
@@ -28,7 +27,7 @@ type XdebProviderDefinition struct {
 }
 
 func ParseYamlDefinition(path string) (*XdebProviderDefinition, error) {
-	yamlFile, err := os.ReadFile(path)
+	yamlFile, err := decompressFile(path)
 
 	if err != nil {
 		return nil, err
@@ -47,7 +46,7 @@ func ParseYamlDefinition(path string) (*XdebProviderDefinition, error) {
 func FindPackage(name string, path string, provider string, distribution string) ([]*XdebPackageDefinition, error) {
 	LogMessage("Looking for package %s via provider %s and distribution %s ...", name, provider, distribution)
 
-	globPattern := filepath.Join(path, provider, distribution, "*.yaml")
+	globPattern := filepath.Join(path, provider, distribution, "*.yaml.zst")
 	globbed, err := filepath.Glob(globPattern)
 
 	if err != nil {

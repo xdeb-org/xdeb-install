@@ -86,7 +86,7 @@ func InstallPackage(packageDefinition *XdebPackageDefinition, context *cli.Conte
 	} else {
 		LogMessage(
 			"Installing %s from %s @ %s/%s",
-			packageDefinition.Name, provider, distribution, component,
+			packageDefinition.Name, provider, distribution, TrimPathExtension(component),
 		)
 	}
 
@@ -102,7 +102,7 @@ func InstallPackage(packageDefinition *XdebPackageDefinition, context *cli.Conte
 	// download if an URL is provided
 	if len(packageDefinition.Url) > 0 {
 		var err error
-		fullPath, err = DownloadFile(path, packageDefinition.Url, true)
+		fullPath, err = DownloadFile(path, packageDefinition.Url, true, false)
 
 		if err != nil {
 			return err

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -157,13 +156,13 @@ func pullAptRepository(directory string, url string, dist string, component stri
 		LogMessage("Syncing repository %s/%s @ %s", filepath.Base(directory), component, dist)
 
 		filePath := filepath.Join(directory, dist, fmt.Sprintf("%s.yaml", component))
-		bytes, err := yaml.Marshal(definition)
+		data, err := yaml.Marshal(definition)
 
 		if err != nil {
 			return err
 		}
 
-		if err = writeFile(filePath, bytes); err != nil {
+		if _, err = writeFile(filePath, data, true); err != nil {
 			return err
 		}
 	}
@@ -175,7 +174,7 @@ func pullCustomRepository(directory string, urlPrefix string, dist string, compo
 	LogMessage("Syncing repository %s/%s @ %s", filepath.Base(urlPrefix), component, dist)
 
 	url := fmt.Sprintf("%s/%s/%s", urlPrefix, dist, component)
-	_, err := DownloadFile(filepath.Join(directory, dist), url, false)
+	_, err := DownloadFile(filepath.Join(directory, dist), url, false, true)
 
 	return err
 }
@@ -184,13 +183,13 @@ func parsePackageLists(path string, arch string) (*PackageListsDefinition, error
 	url := fmt.Sprintf(XDEB_INSTALL_REPOSITORIES_URL, XDEB_INSTALL_REPOSITORIES_TAG, arch)
 	LogMessage("Syncing lists: %s", url)
 
-	listsFile, err := DownloadFile(path, url, true)
+	listsFile, err := DownloadFile(path, url, true, true)
 
 	if err != nil {
 		return nil, err
 	}
 
-	yamlFile, err := os.ReadFile(listsFile)
+	yamlFile, err := decompressFile(listsFile)
 
 	if err != nil {
 		return nil, err

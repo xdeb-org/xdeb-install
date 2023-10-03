@@ -4,6 +4,7 @@ go 1.21.1
 
 require (
 	github.com/adrg/xdg v0.4.0
+	github.com/klauspost/compress v1.17.0
 	github.com/knqyf263/go-deb-version v0.0.0-20230223133812-3ed183d23422
 	github.com/ulikunitz/xz v0.5.11
 	github.com/urfave/cli/v2 v2.25.7
