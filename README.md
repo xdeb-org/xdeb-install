@@ -2,6 +2,24 @@
 
 Simple tool to automatically download, convert, and install DEB packages on [Void Linux](https://voidlinux.org) via the awesome [`xdeb`](https://github.com/toluschr/xdeb) tool. Basically just a wrapper to automate the process.
 
+## Table of Contents
+
+- [Installation](#installation)
+- [XBPS](#xbps)
+  - [Using Go](#using-go)
+  - [Manually](#manually)
+- [Help Page](#help-page)
+- [List available providers](#list-available-providers)
+- [Sync package repositories](#sync-package-repositories)
+- [Supported repositories](#supported-repositories)
+- [Install DEB packages from remote repositories](#install-deb-packages-from-remote-repositories)
+- [Install DEB packages directly from a URL](#install-deb-packages-directly-from-a-url)
+- [Install DEB packages from a local DEB file](#install-deb-packages-from-a-local-deb-file)
+- [Search for a DEB package](#search-for-a-deb-package)
+  - [General instructions](#general-instructions)
+  - [Search filtering by provider/distribution](#search-filtering-by-providerdistribution)
+  - [Inexact matches](#inexact-matches)
+
 ## Installation
 
 There are three ways you can install the tool:
