@@ -353,13 +353,13 @@ ubuntu.com
       component: universe
 
 microsoft.com
-  architecture:
+  architecture: amd64
   url: https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/main/repositories/x86_64/microsoft.com
     distribution: current
       component: vscode.yaml
 
 google.com
-  architecture:
+  architecture: amd64
   url: https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/main/repositories/x86_64/google.com
     distribution: current
       component: google-chrome.yaml
