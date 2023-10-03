@@ -211,7 +211,14 @@ func sync(context *cli.Context) error {
 		return err
 	}
 
-	return xdeb.SyncRepositories(path, arch)
+	err = xdeb.SyncRepositories(path, arch)
+
+	if err != nil {
+		return nil
+	}
+
+	xdeb.LogMessage("Finished syncing: %s", strings.ReplaceAll(path, os.Getenv("HOME"), "~"))
+	return nil
 }
 
 func prepare(context *cli.Context) error {
