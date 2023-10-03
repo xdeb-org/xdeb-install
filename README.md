@@ -66,6 +66,7 @@ COMMANDS:
    url, u         install a package from a URL directly
    file, f        install a package from a local DEB file
    clean, c       cleanup temporary xdeb context root path, optionally the repository lists as well
+   version, v     prints the version of this tool
    help, h        Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 
 	"golang.org/x/exp/slices"
@@ -396,6 +397,20 @@ func clean(context *cli.Context) error {
 	return nil
 }
 
+var (
+	VersionString = "dev"
+	VersionDate   = "now"
+	VersionAuthor = "me"
+)
+
+func version(context *cli.Context) error {
+	xdeb.LogMessage("version information")
+	fmt.Printf("  version:  %s %s/%s\n", VersionString, runtime.GOOS, runtime.GOARCH)
+	fmt.Printf("  created:  %s\n", VersionDate)
+	fmt.Printf("  author:   %s\n", VersionAuthor)
+	return nil
+}
+
 func main() {
 	app := &cli.App{
 		Name:        xdeb.APPLICATION_NAME,
@@ -474,6 +489,12 @@ func main() {
 						Value:   false,
 					},
 				},
+			},
+			{
+				Name:    "version",
+				Usage:   "prints the version of this tool",
+				Aliases: []string{"v"},
+				Action:  version,
 			},
 		},
 		Flags: []cli.Flag{
