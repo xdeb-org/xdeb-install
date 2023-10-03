@@ -259,6 +259,44 @@ func sync(context *cli.Context) error {
 	return nil
 }
 
+func providers(context *cli.Context) error {
+	arch, err := xdeb.FindArchitecture()
+
+	if err != nil {
+		return err
+	}
+
+	path, err := repositoryPath()
+
+	if err != nil {
+		return err
+	}
+
+	lists, err := xdeb.ParsePackageLists(path, arch)
+
+	if err != nil {
+		return err
+	}
+
+	for _, provider := range lists.Providers {
+		fmt.Println(provider.Name)
+		fmt.Printf("  architecture: %s\n", provider.Architecture)
+		fmt.Printf("  url: %s\n", provider.Url)
+
+		for _, distribution := range provider.Distributions {
+			fmt.Printf("    distribution: %s\n", distribution)
+
+			for _, component := range provider.Components {
+				fmt.Printf("      component: %s\n", component)
+			}
+		}
+
+		fmt.Println()
+	}
+
+	return nil
+}
+
 func prepare(context *cli.Context) error {
 	version := context.Args().First()
 	var url string
@@ -368,6 +406,11 @@ func main() {
 				Name:   "xdeb",
 				Usage:  "installs the xdeb utility to the system along with its dependencies",
 				Action: prepare,
+			},
+			{
+				Name:   "providers",
+				Usage:  "lists available providers",
+				Action: providers,
 			},
 			{
 				Name:   "sync",

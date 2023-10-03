@@ -59,6 +59,7 @@ DESCRIPTION:
 
 COMMANDS:
    xdeb           installs the xdeb utility to the system along with its dependencies
+   providers      lists available providers
    sync           sync remote repositories
    search, s      search remote repositories for a package
    repository, r  install a package from an remote repository
@@ -71,6 +72,121 @@ GLOBAL OPTIONS:
    --options value, -o value  override XDEB_OPTS, '-i' will be removed if provided (default: "-Sde")
    --temp value, -t value     temporary xdeb context root path (default: "/tmp/xdeb")
    --help, -h                 show help
+```
+
+## List available providers
+
+To check which providers are available, type:
+```
+$ xdeb-install providers
+```
+
+Output:
+```
+[xdeb-install] Syncing lists: https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/v1.0.0/repositories/x86_64/lists.yaml
+debian.org
+  architecture: amd64
+  url: http://ftp.debian.org/debian
+    distribution: bookworm
+      component: main
+      component: contrib
+      component: non-free
+      component: non-free-firmware
+    distribution: bookworm-backports
+      component: main
+      component: contrib
+      component: non-free
+      component: non-free-firmware
+    distribution: bullseye
+      component: main
+      component: contrib
+      component: non-free
+      component: non-free-firmware
+    distribution: bullseye-backports
+      component: main
+      component: contrib
+      component: non-free
+      component: non-free-firmware
+    distribution: buster
+      component: main
+      component: contrib
+      component: non-free
+      component: non-free-firmware
+    distribution: buster-backports
+      component: main
+      component: contrib
+      component: non-free
+      component: non-free-firmware
+    distribution: sid
+      component: main
+      component: contrib
+      component: non-free
+      component: non-free-firmware
+    distribution: testing
+      component: main
+      component: contrib
+      component: non-free
+      component: non-free-firmware
+    distribution: testing-backports
+      component: main
+      component: contrib
+      component: non-free
+      component: non-free-firmware
+
+linuxmint.com
+  architecture: amd64
+  url: http://packages.linuxmint.com
+    distribution: victoria
+      component: main
+      component: backport
+      component: import
+      component: upstream
+    distribution: vera
+      component: main
+      component: backport
+      component: import
+      component: upstream
+    distribution: vanessa
+      component: main
+      component: backport
+      component: import
+      component: upstream
+    distribution: faye
+      component: main
+      component: backport
+      component: import
+      component: upstream
+
+ubuntu.com
+  architecture: amd64
+  url: http://archive.ubuntu.com/ubuntu
+    distribution: bionic
+      component: main
+      component: multiverse
+      component: restricted
+      component: universe
+    distribution: focal
+      component: main
+      component: multiverse
+      component: restricted
+      component: universe
+    distribution: jammy
+      component: main
+      component: multiverse
+      component: restricted
+      component: universe
+
+microsoft.com
+  architecture:
+  url: https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/main/repositories/x86_64/microsoft.com
+    distribution: current
+      component: vscode.yaml
+
+google.com
+  architecture:
+  url: https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/main/repositories/x86_64/google.com
+    distribution: current
+      component: google-chrome.yaml
 ```
 
 ## Sync package repositories
