@@ -381,7 +381,7 @@ func main() {
 	app := &cli.App{
 		Name:        xdeb.APPLICATION_NAME,
 		Usage:       "Automation wrapper for the xdeb utility",
-		Description: "Simple tool to automatically download, convert, and install DEB packages via the awesome xdeb tool.\nBasically just a wrapper to automate the process.",
+		Description: "Simple tool to automatically download, convert, and install DEB packages via the awesome xdeb utility.\nBasically just a wrapper to automate the process.",
 		Commands: []*cli.Command{
 			{
 				Name:   "xdeb",
