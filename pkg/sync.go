@@ -37,40 +37,32 @@ func parsePackagesFile(urlPrefix string, packagesFile string) *XdebProviderDefin
 			continue
 		}
 
-		var name string
-		var version string
-		var url string
-		var sha256 string
+		packageDefinition := XdebPackageDefinition{}
 
 		for _, line := range strings.Split(packageData, "\n") {
 			if strings.HasPrefix(line, "Package:") {
-				name = strings.Split(line, ": ")[1]
+				packageDefinition.Name = strings.Split(line, ": ")[1]
 				continue
 			}
 
 			if strings.HasPrefix(line, "Version:") {
-				version = strings.Split(line, ": ")[1]
+				packageDefinition.Version = strings.Split(line, ": ")[1]
 				continue
 			}
 
 			if strings.HasPrefix(line, "Filename:") {
 				suffix := strings.Split(line, ": ")[1]
-				url = fmt.Sprintf("%s/%s", urlPrefix, suffix)
+				packageDefinition.Url = fmt.Sprintf("%s/%s", urlPrefix, suffix)
 				continue
 			}
 
 			if strings.HasPrefix(line, "SHA256:") {
-				sha256 = strings.Split(line, ": ")[1]
+				packageDefinition.Sha256 = strings.Split(line, ": ")[1]
 				continue
 			}
 		}
 
-		definition.Xdeb = append(definition.Xdeb, XdebPackageDefinition{
-			Name:    name,
-			Version: version,
-			Url:     url,
-			Sha256:  sha256,
-		})
+		definition.Xdeb = append(definition.Xdeb, packageDefinition)
 	}
 
 	return &definition
