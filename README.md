@@ -237,9 +237,6 @@ To work around that problem, I created my own unofficial XBPS repository at http
 
 Afterwards, you can execute `xbps-install xdeb-install` to install the tool.
 
-**Notes**:
-  - All binary architectures for release 1.0.1 are available: `x86_64`, `i686`, `aarch64`
-
 ### Using Go
 
 If you have [Go](https://go.dev) installed, simply execute:
