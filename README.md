@@ -9,7 +9,7 @@ Simple tool to automatically download, convert, and install DEB packages on [Voi
   - [Using XBPS](#using-xbps)
   - [Using Go](#using-go)
   - [Manually](#manually)
-- [List available providers](#list-available-providers)
+- [Listing available providers](#listing-available-providers)
 - [Package repositories](#package-repositories)
   - [Sync package repositories](#sync-package-repositories)
   - [Supported package repositories](#supported-package-repositories)
@@ -94,7 +94,7 @@ As long as the `GOPATH` is within your `PATH`, that's it.
 
 Head over to the [releases](https://github.com/thetredev/xdeb-install/releases) page and download a release binary. Then move it to some place within your `PATH`, like `/usr/local/bin`. Make sure to make it executable afterwards: `sudo chmod +x /usr/local/bin/xdeb-install`.
 
-## List available providers
+## Listing available providers
 
 To check which providers are available, type:
 ```
