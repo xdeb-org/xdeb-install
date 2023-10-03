@@ -5,7 +5,7 @@ Simple tool to automatically download, convert, and install DEB packages on [Voi
 ## Table of Contents
 
 - [Installation](#installation)
-  - [XBPS](#xbps)
+  - [Using XBPS](#using-xbps)
   - [Using Go](#using-go)
   - [Manually](#manually)
 - [Help Page](#help-page)
@@ -25,13 +25,13 @@ Simple tool to automatically download, convert, and install DEB packages on [Voi
 ## Installation
 
 There are three ways you can install the tool:
-  - [using XBPS](#xbps)
+  - [using XBPS](#using-xbps)
   - [using Go](#using-go)
   - [manually downloading a release binary](#manually)
 
 You can install `xdeb` using `xdeb-install` later, see [Help Page](#help-page).
 
-### XBPS
+### Using XBPS
 
 *Before you continue reading this section*, read up on https://docs.voidlinux.org/xbps/repositories/custom.html. You have been warned.
 
