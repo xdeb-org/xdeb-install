@@ -35,7 +35,7 @@ As long as the `GOPATH` is within your `PATH`, that's it.
 
 ### Manually
 
-Head over to the [releases](https://github.com/thetredev/xdeb-install/releases) page and download a release binary. Then move it to some place within your `PATH`, like `/usr/local/bin`.
+Head over to the [releases](https://github.com/thetredev/xdeb-install/releases) page and download a release binary. Then move it to some place within your `PATH`, like `/usr/local/bin`. Make sure to make it executable afterwards: `sudo chmod +x /usr/local/bin/xdeb-install`.
 
 ## Help Page
 
