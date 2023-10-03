@@ -41,23 +41,23 @@ func parsePackagesFile(urlPrefix string, packagesFile string) *XdebProviderDefin
 
 		for _, line := range strings.Split(packageData, "\n") {
 			if strings.HasPrefix(line, "Package:") {
-				packageDefinition.Name = strings.Split(line, ": ")[1]
+				packageDefinition.Name = line[strings.Index(line, ":")+2:]
 				continue
 			}
 
 			if strings.HasPrefix(line, "Version:") {
-				packageDefinition.Version = strings.Split(line, ": ")[1]
+				packageDefinition.Version = line[strings.Index(line, ":")+2:]
 				continue
 			}
 
 			if strings.HasPrefix(line, "Filename:") {
-				suffix := strings.Split(line, ": ")[1]
+				suffix := line[strings.Index(line, ":")+2:]
 				packageDefinition.Url = fmt.Sprintf("%s/%s", urlPrefix, suffix)
 				continue
 			}
 
 			if strings.HasPrefix(line, "SHA256:") {
-				packageDefinition.Sha256 = strings.Split(line, ": ")[1]
+				packageDefinition.Sha256 = line[strings.Index(line, ":")+2:]
 				continue
 			}
 		}
