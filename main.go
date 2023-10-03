@@ -235,10 +235,10 @@ func prepare(context *cli.Context) error {
 
 	if len(version) == 0 {
 		// install master
-		url = "https://raw.githubusercontent.com/toluschr/xdeb/master/xdeb"
+		url = xdeb.XDEB_MASTER_URL
 		version = "master"
 	} else {
-		url = fmt.Sprintf("https://github.com/toluschr/xdeb/releases/download/%s/xdeb", version)
+		url = fmt.Sprintf(xdeb.XDEB_RELEASE_URL, version)
 	}
 
 	path := filepath.Join(os.TempDir(), "xdeb-download")
