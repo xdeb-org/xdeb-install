@@ -194,6 +194,7 @@ func search(context *cli.Context) error {
 
 	for _, packageDefinition := range packageDefinitions {
 		fmt.Printf("%s/%s\n", packageDefinition.Provider, packageDefinition.Component)
+		fmt.Printf("  package: %s\n", packageDefinition.Name)
 		fmt.Printf("  distribution: %s\n", packageDefinition.Distribution)
 
 		if len(packageDefinition.Version) > 0 {

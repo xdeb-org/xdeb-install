@@ -291,34 +291,60 @@ Output:
 ```
 [xdeb-install] Looking for package speedcrunch via provider * and distribution * ...
 debian.org/main
+  package: speedcrunch
   distribution: bookworm
   version: 0.12.0-6
   url: http://ftp.debian.org/debian/pool/main/s/speedcrunch/speedcrunch_0.12.0-6_amd64.deb
   sha256: a306a478bdf923ad1206a1a76fdc1b2d6a745939663419b360febfa6350e96b6
 
 debian.org/main
+  package: speedcrunch
   distribution: sid
   version: 0.12.0-6
   url: http://ftp.debian.org/debian/pool/main/s/speedcrunch/speedcrunch_0.12.0-6_amd64.deb
   sha256: a306a478bdf923ad1206a1a76fdc1b2d6a745939663419b360febfa6350e96b6
 
 debian.org/main
+  package: speedcrunch
   distribution: testing
   version: 0.12.0-6
   url: http://ftp.debian.org/debian/pool/main/s/speedcrunch/speedcrunch_0.12.0-6_amd64.deb
   sha256: a306a478bdf923ad1206a1a76fdc1b2d6a745939663419b360febfa6350e96b6
 
 debian.org/main
+  package: speedcrunch
   distribution: bullseye
   version: 0.12.0-5
   url: http://ftp.debian.org/debian/pool/main/s/speedcrunch/speedcrunch_0.12.0-5_amd64.deb
   sha256: 0c108597debfbc47e6eb384cfff5539627d0f0652202a63f82aa3c3e8f56aa5c
 
+ubuntu.com/universe
+  package: speedcrunch
+  distribution: jammy
+  version: 0.12.0-5
+  url: http://archive.ubuntu.com/ubuntu/pool/universe/s/speedcrunch/speedcrunch_0.12.0-5_amd64.deb
+  sha256: 241d302af8d696032d11abbc6e46d045934c23461786c4876fcc82e1743eec33
+
+ubuntu.com/universe
+  package: speedcrunch
+  distribution: focal
+  version: 0.12.0-4build1
+  url: http://archive.ubuntu.com/ubuntu/pool/universe/s/speedcrunch/speedcrunch_0.12.0-4build1_amd64.deb
+  sha256: 79c0075eea11b172d17963da185a0dffb9d2ab368fd5c64c812c695127579922
+
 debian.org/main
+  package: speedcrunch
   distribution: buster
   version: 0.12.0-4
   url: http://ftp.debian.org/debian/pool/main/s/speedcrunch/speedcrunch_0.12.0-4_amd64.deb
   sha256: 8681da5ca651a6a7f5abb479c673d33ce3525212e34a2a33afcec7ad75c28aea
+
+ubuntu.com/universe
+  package: speedcrunch
+  distribution: bionic
+  version: 0.12.0-3
+  url: http://archive.ubuntu.com/ubuntu/pool/universe/s/speedcrunch/speedcrunch_0.12.0-3_amd64.deb
+  sha256: 0206f112ac503393c984088817488aa21589c1c5f16f67df8d8836612f27f81
 ```
 
 Filtering search results is also supported via `--provider <provider> [--distribution <distribution>]`:
@@ -331,6 +357,7 @@ Output:
 ```
 [xdeb-install] Looking for package speedcrunch via provider ubuntu.com and distribution bionic ...
 ubuntu.com/universe
+  package: speedcrunch
   distribution: bionic
   version: 0.12.0-3
   url: http://archive.ubuntu.com/ubuntu/pool/universe/s/speedcrunch/speedcrunch_0.12.0-3_amd64.deb
