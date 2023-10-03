@@ -42,10 +42,7 @@ func installPackage(path string) error {
 		return fmt.Errorf("Could not find any XBPS packages to install within %s.", binpkgs)
 	}
 
-	xbps := filepath.Base(files[0])
-	xbps = TrimPathExtension(xbps)
-	xbps = TrimPathExtension(xbps)
-
+	xbps := TrimPathExtension(filepath.Base(files[0]), 2)
 	args := []string{}
 
 	if os.Getuid() > 0 {

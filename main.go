@@ -115,7 +115,7 @@ func url(context *cli.Context) error {
 	downloadUrl := context.Args().First()
 
 	return xdeb.InstallPackage(&xdeb.XdebPackageDefinition{
-		Name: xdeb.TrimPathExtension(filepath.Base(downloadUrl)),
+		Name: xdeb.TrimPathExtension(filepath.Base(downloadUrl), 1),
 		Url:  downloadUrl,
 	}, context)
 }
@@ -136,7 +136,7 @@ func file(context *cli.Context) error {
 	}
 
 	packageDefinition := xdeb.XdebPackageDefinition{
-		Name: xdeb.TrimPathExtension(filepath.Base(filePath)),
+		Name: xdeb.TrimPathExtension(filepath.Base(filePath), 1),
 	}
 
 	packageDefinition.Configure(context.String("temp"))

@@ -5,6 +5,10 @@ import (
 	"strings"
 )
 
-func TrimPathExtension(path string) string {
-	return strings.TrimSuffix(path, filepath.Ext(path))
+func TrimPathExtension(path string, count int) string {
+	for i := 0; i < count; i++ {
+		path = strings.TrimSuffix(path, filepath.Ext(path))
+	}
+
+	return path
 }

@@ -43,7 +43,7 @@ func (this *XdebPackageDefinition) setDistribution() {
 
 func (this *XdebPackageDefinition) setComponent() {
 	if strings.HasSuffix(this.Component, ".yaml") {
-		this.Component = TrimPathExtension(this.Component)
+		this.Component = TrimPathExtension(this.Component, 1)
 	}
 }
 
@@ -116,7 +116,7 @@ func FindPackage(name string, path string, provider string, distribution string)
 			if definition.Xdeb[index].Name == name {
 				distPath := filepath.Dir(match)
 
-				definition.Xdeb[index].Component = TrimPathExtension(TrimPathExtension(filepath.Base(match)))
+				definition.Xdeb[index].Component = TrimPathExtension(filepath.Base(match), 2)
 				definition.Xdeb[index].Distribution = filepath.Base(distPath)
 				definition.Xdeb[index].Provider = filepath.Base(filepath.Dir(distPath))
 
