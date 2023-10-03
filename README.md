@@ -80,6 +80,7 @@ Syncing lists: https://raw.githubusercontent.com/thetredev/xdeb-install-reposito
 ...
 [xdeb-install] Syncing repository microsoft.com/vscode.yaml @ current
 [xdeb-install] Syncing repository google.com/google-chrome.yaml @ current
+[xdeb-install] Finished syncing: ~/.config/xdeb-install/repositories/x86_64
 ```
 
 You can also filter the providers to sync, like so:
