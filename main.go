@@ -384,19 +384,23 @@ func main() {
 		Description: "Simple tool to automatically download, convert, and install DEB packages via the awesome xdeb utility.\nBasically just a wrapper to automate the process.",
 		Commands: []*cli.Command{
 			{
-				Name:   "xdeb",
-				Usage:  "installs the xdeb utility to the system along with its dependencies",
-				Action: prepare,
+				Name:     "xdeb",
+				HelpName: "xdeb [release version]",
+				Usage:    "install the xdeb utility to the system along with its dependencies",
+				Action:   prepare,
 			},
 			{
-				Name:   "providers",
-				Usage:  "lists available providers",
-				Action: providers,
+				Name:    "providers",
+				Usage:   "list available providers",
+				Aliases: []string{"p"},
+				Action:  providers,
 			},
 			{
-				Name:   "sync",
-				Usage:  "sync remote repositories",
-				Action: sync,
+				Name:     "sync",
+				HelpName: "sync [provider list]",
+				Usage:    "synchronize remote repositories",
+				Aliases:  []string{"S"},
+				Action:   sync,
 			},
 			{
 				Name:    "search",
@@ -407,13 +411,16 @@ func main() {
 					&cli.BoolFlag{
 						Name:    "exact",
 						Aliases: []string{"e"},
+						Usage:   "perform an exact match of the package name provided",
 					},
 					&cli.StringFlag{
 						Name:    "provider",
+						Usage:   "limit search results to a specific provider",
 						Aliases: []string{"p"},
 					},
 					&cli.StringFlag{
 						Name:    "distribution",
+						Usage:   "limit search results to a specific distribution (requires --provider)",
 						Aliases: []string{"dist", "d"},
 					},
 				},
@@ -426,25 +433,29 @@ func main() {
 				Flags: []cli.Flag{
 					&cli.StringFlag{
 						Name:    "provider",
+						Usage:   "limit search results to a specific provider",
 						Aliases: []string{"p"},
 					},
 					&cli.StringFlag{
 						Name:    "distribution",
+						Usage:   "limit search results to a specific distribution (requires --provider)",
 						Aliases: []string{"dist", "d"},
 					},
 				},
 			},
 			{
-				Name:    "url",
-				Usage:   "install a package from a URL directly",
-				Aliases: []string{"u"},
-				Action:  url,
+				Name:     "url",
+				HelpName: "url [URL]",
+				Usage:    "install a package from a URL directly",
+				Aliases:  []string{"u"},
+				Action:   url,
 			},
 			{
-				Name:    "file",
-				Usage:   "install a package from a local DEB file",
-				Aliases: []string{"f"},
-				Action:  file,
+				Name:     "file",
+				HelpName: "file [path]",
+				Usage:    "install a package from a local DEB file",
+				Aliases:  []string{"f"},
+				Action:   file,
 			},
 			{
 				Name:    "clean",
@@ -462,7 +473,7 @@ func main() {
 			},
 			{
 				Name:    "version",
-				Usage:   "prints the version of this tool",
+				Usage:   "print the version of this tool",
 				Aliases: []string{"v"},
 				Action:  version,
 			},
@@ -477,7 +488,7 @@ func main() {
 			&cli.StringFlag{
 				Name:    "temp",
 				Aliases: []string{"t"},
-				Usage:   "temporary xdeb context root path",
+				Usage:   "set the temporary xdeb context root path",
 				Value:   filepath.Join(os.TempDir(), "xdeb"),
 			},
 		},

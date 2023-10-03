@@ -38,25 +38,184 @@ USAGE:
    xdeb-install [global options] command [command options] [arguments...]
 
 DESCRIPTION:
-   Simple tool to automatically download, convert, and install DEB packages via the awesome xdeb tool.
+   Simple tool to automatically download, convert, and install DEB packages via the awesome xdeb utility.
    Basically just a wrapper to automate the process.
 
 COMMANDS:
-   xdeb           installs the xdeb utility to the system along with its dependencies
-   providers      lists available providers
-   sync           sync remote repositories
+   xdeb           install the xdeb utility to the system along with its dependencies
+   providers, p   list available providers
+   sync, S        synchronize remote repositories
    search, s      search remote repositories for a package
    repository, r  install a package from an remote repository
    url, u         install a package from a URL directly
    file, f        install a package from a local DEB file
    clean, c       cleanup temporary xdeb context root path, optionally the repository lists as well
-   version, v     prints the version of this tool
+   version, v     print the version of this tool
    help, h        Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
    --options value, -o value  override XDEB_OPTS, '-i' will be removed if provided (default: "-Sde")
-   --temp value, -t value     temporary xdeb context root path (default: "/tmp/xdeb")
+   --temp value, -t value     set the temporary xdeb context root path (default: "/tmp/xdeb")
    --help, -h                 show help
+```
+
+#### xdeb
+
+```
+$ xdeb-install xdeb
+NAME:
+   xdeb-install xdeb [release version] - install the xdeb utility to the system along with its dependencies
+
+USAGE:
+   xdeb-install xdeb [release version] [command options] [arguments...]
+
+OPTIONS:
+   --help, -h  show help
+```
+
+To install the current `master` version of the `xdeb` utility, type:
+```
+$ xdeb-install xdeb
+```
+
+To install a specific version of the `xdeb` utility, type:
+```
+$ xdeb-install xdeb <version>
+```
+
+For example:
+```
+$ xdeb-install xdeb 1.3
+```
+
+#### providers
+
+```
+$ xdeb-install providers -h
+NAME:
+   xdeb-install providers - list available providers
+
+USAGE:
+   xdeb-install providers [command options] [arguments...]
+
+OPTIONS:
+   --help, -h  show help
+```
+
+See [Listing available providers](#listing-available-providers)
+
+#### sync
+
+```
+$ xdeb-install sync -h
+NAME:
+   xdeb-install sync [provider list] - synchronize remote repositories
+
+USAGE:
+   xdeb-install sync [provider list] [command options] [arguments...]
+
+OPTIONS:
+   --help, -h  show help
+```
+
+See [Syncing package repositories](#syncing-package-repositories)
+
+#### search
+
+```
+$ xdeb-install search -h
+NAME:
+   xdeb-install search - search remote repositories for a package
+
+USAGE:
+   xdeb-install search [command options] [arguments...]
+
+OPTIONS:
+   --exact, -e                                   perform an exact match of the package name provided (default: false)
+   --provider value, -p value                    limit search results to a specific provider
+   --distribution value, --dist value, -d value  limit search results to a specific distribution (requires --provider)
+   --help, -h                                    show help
+```
+
+See [Searching for DEB packages](#searching-for-deb-packages)
+
+#### repository
+
+```
+$ xdeb-install repository -h
+NAME:
+   xdeb-install repository - install a package from an remote repository
+
+USAGE:
+   xdeb-install repository [command options] [arguments...]
+
+OPTIONS:
+   --provider value, -p value                    limit search results to a specific provider
+   --distribution value, --dist value, -d value  limit search results to a specific distribution (requires --provider)
+   --help, -h                                    show help
+```
+
+See [Installing DEB packages/From remote repositories](#from-remote-repositories)
+
+#### url
+
+```
+$ xdeb-install url -h
+NAME:
+   xdeb-install url [URL] - install a package from a URL directly
+
+USAGE:
+   xdeb-install url [URL] [command options] [arguments...]
+
+OPTIONS:
+   --help, -h  show help
+```
+
+See [Installing DEB packages/Directly from a URL](#directly-from-a-url)
+
+#### file
+
+```
+$ xdeb-install file -h
+NAME:
+   xdeb-install file [path] - install a package from a local DEB file
+
+USAGE:
+   xdeb-install file [path] [command options] [arguments...]
+
+OPTIONS:
+   --help, -h  show help
+```
+
+See [Installing DEB packages/Directly from a local file](#directly-from-a-local-file)
+
+#### clean
+
+```
+$ xdeb-install clean -h
+NAME:
+   xdeb-install clean - cleanup temporary xdeb context root path, optionally the repository lists as well
+
+USAGE:
+   xdeb-install clean [command options] [arguments...]
+
+OPTIONS:
+   --lists, -l  cleanup repository lists as well (default: false)
+   --help, -h   show help
+```
+
+#### version
+
+```
+$ xdeb-install version -h
+NAME:
+   xdeb-install version - print the version of this tool
+
+USAGE:
+   xdeb-install version [command options] [arguments...]
+
+OPTIONS:
+   --help, -h  show help
 ```
 
 ## Installation
