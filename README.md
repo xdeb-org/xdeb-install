@@ -11,7 +11,7 @@ Simple tool to automatically download, convert, and install DEB packages on [Voi
   - [Manually](#manually)
 - [Listing available providers](#listing-available-providers)
 - [Package repositories](#package-repositories)
-  - [Sync package repositories](#sync-package-repositories)
+  - [Syncing package repositories](#syncing-package-repositories)
   - [Supported package repositories](#supported-package-repositories)
 - [Searching for DEB packages](#searching-for-deb-packages)
   - [General instructions](#general-instructions)
@@ -211,7 +211,7 @@ google.com
 
 ## Package repositories
 
-### Sync package repositories
+### Syncing package repositories
 
 To sync package repositories, type:
 ```
