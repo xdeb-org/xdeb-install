@@ -14,7 +14,7 @@ func packageDefinitionWithMetadata(packageDefinition *XdebPackageDefinition, pat
 	distPath := filepath.Dir(path)
 
 	packageObject := *packageDefinition
-	packageObject.Component = TrimPathExtension(filepath.Base(path))
+	packageObject.Component = TrimPathExtension(TrimPathExtension(filepath.Base(path)))
 	packageObject.Distribution = filepath.Base(distPath)
 	packageObject.Provider = filepath.Base(filepath.Dir(distPath))
 
