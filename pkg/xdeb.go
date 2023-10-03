@@ -113,7 +113,7 @@ func FindPackage(name string, path string, provider string, distribution string)
 
 		for _, packageDefinition := range definition.Xdeb {
 			if packageDefinition.Name == name {
-				packageDefinitions = append(packageDefinitions, PackageDefinitionWithMetadata(&packageDefinition, match))
+				packageDefinitions = append(packageDefinitions, packageDefinitionWithMetadata(&packageDefinition, match))
 			}
 		}
 	}
