@@ -17,7 +17,7 @@ Simple tool to automatically download, convert, and install DEB packages on [Voi
   - [From remote repositories](#from-remote-repositories)
   - [Directly from a URL](#directly-from-a-url)
   - [Directly from a local file](#directly-from-a-local-file)
-- [Search for a DEB package](#search-for-a-deb-package)
+- [Searching for DEB packages](#searching-for-deb-packages)
   - [General instructions](#general-instructions)
   - [Search filtering by provider/distribution](#search-filtering-by-providerdistribution)
   - [Inexact matches](#inexact-matches)
@@ -302,7 +302,7 @@ First, obviously download a DEB file from a remote location. Let's stay it's sto
 $ xdeb-install file $HOME/Downloads/speedcrunch.deb
 ```
 
-## Search for a DEB package
+## Searching for DEB packages
 
 ### General instructions
 You can search for a specific package by its name, let's stay with `speedcrunch`:
