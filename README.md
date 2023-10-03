@@ -10,7 +10,7 @@ Simple tool to automatically download, convert, and install DEB packages on [Voi
   - [Using Go](#using-go)
   - [Manually](#manually)
 - [Listing available providers](#listing-available-providers)
-- [Package repositories](#package-repositories)
+- [Managing package repositories](#managing-package-repositories)
   - [Syncing package repositories](#syncing-package-repositories)
   - [Supported package repositories](#supported-package-repositories)
 - [Searching for DEB packages](#searching-for-deb-packages)
@@ -209,7 +209,7 @@ google.com
       component: google-chrome.yaml
 ```
 
-## Package repositories
+## Managing package repositories
 
 ### Syncing package repositories
 
