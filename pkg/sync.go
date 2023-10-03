@@ -24,6 +24,7 @@ type PackageListsProvider struct {
 }
 
 type PackageListsDefinition struct {
+	Path      string                 `yaml:"path,omitempty"`
 	Providers []PackageListsProvider `yaml:"providers"`
 }
 
@@ -179,7 +180,19 @@ func pullCustomRepository(directory string, urlPrefix string, dist string, compo
 	return err
 }
 
-func ParsePackageLists(path string, arch string) (*PackageListsDefinition, error) {
+func ParsePackageLists() (*PackageListsDefinition, error) {
+	arch, err := FindArchitecture()
+
+	if err != nil {
+		return nil, err
+	}
+
+	path, err := RepositoryPath()
+
+	if err != nil {
+		return nil, err
+	}
+
 	url := fmt.Sprintf(XDEB_INSTALL_REPOSITORIES_URL, XDEB_INSTALL_REPOSITORIES_TAG, arch)
 	LogMessage("Syncing lists: %s", url)
 
@@ -202,10 +215,11 @@ func ParsePackageLists(path string, arch string) (*PackageListsDefinition, error
 		return nil, err
 	}
 
+	lists.Path = path
 	return lists, nil
 }
 
-func SyncRepositories(path string, lists *PackageListsDefinition, providerNames ...string) error {
+func SyncRepositories(lists *PackageListsDefinition, providerNames ...string) error {
 	availableProviderNames := []string{}
 
 	for _, provider := range lists.Providers {
@@ -250,7 +264,7 @@ func SyncRepositories(path string, lists *PackageListsDefinition, providerNames 
 
 				go func(p PackageListsProvider, d string, c string) {
 					defer wg.Done()
-					directory := filepath.Join(path, p.Name)
+					directory := filepath.Join(lists.Path, p.Name)
 
 					if p.Custom {
 						errors <- pullCustomRepository(directory, p.Url, d, c)

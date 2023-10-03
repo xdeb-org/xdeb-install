@@ -9,23 +9,12 @@ import (
 
 	"golang.org/x/exp/slices"
 
-	"github.com/adrg/xdg"
 	xdeb "github.com/thetredev/xdeb-install/pkg"
 	"github.com/urfave/cli/v2"
 )
 
-func repositoryPath() (string, error) {
-	arch, err := xdeb.FindArchitecture()
-
-	if err != nil {
-		return "", err
-	}
-
-	return filepath.Join(xdg.ConfigHome, xdeb.APPLICATION_NAME, "repositories", arch), nil
-}
-
 func readPath(subdir string) ([]string, error) {
-	path, err := repositoryPath()
+	path, err := xdeb.RepositoryPath()
 
 	if err != nil {
 		return nil, err
@@ -89,7 +78,7 @@ func findProvider(provider string) (string, error) {
 }
 
 func repository(context *cli.Context) error {
-	path, err := repositoryPath()
+	path, err := xdeb.RepositoryPath()
 
 	if err != nil {
 		return nil
@@ -179,7 +168,7 @@ func search(context *cli.Context) error {
 		return fmt.Errorf("No package provided to search for.")
 	}
 
-	path, err := repositoryPath()
+	path, err := xdeb.RepositoryPath()
 
 	if err != nil {
 		return err
@@ -224,19 +213,7 @@ func search(context *cli.Context) error {
 }
 
 func sync(context *cli.Context) error {
-	arch, err := xdeb.FindArchitecture()
-
-	if err != nil {
-		return err
-	}
-
-	path, err := repositoryPath()
-
-	if err != nil {
-		return err
-	}
-
-	lists, err := xdeb.ParsePackageLists(path, arch)
+	lists, err := xdeb.ParsePackageLists()
 
 	if err != nil {
 		return err
@@ -250,30 +227,18 @@ func sync(context *cli.Context) error {
 		providerNames = append(providerNames, providerName)
 	}
 
-	err = xdeb.SyncRepositories(path, lists, providerNames...)
+	err = xdeb.SyncRepositories(lists, providerNames...)
 
 	if err != nil {
 		return err
 	}
 
-	xdeb.LogMessage("Finished syncing: %s", strings.ReplaceAll(path, os.Getenv("HOME"), "~"))
+	xdeb.LogMessage("Finished syncing: %s", strings.ReplaceAll(lists.Path, os.Getenv("HOME"), "~"))
 	return nil
 }
 
 func providers(context *cli.Context) error {
-	arch, err := xdeb.FindArchitecture()
-
-	if err != nil {
-		return err
-	}
-
-	path, err := repositoryPath()
-
-	if err != nil {
-		return err
-	}
-
-	lists, err := xdeb.ParsePackageLists(path, arch)
+	lists, err := xdeb.ParsePackageLists()
 
 	if err != nil {
 		return err
@@ -384,7 +349,7 @@ func clean(context *cli.Context) error {
 	}
 
 	if context.Bool("lists") {
-		path, err := repositoryPath()
+		path, err := xdeb.RepositoryPath()
 
 		if err != nil {
 			return err

@@ -7,6 +7,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/adrg/xdg"
 	version "github.com/knqyf263/go-deb-version"
 	"gopkg.in/yaml.v2"
 )
@@ -145,6 +146,16 @@ func FindPackage(name string, path string, provider string, distribution string)
 	})
 
 	return packageDefinitions, nil
+}
+
+func RepositoryPath() (string, error) {
+	arch, err := FindArchitecture()
+
+	if err != nil {
+		return "", err
+	}
+
+	return filepath.Join(xdg.ConfigHome, APPLICATION_NAME, "repositories", arch), nil
 }
 
 func getXdebPath() (string, error) {
