@@ -1,6 +1,6 @@
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Release Status](https://img.shields.io/github/actions/workflow/status/thetredev/xdeb-install/release.yml?label=release
 )](https://github.com/thetredev/xdeb-install/actions/workflows/release.yml)
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 # xdeb-install
 
