@@ -220,7 +220,7 @@ func SyncRepositories(lists *PackageListsDefinition, providerNames ...string) er
 
 	for _, providerName := range providerNames {
 		if !slices.Contains(availableProviderNames, providerName) {
-			return fmt.Errorf("Provider %s not supported. Omit or use any of %v", providerName, availableProviderNames)
+			return fmt.Errorf("provider %s not supported, omit or use any of %v", providerName, availableProviderNames)
 		}
 	}
 

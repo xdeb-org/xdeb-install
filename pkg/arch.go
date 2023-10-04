@@ -15,7 +15,7 @@ func FindArchitecture() (string, error) {
 	arch, ok := ARCHITECTURE_MAP[runtime.GOARCH]
 
 	if !ok {
-		return "", fmt.Errorf("Architecture %s not supported (yet).", runtime.GOARCH)
+		return "", fmt.Errorf("architecture '%s' not supported (yet)", runtime.GOARCH)
 	}
 
 	return arch, nil

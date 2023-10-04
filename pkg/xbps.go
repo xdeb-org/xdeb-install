@@ -22,7 +22,7 @@ func comparePackageChecksums(path string, expected string) error {
 	actual := hex.EncodeToString(hasher.Sum(nil))
 
 	if actual != expected {
-		return fmt.Errorf("Checksums don't match: actual=%s expected=%s", actual, expected)
+		return fmt.Errorf("checksums don't match: actual=%s expected=%s", actual, expected)
 	}
 
 	return nil
@@ -39,7 +39,7 @@ func installPackage(path string) error {
 	}
 
 	if len(files) == 0 {
-		return fmt.Errorf("Could not find any XBPS packages to install within %s.", binpkgs)
+		return fmt.Errorf("could not find any XBPS packages to install within '%s'", binpkgs)
 	}
 
 	xbps := TrimPathExtension(filepath.Base(files[0]), 2)

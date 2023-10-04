@@ -25,7 +25,7 @@ func readPath(subdir string) ([]string, error) {
 	entries, err := os.ReadDir(entriesPath)
 
 	if err != nil {
-		return nil, fmt.Errorf("No entries found. Please sync the repositories first.")
+		return nil, fmt.Errorf("no entries found, please sync the repositories first")
 	}
 
 	subdirs := []string{}
@@ -49,7 +49,7 @@ func findDistribution(provider string, distribution string) (string, error) {
 
 		if !slices.Contains(distributions, distribution) {
 			return "", fmt.Errorf(
-				"Provider %s does not support distribution %s. Omit or use any of %v",
+				"provider %s does not support distribution '%s', - omit or use any of %v",
 				provider, distribution, distributions,
 			)
 		}
@@ -69,7 +69,7 @@ func findProvider(provider string) (string, error) {
 		}
 
 		if !slices.Contains(providers, provider) {
-			return "", fmt.Errorf("Provider %s not supported. Omit or use any of %v", provider, providers)
+			return "", fmt.Errorf("provider '%s' not supported, omit or use any of %v", provider, providers)
 		}
 
 		return provider, nil
@@ -100,7 +100,7 @@ func repository(context *cli.Context) error {
 	packageName := strings.Trim(context.Args().First(), " ")
 
 	if len(packageName) == 0 {
-		return fmt.Errorf("No package provided to install.")
+		return fmt.Errorf("no package provided to install")
 	}
 
 	packageDefinitions, err := xdeb.FindPackage(packageName, path, provider, distribution, true)
@@ -126,14 +126,14 @@ func file(context *cli.Context) error {
 
 	if _, err := os.Stat(filePath); err != nil {
 		if os.IsNotExist(err) {
-			return fmt.Errorf("File %s does not exist.", filePath)
+			return fmt.Errorf("file '%s' does not exist", filePath)
 		}
 
 		return err
 	}
 
 	if !strings.HasSuffix(filePath, ".deb") {
-		return fmt.Errorf("File %s is not a valid DEB package.", filePath)
+		return fmt.Errorf("file '%s' is not a valid DEB package", filePath)
 	}
 
 	packageDefinition := xdeb.XdebPackageDefinition{
@@ -166,7 +166,7 @@ func search(context *cli.Context) error {
 	packageName := context.Args().First()
 
 	if len(packageName) == 0 {
-		return fmt.Errorf("No package provided to search for.")
+		return fmt.Errorf("no package provided to search for")
 	}
 
 	path, err := xdeb.RepositoryPath()
@@ -282,7 +282,7 @@ func prepare(context *cli.Context) error {
 			resp, err := client.Get(urlPrefix)
 
 			if err != nil {
-				return fmt.Errorf("Could not follow URL %s", urlPrefix)
+				return fmt.Errorf("could not follow URL '%s'", urlPrefix)
 			}
 
 			// install latest release tag
@@ -356,7 +356,7 @@ func clean(context *cli.Context) error {
 	tempPath := context.String("temp")
 
 	if len(tempPath) == 0 {
-		return fmt.Errorf("Please provide a temporary xdeb context root path.")
+		return fmt.Errorf("please provide a temporary xdeb context root path")
 	}
 
 	xdeb.LogMessage("Cleaning up temporary xdeb context root path: %s", tempPath)

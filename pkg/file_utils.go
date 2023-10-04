@@ -109,7 +109,7 @@ func DownloadFile(path string, url string, followRedirects bool, compress bool) 
 	resp, err := client.Get(url)
 
 	if err != nil {
-		return "", fmt.Errorf("Could not download file %s", url)
+		return "", fmt.Errorf("could not download file '%s'", url)
 	}
 
 	if followRedirects {
@@ -117,12 +117,12 @@ func DownloadFile(path string, url string, followRedirects bool, compress bool) 
 		resp, err = client.Get(url)
 
 		if err != nil {
-			return "", fmt.Errorf("Could not download file %s", url)
+			return "", fmt.Errorf("could not download file '%s'", url)
 		}
 	}
 
 	if resp.StatusCode != 200 {
-		return "", fmt.Errorf("Could not download file %s", url)
+		return "", fmt.Errorf("could not download file '%s'", url)
 	}
 
 	defer resp.Body.Close()

@@ -38,51 +38,51 @@ type XdebPackageDefinition struct {
 	IsConfigured bool                               `yaml:"is_configured,omitempty"`
 }
 
-func (this *XdebPackageDefinition) setProvider() {
-	if len(this.Provider) == 0 {
-		if len(this.Url) == 0 {
-			this.Provider = "localhost"
+func (packageDefinition *XdebPackageDefinition) setProvider() {
+	if len(packageDefinition.Provider) == 0 {
+		if len(packageDefinition.Url) == 0 {
+			packageDefinition.Provider = "localhost"
 		} else {
-			this.Provider = "remote"
+			packageDefinition.Provider = "remote"
 		}
 	}
 }
 
-func (this *XdebPackageDefinition) setDistribution() {
-	if this.Provider == "localhost" || this.Provider == "remote" {
-		this.Distribution = "file"
+func (packageDefinition *XdebPackageDefinition) setDistribution() {
+	if packageDefinition.Provider == "localhost" || packageDefinition.Provider == "remote" {
+		packageDefinition.Distribution = "file"
 	}
 }
 
-func (this *XdebPackageDefinition) setComponent() {
-	if strings.HasSuffix(this.Component, ".yaml") {
-		this.Component = TrimPathExtension(this.Component, 1)
+func (packageDefinition *XdebPackageDefinition) setComponent() {
+	if strings.HasSuffix(packageDefinition.Component, ".yaml") {
+		packageDefinition.Component = TrimPathExtension(packageDefinition.Component, 1)
 	}
 }
 
-func (this *XdebPackageDefinition) setPaths(rootPath string) {
-	this.Path = filepath.Join(rootPath, this.Provider, this.Distribution, this.Component, this.Name)
+func (packageDefinition *XdebPackageDefinition) setPaths(rootPath string) {
+	packageDefinition.Path = filepath.Join(rootPath, packageDefinition.Provider, packageDefinition.Distribution, packageDefinition.Component, packageDefinition.Name)
 
-	if len(this.Url) > 0 {
-		this.FilePath = filepath.Join(this.Path, filepath.Base(this.Url))
+	if len(packageDefinition.Url) > 0 {
+		packageDefinition.FilePath = filepath.Join(packageDefinition.Path, filepath.Base(packageDefinition.Url))
 	} else {
-		this.FilePath = filepath.Join(this.Path, fmt.Sprintf("%s.deb", this.Name))
+		packageDefinition.FilePath = filepath.Join(packageDefinition.Path, fmt.Sprintf("%s.deb", packageDefinition.Name))
 	}
 }
 
-func (this *XdebPackageDefinition) Configure(rootPath string) {
-	if !this.IsConfigured {
-		this.setProvider()
-		this.setDistribution()
-		this.setComponent()
-		this.setPaths(rootPath)
+func (packageDefinition *XdebPackageDefinition) Configure(rootPath string) {
+	if !packageDefinition.IsConfigured {
+		packageDefinition.setProvider()
+		packageDefinition.setDistribution()
+		packageDefinition.setComponent()
+		packageDefinition.setPaths(rootPath)
 
-		this.IsConfigured = true
+		packageDefinition.IsConfigured = true
 	}
 }
 
-func (this *XdebPackageDefinition) runPostInstallHooks() error {
-	for _, postInstallHook := range this.PostInstall {
+func (packageDefinition *XdebPackageDefinition) runPostInstallHooks() error {
+	for _, postInstallHook := range packageDefinition.PostInstall {
 		for _, command := range postInstallHook.Commands {
 			args := []string{}
 
@@ -94,7 +94,7 @@ func (this *XdebPackageDefinition) runPostInstallHooks() error {
 
 			LogMessage("Running post-install hook: %s", postInstallHook.Name)
 
-			if err := ExecuteCommand(this.Path, args...); err != nil {
+			if err := ExecuteCommand(packageDefinition.Path, args...); err != nil {
 				return err
 			}
 		}
@@ -135,7 +135,7 @@ func FindPackage(name string, path string, provider string, distribution string,
 	}
 
 	if len(globbed) == 0 {
-		return nil, fmt.Errorf("No repositories present on the system. Please sync repositories first.")
+		return nil, fmt.Errorf("no repositories present on the system, please sync repositories first")
 	}
 
 	packageDefinitions := []*XdebPackageDefinition{}
@@ -161,7 +161,7 @@ func FindPackage(name string, path string, provider string, distribution string,
 	}
 
 	if len(packageDefinitions) == 0 {
-		return nil, fmt.Errorf("Could not find package %s", name)
+		return nil, fmt.Errorf("could not find package '%s'", name)
 	}
 
 	sort.Slice(packageDefinitions, func(i int, j int) bool {
@@ -197,7 +197,7 @@ func getXdebPath() (string, error) {
 	xdebPath, err := exec.LookPath("xdeb")
 
 	if err != nil {
-		return "", fmt.Errorf("Package xdeb not found. Please install from %s.", XDEB_URL)
+		return "", fmt.Errorf("xdeb is not installed, please install it via 'xdeb-install xdeb' or manually from '%s'", XDEB_URL)
 	}
 
 	LogMessage("Package xdeb found: %s", xdebPath)
