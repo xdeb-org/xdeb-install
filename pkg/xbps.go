@@ -100,7 +100,9 @@ func InstallPackage(packageDefinition *XdebPackageDefinition, context *cli.Conte
 	}
 
 	// run post install hooks
-	packageDefinition.runPostInstallHooks()
+	if err := packageDefinition.runPostInstallHooks(); err != nil {
+		return err
+	}
 
 	// cleanup
 	return os.RemoveAll(packageDefinition.Path)

@@ -81,7 +81,7 @@ func (this *XdebPackageDefinition) Configure(rootPath string) {
 	}
 }
 
-func (this *XdebPackageDefinition) runPostInstallHooks() {
+func (this *XdebPackageDefinition) runPostInstallHooks() error {
 	for _, postInstallHook := range this.PostInstall {
 		for _, command := range postInstallHook.Commands {
 			args := []string{}
@@ -93,9 +93,14 @@ func (this *XdebPackageDefinition) runPostInstallHooks() {
 			args = append(args, strings.Split(command.Command, " ")...)
 
 			LogMessage("Running post-install hook: %s", postInstallHook.Name)
-			ExecuteCommand(this.Path, args...)
+
+			if err := ExecuteCommand(this.Path, args...); err != nil {
+				return err
+			}
 		}
 	}
+
+	return nil
 }
 
 type XdebProviderDefinition struct {
