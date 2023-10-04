@@ -267,27 +267,32 @@ func providers(context *cli.Context) error {
 
 func prepare(context *cli.Context) error {
 	version := context.Args().First()
-	var url string
+	var urlPrefix string
 
 	if len(version) == 0 {
 		// install master
-		url = xdeb.XDEB_MASTER_URL
+		urlPrefix = xdeb.XDEB_MASTER_URL
 		version = "master"
-	} else if version == "latest" {
-		// find latest release tag
-		client := &http.Client{}
-		resp, err := client.Get(fmt.Sprintf("%s/latest", xdeb.XDEB_URL))
-
-		if err != nil {
-			return fmt.Errorf("Could not download file %s", url)
-		}
-
-		// install latest release tag
-		url = fmt.Sprintf("%s/xdeb", resp.Request.URL.String())
 	} else {
-		url = fmt.Sprintf(xdeb.XDEB_RELEASE_URL, version)
+		if version == "latest" {
+			// find latest release tag
+			urlPrefix = fmt.Sprintf("%s/latest", xdeb.XDEB_URL)
+
+			client := &http.Client{}
+			resp, err := client.Get(urlPrefix)
+
+			if err != nil {
+				return fmt.Errorf("Could not follow URL %s", urlPrefix)
+			}
+
+			// install latest release tag
+			urlPrefix = resp.Request.URL.String()
+		} else {
+			urlPrefix = fmt.Sprintf("%s/download/%s", xdeb.XDEB_URL, version)
+		}
 	}
 
+	url := fmt.Sprintf("%s/xdeb", urlPrefix)
 	path := filepath.Join(os.TempDir(), "xdeb-download")
 
 	xdeb.LogMessage("Downloading xdeb [%s] from %s to %s ...", version, url, path)
