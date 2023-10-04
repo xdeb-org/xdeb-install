@@ -1,0 +1,47 @@
+{
+    "name": "xdeb-install",
+    "image": "ghcr.io/thetredev/xdeb-install:devcontainer",
+
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "golang.Go"
+            ],
+            "settings": {
+                "telemetry.telemetryLevel": "off",
+                "security.workspace.trust.emptyWindow": false,
+                "security.workspace.trust.enabled": false,
+                "extensions.ignoreRecommendations": true,
+                "dev.containers.copyGitConfig": false,
+                "dev.containers.gitCredentialHelperConfigLocation": "none",
+                "dev.containers.dockerCredentialHelper": false,
+                "terminal.integrated.showExitAlert": false,
+                "terminal.integrated.profiles.linux": {
+                    "bash": {
+                        "path": "bash",
+                        "icon": "terminal-bash"
+                    }
+                },
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "explorer.autoReveal": false,
+                "explorer.confirmDragAndDrop": false,
+                "files.trimTrailingWhitespace": true
+            }
+        }
+    },
+
+    "mounts": [
+        "source=${localEnv:HOME}/.bash_history,target=/home/user/.bash_history,type=bind,consistency=cached",
+        "source=${localEnv:HOME}/.gitconfig,target=/home/user/.gitconfig,type=bind,consistency=cached",
+        "source=${localEnv:HOME}/.ssh,target=/home/user/.ssh,type=bind,consistency=cached",
+        "source=/etc/resolv.conf,target=/etc/resolv.conf,type=bind,consistency=cached"
+    ],
+
+    "containerEnv": {
+        "EDITOR": "vim",
+        "GIT_EDITOR": "vim"
+    },
+
+    "postCreateCommand": "go get",
+    "remoteUser": "user"
+}
