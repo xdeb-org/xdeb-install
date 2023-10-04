@@ -1,4 +1,6 @@
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![devcontainer Status](https://img.shields.io/github/actions/workflow/status/thetredev/xdeb-install/docker.yml?label=devcontainer
+)](https://github.com/thetredev/xdeb-install/actions/workflows/docker.yml)
 [![Release Status](https://img.shields.io/github/actions/workflow/status/thetredev/xdeb-install/release.yml?label=release
 )](https://github.com/thetredev/xdeb-install/actions/workflows/release.yml)
 
