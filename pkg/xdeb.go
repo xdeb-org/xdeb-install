@@ -2,6 +2,7 @@ package xdeb
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
 	"path/filepath"
 	"sort"
@@ -13,17 +14,28 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+type XdebPackagePostInstallCommandDefinition struct {
+	Root    bool   `yaml:"root"`
+	Command string `yaml:"command"`
+}
+
+type XdebPackagePostInstallDefinition struct {
+	Name     string                                    `yaml:"name"`
+	Commands []XdebPackagePostInstallCommandDefinition `yaml:"commands"`
+}
+
 type XdebPackageDefinition struct {
-	Name         string `yaml:"name"`
-	Version      string `yaml:"version"`
-	Url          string `yaml:"url"`
-	Sha256       string `yaml:"sha256"`
-	Path         string `yaml:"path,omitempty"`
-	FilePath     string `yaml:"filepath,omitempty"`
-	Provider     string `yaml:"provider,omitempty"`
-	Distribution string `yaml:"distribution,omitempty"`
-	Component    string `yaml:"component,omitempty"`
-	IsConfigured bool   `yaml:"is_configured,omitempty"`
+	Name         string                             `yaml:"name"`
+	Version      string                             `yaml:"version"`
+	Url          string                             `yaml:"url"`
+	Sha256       string                             `yaml:"sha256"`
+	PostInstall  []XdebPackagePostInstallDefinition `yaml:"post-install,omitempty"`
+	Path         string                             `yaml:"path,omitempty"`
+	FilePath     string                             `yaml:"filepath,omitempty"`
+	Provider     string                             `yaml:"provider,omitempty"`
+	Distribution string                             `yaml:"distribution,omitempty"`
+	Component    string                             `yaml:"component,omitempty"`
+	IsConfigured bool                               `yaml:"is_configured,omitempty"`
 }
 
 func (this *XdebPackageDefinition) setProvider() {
@@ -66,6 +78,23 @@ func (this *XdebPackageDefinition) Configure(rootPath string) {
 		this.setPaths(rootPath)
 
 		this.IsConfigured = true
+	}
+}
+
+func (this *XdebPackageDefinition) runPostInstallHooks() {
+	for _, postInstallHook := range this.PostInstall {
+		for _, command := range postInstallHook.Commands {
+			args := []string{}
+
+			if command.Root && os.Getuid() > 0 {
+				args = append(args, "sudo")
+			}
+
+			args = append(args, strings.Split(command.Command, " ")...)
+
+			LogMessage("Running post-install hook: %s", postInstallHook.Name)
+			ExecuteCommand(this.Path, args...)
+		}
 	}
 }
 
