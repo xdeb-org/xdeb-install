@@ -1,3 +1,6 @@
+[![Build Status](https://img.shields.io/github/actions/workflow/status/thetredev/xdeb-install/release.yml)](https://github.com/thetredev/xdeb-install/actions)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 # xdeb-install
 
 Simple tool to automatically download, convert, and install DEB packages on [Void Linux](https://voidlinux.org) via the awesome [`xdeb`](https://github.com/toluschr/xdeb) tool. Basically just a wrapper to automate the process.
