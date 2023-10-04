@@ -88,6 +88,13 @@ For example:
 $ xdeb-install xdeb 1.3
 ```
 
+The tool also supports to figure out the latest release of `xdeb` when `latest` is provided as `<version>`. Example:
+```
+$ xdeb-install xdeb latest
+```
+
+As of today, 2023-10-04, this will install release `1.3`.
+
 #### providers
 
 ```

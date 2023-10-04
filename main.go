@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -272,6 +273,17 @@ func prepare(context *cli.Context) error {
 		// install master
 		url = xdeb.XDEB_MASTER_URL
 		version = "master"
+	} else if version == "latest" {
+		// find latest release tag
+		client := &http.Client{}
+		resp, err := client.Get(fmt.Sprintf("%s/latest", xdeb.XDEB_URL))
+
+		if err != nil {
+			return fmt.Errorf("Could not download file %s", url)
+		}
+
+		// install latest release tag
+		url = fmt.Sprintf("%s/xdeb", resp.Request.URL.String())
 	} else {
 		url = fmt.Sprintf(xdeb.XDEB_RELEASE_URL, version)
 	}
