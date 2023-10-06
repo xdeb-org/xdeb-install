@@ -11,6 +11,8 @@ RUN xbps-install -Sy \
         bash \
         binutils \
         xz \
+        zstd \
+        wget \
     && xbps-remove -yOo \
     && chsh -s /bin/bash \
     && groupadd -g 1000 user \
