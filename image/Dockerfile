@@ -19,6 +19,8 @@ RUN xbps-install -Syu \
         xz \
         zstd \
         wget \
+        ncurses-base \
+        bash-completion \
     && xbps-remove -yOo \
     && chsh -s /bin/bash \
     && groupadd -g 1000 user \
