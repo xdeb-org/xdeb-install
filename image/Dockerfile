@@ -36,3 +36,6 @@ COPY --chown=user:user --from=microsoft_devcontainer_image /home/vscode/.bashrc 
 RUN go install golang.org/x/tools/gopls@latest \
     && go install github.com/go-delve/delve/cmd/dlv@latest \
     && go install honnef.co/go/tools/cmd/staticcheck@latest
+
+ENV GOPATH=/home/user/go
+ENV PATH=${PATH}:${GOPATH}/bin
