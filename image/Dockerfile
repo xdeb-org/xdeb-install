@@ -9,6 +9,8 @@ RUN xbps-install -Sy \
         sudo \
         openssh \
         bash \
+        binutils \
+        xz \
     && xbps-remove -yOo \
     && chsh -s /bin/bash \
     && groupadd -g 1000 user \
