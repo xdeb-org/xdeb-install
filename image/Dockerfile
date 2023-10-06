@@ -1,7 +1,13 @@
 FROM mcr.microsoft.com/vscode/devcontainers/base:debian-12 AS microsoft_devcontainer_image
-FROM ghcr.io/thetredev/voidlinux-repository:x86_64
+FROM ghcr.io/void-linux/void-glibc-full:20231003R1
 
-RUN xbps-install -Sy \
+RUN xbps-install -Syu \
+    && xbps-install -y \
+        git \
+        tar \
+        util-linux \
+        grep \
+        curl \
         shadow \
         vim \
         nano \
