@@ -185,7 +185,7 @@ func ParsePackageLists() (*PackageListsDefinition, error) {
 		return nil, err
 	}
 
-	url := fmt.Sprintf(XDEB_INSTALL_REPOSITORIES_URL, XDEB_INSTALL_REPOSITORIES_TAG, arch)
+	url := fmt.Sprintf("%s/%s/repositories/%s/lists.yaml", XDEB_INSTALL_REPOSITORIES_URL, XDEB_INSTALL_REPOSITORIES_TAG, arch)
 	LogMessage("Syncing lists: %s", url)
 
 	listsFile, err := DownloadFile(path, url, true, true)
@@ -255,7 +255,8 @@ func SyncRepositories(lists *PackageListsDefinition, providerNames ...string) er
 					directory := filepath.Join(lists.Path, p.Name)
 
 					if p.Custom {
-						errors <- pullCustomRepository(directory, p.Url, d, c)
+						urlPrefix := fmt.Sprintf("%s/%s/%s", XDEB_INSTALL_REPOSITORIES_URL, XDEB_INSTALL_REPOSITORIES_TAG, p.Url)
+						errors <- pullCustomRepository(directory, urlPrefix, d, c)
 					} else {
 						errors <- pullAptRepository(directory, p.Url, d, c, p.Architecture)
 					}
