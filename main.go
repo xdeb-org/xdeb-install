@@ -10,7 +10,7 @@ import (
 
 	"golang.org/x/exp/slices"
 
-	xdeb "github.com/thetredev/xdeb-install/pkg"
+	xdeb "github.com/thetredev/xdeb-install/v2/pkg"
 	"github.com/urfave/cli/v2"
 )
 

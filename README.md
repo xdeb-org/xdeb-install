@@ -254,7 +254,7 @@ Afterwards, you can execute `xbps-install xdeb-install` to install the tool.
 
 If you have [Go](https://go.dev) installed, simply execute:
 ```
-go install github.com/thetredev/xdeb-install
+go install github.com/thetredev/xdeb-install/v2@latest
 ```
 
 As long as the `GOPATH` is within your `PATH`, that's it.
