@@ -285,11 +285,12 @@ func prepare(context *cli.Context) error {
 				return fmt.Errorf("could not follow URL '%s'", urlPrefix)
 			}
 
-			// install latest release tag
-			urlPrefix = resp.Request.URL.String()
-		} else {
-			urlPrefix = fmt.Sprintf("%s/download/%s", xdeb.XDEB_URL, version)
+			// get latest release version
+			releaseUrl := resp.Request.URL.String()
+			version = releaseUrl[strings.LastIndex(releaseUrl, "/")+1:]
 		}
+
+		urlPrefix = fmt.Sprintf("%s/download/%s", xdeb.XDEB_URL, version)
 	}
 
 	url := fmt.Sprintf("%s/xdeb", urlPrefix)
