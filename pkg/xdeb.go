@@ -193,7 +193,7 @@ func RepositoryPath() (string, error) {
 	return filepath.Join(xdg.ConfigHome, APPLICATION_NAME, "repositories", arch), nil
 }
 
-func getXdebPath() (string, error) {
+func FindXdeb() (string, error) {
 	xdebPath, err := exec.LookPath("xdeb")
 
 	if err != nil {
@@ -209,11 +209,6 @@ func convertPackage(path string, xdebArgs string) error {
 		xdebArgs = strings.ReplaceAll(xdebArgs, "i", "")
 	}
 
-	xdebPath, err := getXdebPath()
-
-	if err != nil {
-		return err
-	}
-
+	xdebPath, _ := FindXdeb()
 	return ExecuteCommand(filepath.Dir(path), xdebPath, xdebArgs, path)
 }

@@ -79,6 +79,12 @@ func findProvider(provider string) (string, error) {
 }
 
 func deb(context *cli.Context) error {
+	_, err := xdeb.FindXdeb()
+
+	if err != nil {
+		return err
+	}
+
 	path, err := xdeb.RepositoryPath()
 
 	if err != nil {
@@ -113,6 +119,12 @@ func deb(context *cli.Context) error {
 }
 
 func url(context *cli.Context) error {
+	_, err := xdeb.FindXdeb()
+
+	if err != nil {
+		return err
+	}
+
 	downloadUrl := context.Args().First()
 
 	return xdeb.InstallPackage(&xdeb.XdebPackageDefinition{
@@ -122,6 +134,12 @@ func url(context *cli.Context) error {
 }
 
 func file(context *cli.Context) error {
+	_, err := xdeb.FindXdeb()
+
+	if err != nil {
+		return err
+	}
+
 	filePath := context.Args().First()
 
 	if _, err := os.Stat(filePath); err != nil {
