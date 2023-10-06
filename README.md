@@ -48,16 +48,16 @@ DESCRIPTION:
    Basically just a wrapper to automate the process.
 
 COMMANDS:
-   xdeb           install the xdeb utility to the system along with its dependencies
-   providers, p   list available providers
-   sync, S        synchronize remote repositories
-   search, s      search remote repositories for a package
-   repository, r  install a package from an remote repository
-   url, u         install a package from a URL directly
-   file, f        install a package from a local DEB file
-   clean, c       cleanup temporary xdeb context root path, optionally the repository lists as well
-   version, v     print the version of this tool
-   help, h        Shows a list of commands or help for one command
+   xdeb          install the xdeb utility to the system along with its dependencies
+   providers, p  list available providers
+   sync, S       synchronize remote repositories
+   search, s     search remote repositories for a package
+   deb, apt, i   install a package from a remote repository
+   url, u        install a package from a URL directly
+   file, f       install a package from a local DEB file
+   clean, c      cleanup temporary xdeb context root path, optionally the repository lists as well
+   version, v    print the version of this tool
+   help, h       Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
    --options value, -o value  override XDEB_OPTS, '-i' will be removed if provided (default: "-Sde")
@@ -152,15 +152,15 @@ OPTIONS:
 
 See [Searching for DEB packages](#searching-for-deb-packages)
 
-#### repository
+#### deb
 
 ```
-$ xdeb-install repository -h
+$ xdeb-install deb -h
 NAME:
-   xdeb-install repository - install a package from an remote repository
+   xdeb-install deb - install a package from a remote repository
 
 USAGE:
-   xdeb-install repository [command options] [arguments...]
+   xdeb-install deb [command options] [arguments...]
 
 OPTIONS:
    --provider value, -p value                    limit search results to a specific provider
@@ -564,14 +564,14 @@ Currently, the only pattern available is `startsWith`, effectively matching `goo
 
 To install `speedcrunch`, for example, type:
 ```
-$ xdeb-install repository speedcrunch
+$ xdeb-install deb speedcrunch
 ```
 
 This will install the most recent version of the package from the first provider and distribution it can find.
 
 You can also specify the provider and distribution, for example `debian.org` and `bookworm`, respectively:
 ```
-$ xdeb-install repository --provider debian.org --distribution bookworm speedcrunch
+$ xdeb-install deb --provider debian.org --distribution bookworm speedcrunch
 ```
 
 ### Directly from a URL

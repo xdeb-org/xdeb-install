@@ -78,7 +78,7 @@ func findProvider(provider string) (string, error) {
 	return "*", nil
 }
 
-func repository(context *cli.Context) error {
+func deb(context *cli.Context) error {
 	path, err := xdeb.RepositoryPath()
 
 	if err != nil {
@@ -443,10 +443,10 @@ func main() {
 				},
 			},
 			{
-				Name:    "repository",
-				Usage:   "install a package from an remote repository",
-				Aliases: []string{"r"},
-				Action:  repository,
+				Name:    "deb",
+				Usage:   "install a package from a remote repository",
+				Aliases: []string{"apt", "i"},
+				Action:  deb,
 				Flags: []cli.Flag{
 					&cli.StringFlag{
 						Name:    "provider",
