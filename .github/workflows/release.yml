@@ -12,10 +12,14 @@ jobs:
     name: release
     permissions:
       contents: write
+      actions: write
     runs-on: ubuntu-latest
     steps:
-      - name: Check out code into the Go module directory
+      - name: Check out repository
         uses: actions/checkout@v4
+
+      - name: Clear workflow caches
+        uses: easimon/wipe-cache@main
 
       # Ugly hack to get the tag name
       # github.ref gives the full reference like refs.tags.v0.0.1-beta1
@@ -31,11 +35,10 @@ jobs:
           check-latest: true
 
       - name: Build binaries
-        env:
-          TAG_NAME: ${{ steps.branch_name.outputs.TAG_NAME }}
-        run: |
-          ./scripts/build.sh
-          ./scripts/checksums.sh
+        run: ./scripts/build.sh
+
+      - name: Generate changelog
+        run: ./scripts/changelog.sh
 
       - name: Create release and upload binaries
         uses: softprops/action-gh-release@v1
@@ -43,7 +46,7 @@ jobs:
         with:
           files: |
             bin/*
-          body_path: bin/checksums.md
+          body_path: bin/changelog.md
           tag_name: ${{ steps.branch_name.outputs.TAG_NAME }}
           name: ${{ steps.branch_name.outputs.TAG_NAME }}
           draft: true # So we can manually edit before publishing
