@@ -104,25 +104,25 @@ func writeFileCompressed(path string, data []byte) (string, error) {
 	return writeFile(fmt.Sprintf("%s.zst", path), compressedData.Bytes())
 }
 
-func DownloadFile(path string, url string, followRedirects bool, compress bool) (string, error) {
+func DownloadFile(path string, requestUrl string, followRedirects bool, compress bool) (string, error) {
 	client := &http.Client{}
-	resp, err := client.Get(url)
+	resp, err := client.Get(requestUrl)
 
 	if err != nil {
-		return "", fmt.Errorf("could not download file '%s'", url)
+		return "", fmt.Errorf("could not download file '%s'", requestUrl)
 	}
 
 	if followRedirects {
-		url = resp.Request.URL.String()
-		resp, err = client.Get(url)
+		requestUrl = resp.Request.URL.String()
+		resp, err = client.Get(requestUrl)
 
 		if err != nil {
-			return "", fmt.Errorf("could not download file '%s'", url)
+			return "", fmt.Errorf("could not download file '%s'", requestUrl)
 		}
 	}
 
 	if resp.StatusCode != 200 {
-		return "", fmt.Errorf("could not download file '%s'", url)
+		return "", fmt.Errorf("could not download file '%s'", requestUrl)
 	}
 
 	defer resp.Body.Close()
@@ -133,7 +133,7 @@ func DownloadFile(path string, url string, followRedirects bool, compress bool) 
 		return "", err
 	}
 
-	fullPath := filepath.Join(path, filepath.Base(url))
+	fullPath := filepath.Join(path, filepath.Base(requestUrl))
 
 	if compress {
 		return writeFileCompressed(fullPath, body)

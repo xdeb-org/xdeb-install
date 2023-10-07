@@ -311,11 +311,11 @@ func prepare(context *cli.Context) error {
 		urlPrefix = fmt.Sprintf("%s/download/%s", xdeb.XDEB_URL, version)
 	}
 
-	url := fmt.Sprintf("%s/xdeb", urlPrefix)
+	requestUrl := fmt.Sprintf("%s/xdeb", urlPrefix)
 	path := filepath.Join(os.TempDir(), "xdeb-download")
 
-	xdeb.LogMessage("Downloading xdeb [%s] from %s to %s ...", version, url, path)
-	xdebFile, err := xdeb.DownloadFile(path, url, false, false)
+	xdeb.LogMessage("Downloading xdeb [%s] from %s to %s ...", version, requestUrl, path)
+	xdebFile, err := xdeb.DownloadFile(path, requestUrl, false, false)
 
 	if err != nil {
 		return err

@@ -73,19 +73,19 @@ func parsePackagesFile(urlPrefix string, packagesFile string) *XdebProviderDefin
 }
 
 func pullPackagesFile(urlPrefix string, dist string, component string, architecture string) (*XdebProviderDefinition, error) {
-	url := fmt.Sprintf(
+	requestUrl := fmt.Sprintf(
 		"%s/dists/%s/%s/binary-%s/Packages",
 		urlPrefix, dist, component, architecture,
 	)
 
-	resp, err := http.Get(url)
+	resp, err := http.Get(requestUrl)
 
 	if err != nil {
 		return nil, err
 	}
 
 	if resp.StatusCode != 200 {
-		resp, err = http.Get(fmt.Sprintf("%s.xz", url))
+		resp, err = http.Get(fmt.Sprintf("%s.xz", requestUrl))
 
 		if err != nil {
 			return nil, err
@@ -93,7 +93,7 @@ func pullPackagesFile(urlPrefix string, dist string, component string, architect
 	}
 
 	if resp.StatusCode != 200 {
-		resp, err = http.Get(fmt.Sprintf("%s.gz", url))
+		resp, err = http.Get(fmt.Sprintf("%s.gz", requestUrl))
 
 		if err != nil {
 			return nil, err
@@ -106,7 +106,7 @@ func pullPackagesFile(urlPrefix string, dist string, component string, architect
 
 	defer resp.Body.Close()
 
-	requestUrl := fmt.Sprintf(
+	requestUrl = fmt.Sprintf(
 		"%s://%s%s",
 		resp.Request.URL.Scheme, resp.Request.URL.Host, resp.Request.URL.Path,
 	)
@@ -166,8 +166,8 @@ func pullAptRepository(directory string, url string, dist string, component stri
 func pullCustomRepository(directory string, urlPrefix string, dist string, component string) error {
 	LogMessage("Syncing repository %s/%s: %s", filepath.Base(urlPrefix), dist, component)
 
-	url := fmt.Sprintf("%s/%s/%s", urlPrefix, dist, component)
-	_, err := DownloadFile(filepath.Join(directory, dist), url, false, true)
+	requestUrl := fmt.Sprintf("%s/%s/%s", urlPrefix, dist, component)
+	_, err := DownloadFile(filepath.Join(directory, dist), requestUrl, false, true)
 
 	return err
 }
@@ -185,10 +185,13 @@ func ParsePackageLists() (*PackageListsDefinition, error) {
 		return nil, err
 	}
 
-	url := fmt.Sprintf("%s/%s/repositories/%s/lists.yaml", XDEB_INSTALL_REPOSITORIES_URL, XDEB_INSTALL_REPOSITORIES_TAG, arch)
-	LogMessage("Syncing lists: %s", url)
+	requestUrl := fmt.Sprintf(
+		"%s/%s/repositories/%s/lists.yaml",
+		XDEB_INSTALL_REPOSITORIES_URL, XDEB_INSTALL_REPOSITORIES_TAG, arch,
+	)
 
-	listsFile, err := DownloadFile(path, url, true, true)
+	LogMessage("Syncing lists: %s", requestUrl)
+	listsFile, err := DownloadFile(path, requestUrl, true, true)
 
 	if err != nil {
 		return nil, err
