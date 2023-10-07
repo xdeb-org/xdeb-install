@@ -452,6 +452,7 @@ func main() {
 		Version:     VersionString,
 		Compiled:    *compiled,
 		Authors:     authors,
+		Suggest:     true,
 		Action:      deb,
 		Flags: []cli.Flag{
 			&cli.StringFlag{
