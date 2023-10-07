@@ -151,24 +151,6 @@ OPTIONS:
 
 See [Searching for DEB packages](#searching-for-deb-packages)
 
-#### deb
-
-```
-$ xdeb-install deb -h
-NAME:
-   xdeb-install deb - install a package from a remote repository
-
-USAGE:
-   xdeb-install deb [command options] [arguments...]
-
-OPTIONS:
-   --provider value, -p value                    limit search results to a specific provider
-   --distribution value, --dist value, -d value  limit search results to a specific distribution (requires --provider)
-   --help, -h                                    show help
-```
-
-See [Installing DEB packages/From remote repositories](#from-remote-repositories)
-
 #### file
 
 ```
@@ -549,21 +531,21 @@ Currently, the only pattern available is `startsWith`, effectively matching `goo
 
 To install `speedcrunch`, for example, type:
 ```
-$ xdeb-install deb speedcrunch
+$ xdeb-install speedcrunch
 ```
 
 This will install the most recent version of the package from the first provider and distribution it can find.
 
 You can also specify the provider and distribution, for example `debian.org` and `bookworm`, respectively:
 ```
-$ xdeb-install deb --provider debian.org --distribution bookworm speedcrunch
+$ xdeb-install --provider debian.org --distribution bookworm speedcrunch
 ```
 
 ### Directly from a URL
 
 Let's stay with the `speedcrunch` example:
 ```
-$ xdeb-install file http://ftp.debian.org/debian/pool/main/s/speedcrunch/speedcrunch_0.12.0-6_amd64.deb
+$ xdeb-install --file http://ftp.debian.org/debian/pool/main/s/speedcrunch/speedcrunch_0.12.0-6_amd64.deb
 ```
 
 This will download the file `speedcrunch_0.12.0-6_amd64.deb` to `/tmp/xdeb/localhost/file/speedcrunch_0.12.0-6_amd64/speedcrunch_0.12.0-6_amd64.deb` and install it from there.
@@ -572,7 +554,7 @@ This will download the file `speedcrunch_0.12.0-6_amd64.deb` to `/tmp/xdeb/local
 
 First, obviously download a DEB file from a remote location. Let's stay it's stored at `$HOME/Downloads/speedcrunch.deb`:
 ```
-$ xdeb-install file $HOME/Downloads/speedcrunch.deb
+$ xdeb-install --file $HOME/Downloads/speedcrunch.deb
 ```
 
 This will copy the file `speedcrunch.deb` to `/tmp/xdeb/localhost/file/speedcrunch/speedcrunch.deb` and install it from there.

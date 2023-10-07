@@ -119,14 +119,13 @@ func deb(context *cli.Context) error {
 	return xdeb.InstallPackage(packageDefinitions[0], context)
 }
 
-func file(context *cli.Context) error {
+func file(context *cli.Context, filePath string) error {
 	_, err := xdeb.FindXdeb()
 
 	if err != nil {
 		return err
 	}
 
-	filePath := context.Args().First()
 	var packageDefinition xdeb.XdebPackageDefinition
 
 	fileUrl, err := url.Parse(filePath)
@@ -414,7 +413,39 @@ func main() {
 	app := &cli.App{
 		Name:        xdeb.APPLICATION_NAME,
 		Usage:       "Automation wrapper for the xdeb utility",
+		UsageText:   fmt.Sprintf("%s [global options (except --file)] <package>\n%s [global options] command [command options] [arguments...]", xdeb.APPLICATION_NAME, xdeb.APPLICATION_NAME),
 		Description: "Simple tool to automatically download, convert, and install DEB packages via the awesome xdeb utility.\nBasically just a wrapper to automate the process.",
+		Action:      deb,
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:    "file",
+				Usage:   "install a package from a local DEB file or remote URL",
+				Aliases: []string{"f"},
+				Action:  file,
+			},
+			&cli.StringFlag{
+				Name:    "provider",
+				Usage:   "limit search results to a specific provider when --file is not passed",
+				Aliases: []string{"p"},
+			},
+			&cli.StringFlag{
+				Name:    "distribution",
+				Usage:   "limit search results to a specific distribution (requires --provider)",
+				Aliases: []string{"dist", "d"},
+			},
+			&cli.StringFlag{
+				Name:    "options",
+				Aliases: []string{"o"},
+				Usage:   "override XDEB_OPTS, '-i' will be removed if provided",
+				Value:   "-Sde",
+			},
+			&cli.StringFlag{
+				Name:    "temp",
+				Aliases: []string{"t"},
+				Usage:   "set the temporary xdeb context root path",
+				Value:   filepath.Join(os.TempDir(), "xdeb"),
+			},
+		},
 		Commands: []*cli.Command{
 			{
 				Name:     "xdeb",
@@ -459,31 +490,6 @@ func main() {
 				},
 			},
 			{
-				Name:    "deb",
-				Usage:   "install a package from a remote repository",
-				Aliases: []string{"apt", "i"},
-				Action:  deb,
-				Flags: []cli.Flag{
-					&cli.StringFlag{
-						Name:    "provider",
-						Usage:   "limit search results to a specific provider",
-						Aliases: []string{"p"},
-					},
-					&cli.StringFlag{
-						Name:    "distribution",
-						Usage:   "limit search results to a specific distribution (requires --provider)",
-						Aliases: []string{"dist", "d"},
-					},
-				},
-			},
-			{
-				Name:     "file",
-				HelpName: "file [path or URL]",
-				Usage:    "install a package from a local DEB file or remote URL",
-				Aliases:  []string{"f"},
-				Action:   file,
-			},
-			{
 				Name:    "clean",
 				Usage:   "cleanup temporary xdeb context root path, optionally the repository lists as well",
 				Aliases: []string{"c"},
@@ -502,20 +508,6 @@ func main() {
 				Usage:   "print the version of this tool",
 				Aliases: []string{"v"},
 				Action:  version,
-			},
-		},
-		Flags: []cli.Flag{
-			&cli.StringFlag{
-				Name:    "options",
-				Aliases: []string{"o"},
-				Usage:   "override XDEB_OPTS, '-i' will be removed if provided",
-				Value:   "-Sde",
-			},
-			&cli.StringFlag{
-				Name:    "temp",
-				Aliases: []string{"t"},
-				Usage:   "set the temporary xdeb context root path",
-				Value:   filepath.Join(os.TempDir(), "xdeb"),
 			},
 		},
 	}
