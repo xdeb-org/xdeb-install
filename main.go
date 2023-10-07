@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -118,21 +119,6 @@ func deb(context *cli.Context) error {
 	return xdeb.InstallPackage(packageDefinitions[0], context)
 }
 
-func url(context *cli.Context) error {
-	_, err := xdeb.FindXdeb()
-
-	if err != nil {
-		return err
-	}
-
-	downloadUrl := context.Args().First()
-
-	return xdeb.InstallPackage(&xdeb.XdebPackageDefinition{
-		Name: xdeb.TrimPathExtension(filepath.Base(downloadUrl), 1),
-		Url:  downloadUrl,
-	}, context)
-}
-
 func file(context *cli.Context) error {
 	_, err := xdeb.FindXdeb()
 
@@ -141,39 +127,50 @@ func file(context *cli.Context) error {
 	}
 
 	filePath := context.Args().First()
+	var packageDefinition xdeb.XdebPackageDefinition
 
-	if _, err := os.Stat(filePath); err != nil {
-		if os.IsNotExist(err) {
-			return fmt.Errorf("file '%s' does not exist", filePath)
-		}
+	fileUrl, err := url.Parse(filePath)
+	isUrl := err == nil && fileUrl.Scheme != "" && fileUrl.Host != ""
 
-		return err
-	}
+	if !isUrl {
+		if _, err := os.Stat(filePath); err != nil {
+			if os.IsNotExist(err) {
+				return fmt.Errorf("file '%s' does not exist", filePath)
+			}
 
-	if !strings.HasSuffix(filePath, ".deb") {
-		return fmt.Errorf("file '%s' is not a valid DEB package", filePath)
-	}
-
-	packageDefinition := xdeb.XdebPackageDefinition{
-		Name: xdeb.TrimPathExtension(filepath.Base(filePath), 1),
-	}
-
-	packageDefinition.Configure(context.String("temp"))
-
-	if filePath != packageDefinition.FilePath {
-		// copy file to temporary xdeb context path
-		if err := os.MkdirAll(packageDefinition.Path, os.ModePerm); err != nil {
 			return err
 		}
 
-		data, err := os.ReadFile(filePath)
-
-		if err != nil {
-			return err
+		if !strings.HasSuffix(filePath, ".deb") {
+			return fmt.Errorf("file '%s' is not a valid DEB package", filePath)
 		}
 
-		if err = os.WriteFile(packageDefinition.FilePath, data, os.ModePerm); err != nil {
-			return err
+		packageDefinition = xdeb.XdebPackageDefinition{
+			Name: xdeb.TrimPathExtension(filepath.Base(filePath), 1),
+		}
+
+		packageDefinition.Configure(context.String("temp"))
+
+		if filePath != packageDefinition.FilePath {
+			// copy file to temporary xdeb context path
+			if err := os.MkdirAll(packageDefinition.Path, os.ModePerm); err != nil {
+				return err
+			}
+
+			data, err := os.ReadFile(filePath)
+
+			if err != nil {
+				return err
+			}
+
+			if err = os.WriteFile(packageDefinition.FilePath, data, os.ModePerm); err != nil {
+				return err
+			}
+		}
+	} else {
+		packageDefinition = xdeb.XdebPackageDefinition{
+			Name: xdeb.TrimPathExtension(filepath.Base(filePath), 1),
+			Url:  filePath,
 		}
 	}
 
@@ -480,16 +477,9 @@ func main() {
 				},
 			},
 			{
-				Name:     "url",
-				HelpName: "url [URL]",
-				Usage:    "install a package from a URL directly",
-				Aliases:  []string{"u"},
-				Action:   url,
-			},
-			{
 				Name:     "file",
-				HelpName: "file [path]",
-				Usage:    "install a package from a local DEB file",
+				HelpName: "file [path or URL]",
+				Usage:    "install a package from a local DEB file or remote URL",
 				Aliases:  []string{"f"},
 				Action:   file,
 			},

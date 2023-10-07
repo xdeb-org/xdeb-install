@@ -53,8 +53,7 @@ COMMANDS:
    sync, S       synchronize remote repositories
    search, s     search remote repositories for a package
    deb, apt, i   install a package from a remote repository
-   url, u        install a package from a URL directly
-   file, f       install a package from a local DEB file
+   file, f       install a package from a local DEB file or remote URL
    clean, c      cleanup temporary xdeb context root path, optionally the repository lists as well
    version, v    print the version of this tool
    help, h       Shows a list of commands or help for one command
@@ -170,37 +169,23 @@ OPTIONS:
 
 See [Installing DEB packages/From remote repositories](#from-remote-repositories)
 
-#### url
-
-```
-$ xdeb-install url -h
-NAME:
-   xdeb-install url [URL] - install a package from a URL directly
-
-USAGE:
-   xdeb-install url [URL] [command options] [arguments...]
-
-OPTIONS:
-   --help, -h  show help
-```
-
-See [Installing DEB packages/Directly from a URL](#directly-from-a-url)
-
 #### file
 
 ```
 $ xdeb-install file -h
 NAME:
-   xdeb-install file [path] - install a package from a local DEB file
+   xdeb-install file [path or URL] - install a package from a local DEB file or remote URL
 
 USAGE:
-   xdeb-install file [path] [command options] [arguments...]
+   xdeb-install file [path or URL] [command options] [arguments...]
 
 OPTIONS:
    --help, -h  show help
 ```
 
-See [Installing DEB packages/Directly from a local file](#directly-from-a-local-file)
+See
+- [Installing DEB packages/Directly from a URL](#directly-from-a-url)
+- [Installing DEB packages/Directly from a local file](#directly-from-a-local-file)
 
 #### clean
 
@@ -578,8 +563,10 @@ $ xdeb-install deb --provider debian.org --distribution bookworm speedcrunch
 
 Let's stay with the `speedcrunch` example:
 ```
-$ xdeb-install url http://ftp.debian.org/debian/pool/main/s/speedcrunch/speedcrunch_0.12.0-6_amd64.deb
+$ xdeb-install file http://ftp.debian.org/debian/pool/main/s/speedcrunch/speedcrunch_0.12.0-6_amd64.deb
 ```
+
+This will download the file `speedcrunch_0.12.0-6_amd64.deb` to `/tmp/xdeb/localhost/file/speedcrunch_0.12.0-6_amd64/speedcrunch_0.12.0-6_amd64.deb` and install it from there.
 
 ### Directly from a local file
 
@@ -587,3 +574,5 @@ First, obviously download a DEB file from a remote location. Let's stay it's sto
 ```
 $ xdeb-install file $HOME/Downloads/speedcrunch.deb
 ```
+
+This will copy the file `speedcrunch.deb` to `/tmp/xdeb/localhost/file/speedcrunch/speedcrunch.deb` and install it from there.
