@@ -107,7 +107,7 @@ type XdebProviderDefinition struct {
 	Xdeb []*XdebPackageDefinition `yaml:"xdeb"`
 }
 
-func ParseYamlDefinition(path string) (*XdebProviderDefinition, error) {
+func parseYamlDefinition(path string) (*XdebProviderDefinition, error) {
 	yamlFile, err := decompressFile(path)
 
 	if err != nil {
@@ -141,7 +141,7 @@ func FindPackage(name string, path string, provider string, distribution string,
 	packageDefinitions := []*XdebPackageDefinition{}
 
 	for _, match := range globbed {
-		definition, err := ParseYamlDefinition(match)
+		definition, err := parseYamlDefinition(match)
 
 		if err != nil {
 			return nil, err
