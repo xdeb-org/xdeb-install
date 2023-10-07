@@ -2,12 +2,14 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
 	"path/filepath"
-	"runtime"
+	"strconv"
 	"strings"
+	"time"
 
 	"golang.org/x/exp/slices"
 
@@ -395,26 +397,61 @@ func clean(context *cli.Context) error {
 	return nil
 }
 
-var (
-	VersionString = "dev"
-	VersionDate   = "now"
-	VersionAuthor = "me"
-)
+func unixTime(epochString string) (*time.Time, error) {
+	if epochString == "now" {
+		now := time.Now().UTC()
+		return &now, nil
+	}
 
-func version(context *cli.Context) error {
-	xdeb.LogMessage("version information")
-	fmt.Printf("  version:  %s %s/%s\n", VersionString, runtime.GOOS, runtime.GOARCH)
-	fmt.Printf("  created:  %s\n", VersionDate)
-	fmt.Printf("  author:   %s\n", VersionAuthor)
-	return nil
+	parsed, err := strconv.ParseInt(epochString, 10, 64)
+
+	if err != nil {
+		return nil, err
+	}
+
+	epoch := time.Unix(parsed, 0)
+	return &epoch, nil
 }
 
+var (
+	VersionString   string = "dev"
+	VersionCompiled string = "now"
+	VersionAuthors  string = "me <me@localhost>"
+)
+
 func main() {
+	authors := []*cli.Author{}
+
+	for _, authorString := range strings.Split(VersionAuthors, ",") {
+		authorItems := strings.Split(authorString, " <")
+		authorEmail := ""
+
+		if len(authorItems) > 1 {
+			authorEmail = authorItems[1]
+		}
+
+		authorEmail = strings.TrimSuffix(authorEmail, ">")
+
+		authors = append(authors, &cli.Author{
+			Name:  authorItems[0],
+			Email: authorEmail,
+		})
+	}
+
+	compiled, err := unixTime(VersionCompiled)
+
+	if err != nil {
+		log.Fatalf("cannot parse compiled time from unix epoch: %s", err.Error())
+	}
+
 	app := &cli.App{
 		Name:        xdeb.APPLICATION_NAME,
 		Usage:       "Automation wrapper for the xdeb utility",
 		UsageText:   fmt.Sprintf("%s [global options (except --file)] <package>\n%s [global options] command [command options] [arguments...]", xdeb.APPLICATION_NAME, xdeb.APPLICATION_NAME),
 		Description: "Simple tool to automatically download, convert, and install DEB packages via the awesome xdeb utility.\nBasically just a wrapper to automate the process.",
+		Version:     VersionString,
+		Compiled:    *compiled,
+		Authors:     authors,
 		Action:      deb,
 		Flags: []cli.Flag{
 			&cli.StringFlag{
@@ -502,12 +539,6 @@ func main() {
 						Value:   false,
 					},
 				},
-			},
-			{
-				Name:    "version",
-				Usage:   "print the version of this tool",
-				Aliases: []string{"v"},
-				Action:  version,
 			},
 		},
 	}

@@ -35,33 +35,42 @@ To display the help page, type:
 $ xdeb-install -h
 ```
 
-Output:
+Example output:
 ```
 NAME:
    xdeb-install - Automation wrapper for the xdeb utility
 
 USAGE:
+   xdeb-install [global options (except --file)] <package>
    xdeb-install [global options] command [command options] [arguments...]
+
+VERSION:
+   v2.2.5-5-gd99358a
 
 DESCRIPTION:
    Simple tool to automatically download, convert, and install DEB packages via the awesome xdeb utility.
    Basically just a wrapper to automate the process.
+
+AUTHORS:
+   Timo Reichl <thetredev@gmail.com>
+   toluschr
 
 COMMANDS:
    xdeb          install the xdeb utility to the system along with its dependencies
    providers, p  list available providers
    sync, S       synchronize remote repositories
    search, s     search remote repositories for a package
-   deb, apt, i   install a package from a remote repository
-   file, f       install a package from a local DEB file or remote URL
    clean, c      cleanup temporary xdeb context root path, optionally the repository lists as well
-   version, v    print the version of this tool
    help, h       Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
-   --options value, -o value  override XDEB_OPTS, '-i' will be removed if provided (default: "-Sde")
-   --temp value, -t value     set the temporary xdeb context root path (default: "/tmp/xdeb")
-   --help, -h                 show help
+   --file value, -f value                        install a package from a local DEB file or remote URL
+   --provider value, -p value                    limit search results to a specific provider when --file is not passed
+   --distribution value, --dist value, -d value  limit search results to a specific distribution (requires --provider)
+   --options value, -o value                     override XDEB_OPTS, '-i' will be removed if provided (default: "-Sde")
+   --temp value, -t value                        set the temporary xdeb context root path (default: "/tmp/xdeb")
+   --help, -h                                    show help
+   --version, -v                                 print the version
 ```
 
 #### xdeb
@@ -182,20 +191,6 @@ USAGE:
 OPTIONS:
    --lists, -l  cleanup repository lists as well (default: false)
    --help, -h   show help
-```
-
-#### version
-
-```
-$ xdeb-install version -h
-NAME:
-   xdeb-install version - print the version of this tool
-
-USAGE:
-   xdeb-install version [command options] [arguments...]
-
-OPTIONS:
-   --help, -h  show help
 ```
 
 ## Installation
