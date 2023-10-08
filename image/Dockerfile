@@ -21,6 +21,7 @@ RUN xbps-install -Syu \
         wget \
         ncurses-base \
         bash-completion \
+        python3-pytest \
     && xbps-remove -yOo \
     && chsh -s /bin/bash \
     && groupadd -g 1000 user \
