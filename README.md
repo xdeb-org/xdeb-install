@@ -1,5 +1,5 @@
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![devcontainer Status](https://img.shields.io/github/actions/workflow/status/thetredev/xdeb-install/docker.yml?label=devcontainer)](https://github.com/thetredev/xdeb-install/actions/workflows/docker.yml)
+[![devcontainer Status](https://img.shields.io/github/actions/workflow/status/thetredev/xdeb-install/devcontainer.yml?label=devcontainer)](https://github.com/thetredev/xdeb-install/actions/workflows/devcontainer.yml)
 [![test Status](https://img.shields.io/github/actions/workflow/status/thetredev/xdeb-install/test.yml?label=tests)](https://github.com/thetredev/xdeb-install/actions/workflows/test.yml)
 [![Release Status](https://img.shields.io/github/actions/workflow/status/thetredev/xdeb-install/release.yml?label=release)](https://github.com/thetredev/xdeb-install/actions/workflows/release.yml)
 
