@@ -8,18 +8,19 @@ on:
       - 'v*'
 
 jobs:
-  release:
-    name: release
+  test:
     permissions:
-      contents: write
-      actions: write
+      contents: read
+      packages: read
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:testcontainer
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Clear workflow caches
-        uses: easimon/wipe-cache@main
+      - name: Add safe git directory
+        run: git config --global --add safe.directory /__w/xdeb-install/xdeb-install
 
       # Ugly hack to get the tag name
       # github.ref gives the full reference like refs.tags.v0.0.1-beta1
@@ -35,14 +36,89 @@ jobs:
           git fetch --unshallow
           git checkout ${TAG_NAME}
 
-      - name: Set up Go
-        uses: actions/setup-go@v4
-        with:
-          go-version-file: go.mod
-          check-latest: true
-
       - name: Build binaries
         run: ./scripts/build.sh
+
+      - name: Run tests and generate HTML report
+        run: ./scripts/test.sh html
+
+      - name: Upload HTML report
+        uses: actions/upload-artifact@v3
+        with:
+          name: html
+          path: html
+
+      - name: Upload binaries
+        uses: actions/upload-artifact@v3
+        with:
+          name: bin
+          path: bin
+
+  report:
+    needs: test
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download HTML report artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: html
+          path: html
+
+      - name: Rename HTML report to index.html
+        run: mv html/*.html html/index.html
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: html
+
+  deploy-report:
+    needs: report
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
+
+  release:
+    needs: deploy-report
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Add safe git directory
+        run: git config --global --add safe.directory /__w/xdeb-install/xdeb-install
+
+      # Ugly hack to get the tag name
+      # github.ref gives the full reference like refs.tags.v0.0.1-beta1
+      - name: Branch name
+        id: branch_name
+        run: |
+          echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> ${GITHUB_OUTPUT}
+
+      - name: Unshallow git history
+        env:
+          TAG_NAME: ${{ steps.branch_name.outputs.TAG_NAME }}
+        run: |
+          git fetch --unshallow
+          git checkout ${TAG_NAME}
+
+      - name: Download binaries artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: bin
+          path: bin
 
       - name: Generate changelog
         run: ./scripts/changelog.sh
