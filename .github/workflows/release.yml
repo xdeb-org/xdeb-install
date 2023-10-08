@@ -28,6 +28,13 @@ jobs:
         run: |
           echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> ${GITHUB_OUTPUT}
 
+      - name: Unshallow git history
+        env:
+          TAG_NAME: ${{ steps.branch_name.outputs.TAG_NAME }}
+        run: |
+          git fetch --unshallow
+          git checkout ${TAG_NAME}
+
       - name: Set up Go
         uses: actions/setup-go@v4
         with:

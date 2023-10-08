@@ -1,7 +1,5 @@
 #!/bin/bash
 
-git fetch --tags
-
 first_tag=$(git tag --sort=-version:refname | head -n 2 | tail -1)
 second_tag=$(git tag --sort=-version:refname | head -n 1)
 
