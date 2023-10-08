@@ -6,4 +6,4 @@ It is based on the `x86_64` variant of https://github.com/thetredev/voidlinux-re
 
 ## Schedule
 
-The image is rebuilt on each push to the `devcontainer` branch and each sunday at 09:00.
+The image is rebuilt on each push to the `devcontainer` branch and each sunday at 11:00.
