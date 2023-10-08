@@ -262,6 +262,8 @@ func providers(context *cli.Context) error {
 		return err
 	}
 
+	showDetails := context.Bool("details")
+
 	for _, provider := range lists.Providers {
 		fmt.Println(provider.Name)
 		fmt.Printf("  architecture: %s\n", provider.Architecture)
@@ -272,11 +274,13 @@ func providers(context *cli.Context) error {
 			fmt.Printf("  url: %s\n", provider.Url)
 		}
 
-		for _, distribution := range provider.Distributions {
-			fmt.Printf("    distribution: %s\n", distribution)
+		if showDetails {
+			for _, distribution := range provider.Distributions {
+				fmt.Printf("    distribution: %s\n", distribution)
 
-			for _, component := range provider.Components {
-				fmt.Printf("      component: %s\n", component)
+				for _, component := range provider.Components {
+					fmt.Printf("      component: %s\n", component)
+				}
 			}
 		}
 
@@ -501,6 +505,12 @@ func main() {
 				Usage:   "list available providers",
 				Aliases: []string{"p"},
 				Action:  providers,
+				Flags: []cli.Flag{
+					&cli.BoolFlag{
+						Name:  "details",
+						Usage: "display provider details (distributions and components)",
+					},
+				},
 			},
 			{
 				Name:     "sync",

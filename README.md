@@ -16,6 +16,8 @@ Simple tool to automatically download, convert, and install DEB packages on [Voi
   - [Using Go](#using-go)
   - [Manually](#manually)
 - [Listing available providers](#listing-available-providers)
+  - [With details redacted](#with-details-redacted)
+  - [With details (distributions and components)](#with-details-distributions-and-components)
 - [Managing package repositories](#managing-package-repositories)
   - [Syncing package repositories](#syncing-package-repositories)
   - [Supported package repositories](#supported-package-repositories)
@@ -120,6 +122,7 @@ USAGE:
    xdeb-install providers [command options] [arguments...]
 
 OPTIONS:
+   --details   display provider details (distributions and components) (default: false)
    --help, -h  show help
 ```
 
@@ -227,9 +230,42 @@ Head over to the [releases](https://github.com/thetredev/xdeb-install/releases) 
 
 ## Listing available providers
 
-To check which providers are available, type:
+### With details redacted
+
+To list available providers, type:
 ```
 $ xdeb-install providers
+```
+
+Output:
+```
+[xdeb-install] Syncing lists: https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/v1.1.1/repositories/x86_64/lists.yaml
+debian.org
+  architecture: amd64
+  url: http://ftp.debian.org/debian
+
+linuxmint.com
+  architecture: amd64
+  url: http://packages.linuxmint.com
+
+ubuntu.com
+  architecture: amd64
+  url: http://archive.ubuntu.com/ubuntu
+
+microsoft.com
+  architecture: amd64
+  url: https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/v1.1.1/repositories/x86_64/microsoft.com
+
+google.com
+  architecture: amd64
+  url: https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/v1.1.1/repositories/x86_64/google.com
+```
+
+### With details (distributions and components)
+
+To list available providers along with their distributions and components, type:
+```
+$ xdeb-install providers --details
 ```
 
 Output:
