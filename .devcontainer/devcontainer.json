@@ -5,7 +5,8 @@
     "customizations": {
         "vscode": {
             "extensions": [
-                "golang.Go"
+                "golang.Go",
+                "yzhang.markdown-all-in-one"
             ],
             "settings": {
                 "telemetry.telemetryLevel": "off",
@@ -25,7 +26,9 @@
                 "terminal.integrated.defaultProfile.linux": "bash",
                 "explorer.autoReveal": false,
                 "explorer.confirmDragAndDrop": false,
-                "files.trimTrailingWhitespace": true
+                "files.trimTrailingWhitespace": true,
+                "markdown.extension.toc.levels": "2..3",
+                "markdown.extension.toc.updateOnSave": false
             }
         }
     },
