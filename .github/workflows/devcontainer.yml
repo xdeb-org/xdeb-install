@@ -1,4 +1,4 @@
-name: Devcontainer
+name: devcontainer
 
 on:
   schedule:
@@ -12,7 +12,7 @@ env:
   GHCR_IMAGE: "ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:devcontainer"
 
 jobs:
-  build:
+  devcontainer:
     runs-on: ubuntu-latest
     permissions:
       contents: read
