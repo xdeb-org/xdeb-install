@@ -265,7 +265,12 @@ func providers(context *cli.Context) error {
 	for _, provider := range lists.Providers {
 		fmt.Println(provider.Name)
 		fmt.Printf("  architecture: %s\n", provider.Architecture)
-		fmt.Printf("  url: %s\n", provider.Url)
+
+		if provider.Custom {
+			fmt.Printf("  url: %s/%s/%s\n", xdeb.XDEB_INSTALL_REPOSITORIES_URL, xdeb.XDEB_INSTALL_REPOSITORIES_TAG, provider.Url)
+		} else {
+			fmt.Printf("  url: %s\n", provider.Url)
+		}
 
 		for _, distribution := range provider.Distributions {
 			fmt.Printf("    distribution: %s\n", distribution)

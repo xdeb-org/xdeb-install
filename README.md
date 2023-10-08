@@ -234,7 +234,7 @@ $ xdeb-install providers
 
 Output:
 ```
-[xdeb-install] Syncing lists: https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/v1.0.0/repositories/x86_64/lists.yaml
+[xdeb-install] Syncing lists: https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/v1.1.1/repositories/x86_64/lists.yaml
 debian.org
   architecture: amd64
   url: http://ftp.debian.org/debian
@@ -329,13 +329,13 @@ ubuntu.com
 
 microsoft.com
   architecture: amd64
-  url: https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/main/repositories/x86_64/microsoft.com
+  url: https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/v1.1.1/repositories/x86_64/microsoft.com
     distribution: current
       component: vscode.yaml
 
 google.com
   architecture: amd64
-  url: https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/main/repositories/x86_64/google.com
+  url: https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/v1.1.1/repositories/x86_64/google.com
     distribution: current
       component: google-chrome.yaml
 ```
