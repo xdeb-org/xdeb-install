@@ -1,1 +1,4 @@
 bin
+html
+**/.pytest_cache
+**/__pycache__
