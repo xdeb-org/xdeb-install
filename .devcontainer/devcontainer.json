@@ -6,7 +6,8 @@
         "vscode": {
             "extensions": [
                 "golang.Go",
-                "yzhang.markdown-all-in-one"
+                "yzhang.markdown-all-in-one",
+                "ms-python.python"
             ],
             "settings": {
                 "telemetry.telemetryLevel": "off",
