@@ -2,9 +2,9 @@ name: Run tests
 
 # should also run on pull requests I guess
 on:
-  push:
-    branches:
-      - 'main'
+  schedule:
+    # each night at 0:00
+    - cron: "0 0 * * *"
 
 jobs:
   tests:
