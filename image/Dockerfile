@@ -21,6 +21,8 @@ RUN xbps-install -Syu \
         wget \
         ncurses-base \
         bash-completion \
+        python3 \
+        python3-pip \
         python3-pytest \
     && xbps-remove -yOo \
     && chsh -s /bin/bash \
@@ -36,7 +38,8 @@ COPY --chown=user:user --from=microsoft_devcontainer_image /home/vscode/.bashrc 
 
 RUN go install golang.org/x/tools/gopls@latest \
     && go install github.com/go-delve/delve/cmd/dlv@latest \
-    && go install honnef.co/go/tools/cmd/staticcheck@latest
+    && go install honnef.co/go/tools/cmd/staticcheck@latest \
+    && pip3 install --user pytest-order
 
 ENV GOPATH=/home/user/go
 ENV PATH=${PATH}:${GOPATH}/bin
