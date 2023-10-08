@@ -8,6 +8,8 @@
 
 Simple tool to automatically download, convert, and install DEB packages on [Void Linux](https://voidlinux.org) via the awesome [`xdeb`](https://github.com/toluschr/xdeb) tool. Basically just a wrapper to automate the process.
 
+Each release generates a test report which is uploaded to https://thetredev.github.io/xdeb-install.
+
 ## Table of Contents
 
 - [Help Page](#help-page)
