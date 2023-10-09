@@ -14,8 +14,10 @@ echo >> bin/changelog.md
 
 go_module=$(go list -m | sed 's/\/v.*//')
 
-echo "**Full Changelog**: [\`${first_tag}..${second_tag}\`](https://${go_module}/compare/${first_tag}..${second_tag})" >> bin/changelog.md
+echo "Test report: https://thetredev.github.io/xdeb-install" >> bin/changelog.md
+echo >> bin/changelog.md
 
+echo "**Full Changelog**: [\`${first_tag}..${second_tag}\`](https://${go_module}/compare/${first_tag}..${second_tag})" >> bin/changelog.md
 echo >> bin/changelog.md
 
 echo "## SHA256 Checksums" >> bin/changelog.md
