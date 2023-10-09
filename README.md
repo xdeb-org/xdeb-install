@@ -1,7 +1,7 @@
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![devcontainer Status](https://img.shields.io/github/actions/workflow/status/thetredev/xdeb-install/devcontainer.yml?label=devcontainer)](https://github.com/thetredev/xdeb-install/actions/workflows/devcontainer.yml)
 [![testcontainer Status](https://img.shields.io/github/actions/workflow/status/thetredev/xdeb-install/testcontainer.yml?label=testcontainer)](https://github.com/thetredev/xdeb-install/actions/workflows/testcontainer.yml)
-[![nightly test Status](https://img.shields.io/github/actions/workflow/status/thetredev/xdeb-install/test.yml?label=nightly%20tests)](https://github.com/thetredev/xdeb-install/actions/workflows/test.yml)
+[![nightly test Status](https://img.shields.io/github/actions/workflow/status/thetredev/xdeb-install/test.yml?label=nightly%20tests)](https://github.com/thetredev/xdeb-install/actions/workflows/test.yml?query=event%3Aschedule+branch%3Amain)
 [![release Status](https://img.shields.io/github/actions/workflow/status/thetredev/xdeb-install/release.yml?label=release)](https://github.com/thetredev/xdeb-install/actions/workflows/release.yml)
 
 # xdeb-install
