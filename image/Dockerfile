@@ -19,7 +19,7 @@ RUN xbps-install -Syu \
         xz \
         zstd \
         wget \
-        ncurses-base \
+        ncurses \
         bash-completion \
         python3 \
         python3-pip \
