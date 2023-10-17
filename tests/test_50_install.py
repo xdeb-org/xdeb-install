@@ -16,11 +16,14 @@ def test_install_nonexistent():
 
 @pytest.mark.order(53)
 def test_install_speedcrunch():
+    helpers.assert_xdeb_install_command("sync")
     helpers.assert_xdeb_install_xbps(0, "speedcrunch")
 
 
 @pytest.mark.order(54)
 def test_install_packages():
+    helpers.assert_xdeb_install_command("sync")
+
     for package, provider_data in constants.XDEB_INSTALL_HAVE_PACKAGE.items():
         for provider, data in provider_data.items():
             if not data["any"]:

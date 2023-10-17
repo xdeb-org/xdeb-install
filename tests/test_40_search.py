@@ -19,11 +19,14 @@ def test_search_nonexistent():
 
 @pytest.mark.order(42)
 def test_search_speedcrunch():
+    helpers.assert_xdeb_install_command("sync")
     helpers.assert_xdeb_install_command("search", "speedcrunch")
 
 
 @pytest.mark.order(43)
 def test_search_packages():
+    helpers.assert_xdeb_install_command("sync")
+
     for package, provider_data in constants.XDEB_INSTALL_HAVE_PACKAGE.items():
         for provider, data in provider_data.items():
             if not data["any"]:
