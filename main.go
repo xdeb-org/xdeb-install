@@ -82,6 +82,12 @@ func findProvider(provider string) (string, error) {
 }
 
 func deb(context *cli.Context) error {
+	filePath := context.String("file")
+
+	if len(filePath) > 0 {
+		return file(context, filePath)
+	}
+
 	_, err := xdeb.FindXdeb()
 
 	if err != nil {
@@ -468,7 +474,6 @@ func main() {
 				Name:    "file",
 				Usage:   "install a package from a local DEB file or remote URL",
 				Aliases: []string{"f"},
-				Action:  file,
 			},
 			&cli.StringFlag{
 				Name:    "provider",
