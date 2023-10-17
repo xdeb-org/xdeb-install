@@ -75,7 +75,10 @@ func InstallPackage(packageDefinition *XdebPackageDefinition, context *cli.Conte
 			return err
 		}
 
-		packageDefinition.FilePath, err = DownloadFile(packageDefinition.Path, packageDefinition.Url, true, false)
+		packageDefinition.FilePath, err = DownloadFile(
+			filepath.Join(packageDefinition.Path, fmt.Sprintf("%s.deb", packageDefinition.Name)),
+			packageDefinition.Url, true, false,
+		)
 
 		if err != nil {
 			return err

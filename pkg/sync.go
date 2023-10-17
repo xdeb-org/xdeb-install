@@ -167,7 +167,7 @@ func pullCustomRepository(directory string, urlPrefix string, dist string, compo
 	LogMessage("Syncing repository %s/%s: %s", filepath.Base(urlPrefix), dist, component)
 
 	requestUrl := fmt.Sprintf("%s/%s/%s", urlPrefix, dist, component)
-	_, err := DownloadFile(filepath.Join(directory, dist), requestUrl, false, true)
+	_, err := DownloadFile(filepath.Join(directory, dist, fmt.Sprintf("%s.yaml", component)), requestUrl, false, true)
 
 	return err
 }
@@ -191,7 +191,7 @@ func ParsePackageLists() (*PackageListsDefinition, error) {
 	)
 
 	LogMessage("Syncing lists: %s", requestUrl)
-	listsFile, err := DownloadFile(path, requestUrl, true, true)
+	listsFile, err := DownloadFile(filepath.Join(path, "lists.yaml"), requestUrl, true, true)
 
 	if err != nil {
 		return nil, err

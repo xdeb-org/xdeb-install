@@ -104,7 +104,9 @@ func writeFileCompressed(path string, data []byte) (string, error) {
 	return writeFile(fmt.Sprintf("%s.zst", path), compressedData.Bytes())
 }
 
-func DownloadFile(path string, requestUrl string, followRedirects bool, compress bool) (string, error) {
+func DownloadFile(path string, baseRequestUrl string, followRedirects bool, compress bool) (string, error) {
+	requestUrl := baseRequestUrl
+
 	client := &http.Client{}
 	resp, err := client.Get(requestUrl)
 
@@ -133,11 +135,9 @@ func DownloadFile(path string, requestUrl string, followRedirects bool, compress
 		return "", err
 	}
 
-	fullPath := filepath.Join(path, filepath.Base(requestUrl))
-
 	if compress {
-		return writeFileCompressed(fullPath, body)
+		return writeFileCompressed(path, body)
 	}
 
-	return writeFile(fullPath, body)
+	return writeFile(path, body)
 }

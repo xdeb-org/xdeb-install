@@ -319,7 +319,7 @@ func prepare(context *cli.Context) error {
 	}
 
 	requestUrl := fmt.Sprintf("%s/xdeb", urlPrefix)
-	path := filepath.Join(os.TempDir(), "xdeb-download")
+	path := filepath.Join(os.TempDir(), "xdeb-download", "xdeb")
 
 	xdeb.LogMessage("Downloading xdeb [%s] from %s to %s ...", version, requestUrl, path)
 	xdebFile, err := xdeb.DownloadFile(path, requestUrl, false, false)
