@@ -1,8 +1,8 @@
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![devcontainer Status](https://img.shields.io/github/actions/workflow/status/thetredev/xdeb-install/devcontainer.yml?label=devcontainer)](https://github.com/thetredev/xdeb-install/actions/workflows/devcontainer.yml)
-[![testcontainer Status](https://img.shields.io/github/actions/workflow/status/thetredev/xdeb-install/testcontainer.yml?label=testcontainer)](https://github.com/thetredev/xdeb-install/actions/workflows/testcontainer.yml)
-[![nightly test Status](https://img.shields.io/github/actions/workflow/status/thetredev/xdeb-install/test.yml?label=nightly%20tests)](https://github.com/thetredev/xdeb-install/actions/workflows/test.yml?query=event%3Aschedule+branch%3Amain)
-[![release Status](https://img.shields.io/github/actions/workflow/status/thetredev/xdeb-install/release.yml?label=release)](https://github.com/thetredev/xdeb-install/actions/workflows/release.yml)
+[![devcontainer Status](https://img.shields.io/github/actions/workflow/status/xdeb-org/xdeb-install/devcontainer.yml?label=devcontainer)](https://github.com/xdeb-org/xdeb-install/actions/workflows/devcontainer.yml)
+[![testcontainer Status](https://img.shields.io/github/actions/workflow/status/xdeb-org/xdeb-install/testcontainer.yml?label=testcontainer)](https://github.com/xdeb-org/xdeb-install/actions/workflows/testcontainer.yml)
+[![nightly test Status](https://img.shields.io/github/actions/workflow/status/xdeb-org/xdeb-install/test.yml?label=nightly%20tests)](https://github.com/xdeb-org/xdeb-install/actions/workflows/test.yml?query=event%3Aschedule+branch%3Amain)
+[![release Status](https://img.shields.io/github/actions/workflow/status/xdeb-org/xdeb-install/release.yml?label=release)](https://github.com/xdeb-org/xdeb-install/actions/workflows/release.yml)
 
 # xdeb-install
 
@@ -221,14 +221,14 @@ Afterwards, you can execute `xbps-install xdeb-install` to install the tool.
 
 If you have [Go](https://go.dev) installed, simply execute:
 ```
-go install github.com/thetredev/xdeb-install/v2@latest
+go install github.com/xdeb-org/xdeb-install/v2@latest
 ```
 
 As long as the `GOPATH` is within your `PATH`, that's it.
 
 ### Manually
 
-Head over to the [releases](https://github.com/thetredev/xdeb-install/releases) page and download a release binary. Then move it to some place within your `PATH`, like `/usr/local/bin`. Make sure to make it executable afterwards: `sudo chmod +x /usr/local/bin/xdeb-install`.
+Head over to the [releases](https://github.com/xdeb-org/xdeb-install/releases) page and download a release binary. Then move it to some place within your `PATH`, like `/usr/local/bin`. Make sure to make it executable afterwards: `sudo chmod +x /usr/local/bin/xdeb-install`.
 
 ## Listing available providers
 
