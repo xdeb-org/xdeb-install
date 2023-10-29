@@ -8,7 +8,7 @@
 
 Simple tool to automatically download, convert, and install DEB packages on [Void Linux](https://voidlinux.org) via the awesome [`xdeb`](https://github.com/toluschr/xdeb) tool. Basically just a wrapper to automate the process.
 
-Each release generates a test report which is uploaded to https://thetredev.github.io/xdeb-install.
+Each release generates a test report which is uploaded to https://xdeb-org.github.io/xdeb-install.
 
 ## Table of Contents
 
@@ -213,7 +213,7 @@ You can install `xdeb` using `xdeb-install` later, see [Help Page](#help-page).
 
 Since [my PR over at void-linux/void-packages](https://github.com/void-linux/void-packages/pull/46352) didn't make it, you can't install the tool using any official XBPS repositories.
 
-To work around that problem, I created my own unofficial XBPS repository at https://thetredev.github.io/voidlinux-repository. See https://github.com/thetredev/voidlinux-repository for instructions on how to install it to your system.
+To work around that problem, I created my own unofficial XBPS repository at https://xdeb-org.github.io/voidlinux-repository. See https://github.com/xdeb-org/voidlinux-repository for instructions on how to install it to your system.
 
 Afterwards, you can execute `xbps-install xdeb-install` to install the tool.
 
@@ -241,7 +241,7 @@ $ xdeb-install providers
 
 Output:
 ```
-[xdeb-install] Syncing lists: https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/v1.1.1/repositories/x86_64/lists.yaml
+[xdeb-install] Syncing lists: https://raw.githubusercontent.com/xdeb-org/xdeb-install-repositories/v1.1.1/repositories/x86_64/lists.yaml
 debian.org
   architecture: amd64
   url: http://ftp.debian.org/debian
@@ -256,11 +256,11 @@ ubuntu.com
 
 microsoft.com
   architecture: amd64
-  url: https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/v1.1.1/repositories/x86_64/microsoft.com
+  url: https://raw.githubusercontent.com/xdeb-org/xdeb-install-repositories/v1.1.1/repositories/x86_64/microsoft.com
 
 google.com
   architecture: amd64
-  url: https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/v1.1.1/repositories/x86_64/google.com
+  url: https://raw.githubusercontent.com/xdeb-org/xdeb-install-repositories/v1.1.1/repositories/x86_64/google.com
 ```
 
 ### With details (distributions and components)
@@ -272,7 +272,7 @@ $ xdeb-install providers --details
 
 Output:
 ```
-[xdeb-install] Syncing lists: https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/v1.1.1/repositories/x86_64/lists.yaml
+[xdeb-install] Syncing lists: https://raw.githubusercontent.com/xdeb-org/xdeb-install-repositories/v1.1.1/repositories/x86_64/lists.yaml
 debian.org
   architecture: amd64
   url: http://ftp.debian.org/debian
@@ -367,13 +367,13 @@ ubuntu.com
 
 microsoft.com
   architecture: amd64
-  url: https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/v1.1.1/repositories/x86_64/microsoft.com
+  url: https://raw.githubusercontent.com/xdeb-org/xdeb-install-repositories/v1.1.1/repositories/x86_64/microsoft.com
     distribution: current
       component: vscode.yaml
 
 google.com
   architecture: amd64
-  url: https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/v1.1.1/repositories/x86_64/google.com
+  url: https://raw.githubusercontent.com/xdeb-org/xdeb-install-repositories/v1.1.1/repositories/x86_64/google.com
     distribution: current
       component: google-chrome.yaml
 ```
@@ -389,7 +389,7 @@ $ xdeb-install sync
 
 Output:
 ```
-[xdeb-install] Syncing lists: https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/v1.0.0/repositories/x86_64/lists.yaml
+[xdeb-install] Syncing lists: https://raw.githubusercontent.com/xdeb-org/xdeb-install-repositories/v1.0.0/repositories/x86_64/lists.yaml
 [xdeb-install] Syncing repository debian.org/bullseye: contrib
 [xdeb-install] Syncing repository debian.org/bookworm: contrib
 [xdeb-install] Syncing repository debian.org/bullseye: non-free
@@ -419,7 +419,7 @@ $ xdeb-install sync ubuntu.com
 
 Output:
 ```
-[xdeb-install] Syncing lists: https://raw.githubusercontent.com/thetredev/xdeb-install-repositories/v1.0.0/repositories/x86_64/lists.yaml
+[xdeb-install] Syncing lists: https://raw.githubusercontent.com/xdeb-org/xdeb-install-repositories/v1.0.0/repositories/x86_64/lists.yaml
 [xdeb-install] Syncing repository ubuntu.com/bionic: restricted
 [xdeb-install] Syncing repository ubuntu.com/focal: restricted
 [xdeb-install] Syncing repository ubuntu.com/jammy: restricted
@@ -439,7 +439,7 @@ The package repository lists are stored at `$XDG_CONFIG_HOME/xdeb-install/reposi
 
 ### Supported package repositories
 
-See https://github.com/thetredev/xdeb-install-repositories for details.
+See https://github.com/xdeb-org/xdeb-install-repositories for details.
 
 ## Searching for DEB packages
 

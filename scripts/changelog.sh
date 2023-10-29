@@ -14,7 +14,7 @@ echo >> bin/changelog.md
 
 go_module=$(go list -m | sed 's/\/v.*//')
 
-echo "Test report: https://thetredev.github.io/xdeb-install" >> bin/changelog.md
+echo "Test report: https://xdeb-org.github.io/xdeb-install" >> bin/changelog.md
 echo >> bin/changelog.md
 
 echo "**Full Changelog**: [\`${first_tag}..${second_tag}\`](https://${go_module}/compare/${first_tag}..${second_tag})" >> bin/changelog.md

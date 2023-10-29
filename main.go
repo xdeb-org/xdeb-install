@@ -13,8 +13,8 @@ import (
 
 	"golang.org/x/exp/slices"
 
-	xdeb "github.com/thetredev/xdeb-install/v2/pkg"
 	"github.com/urfave/cli/v2"
+	xdeb "github.com/xdeb-org/xdeb-install/v2/pkg"
 )
 
 func readPath(subdir string) ([]string, error) {

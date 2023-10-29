@@ -8,4 +8,4 @@ const XDEB_URL = "https://github.com/toluschr/xdeb/releases"
 const XDEB_MASTER_URL = "https://raw.githubusercontent.com/toluschr/xdeb/master"
 
 const XDEB_INSTALL_REPOSITORIES_TAG = "v1.1.1"
-const XDEB_INSTALL_REPOSITORIES_URL = "https://raw.githubusercontent.com/thetredev/xdeb-install-repositories"
+const XDEB_INSTALL_REPOSITORIES_URL = "https://raw.githubusercontent.com/xdeb-org/xdeb-install-repositories"

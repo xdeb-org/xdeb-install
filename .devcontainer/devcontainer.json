@@ -1,6 +1,6 @@
 {
     "name": "xdeb-install",
-    "image": "ghcr.io/thetredev/xdeb-install:devcontainer",
+    "image": "ghcr.io/xdeb-org/xdeb-install:devcontainer",
 
     "customizations": {
         "vscode": {

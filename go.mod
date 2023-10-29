@@ -1,4 +1,4 @@
-module github.com/thetredev/xdeb-install/v2
+module github.com/xdeb-org/xdeb-install/v2
 
 go 1.21.1
 
