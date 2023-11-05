@@ -389,22 +389,62 @@ $ xdeb-install sync
 
 Output:
 ```
-[xdeb-install] Syncing lists: https://raw.githubusercontent.com/xdeb-org/xdeb-install-repositories/v1.0.0/repositories/x86_64/lists.yaml
+[xdeb-install] Syncing lists: https://raw.githubusercontent.com/xdeb-org/xdeb-install-repositories/v1.1.1/repositories/x86_64/lists.yaml
 [xdeb-install] Syncing repository debian.org/bullseye: contrib
 [xdeb-install] Syncing repository debian.org/bookworm: contrib
-[xdeb-install] Syncing repository debian.org/bullseye: non-free
+[xdeb-install] Syncing repository debian.org/sid: non-free-firmware
+[xdeb-install] Syncing repository debian.org/bullseye-backports: non-free
+[xdeb-install] Syncing repository debian.org/bookworm: non-free-firmware
+[xdeb-install] Syncing repository debian.org/bullseye-backports: contrib
+[xdeb-install] Syncing repository debian.org/buster-backports: non-free
+[xdeb-install] Syncing repository debian.org/bookworm-backports: non-free
+[xdeb-install] Syncing repository debian.org/testing: contrib
+[xdeb-install] Syncing repository debian.org/testing: non-free-firmware
+[xdeb-install] Syncing repository debian.org/sid: contrib
+[xdeb-install] Syncing repository debian.org/buster: non-free
+[xdeb-install] Syncing repository debian.org/buster: contrib
+[xdeb-install] Syncing repository debian.org/bookworm-backports: contrib
+[xdeb-install] Syncing repository debian.org/bookworm-backports: main
 [xdeb-install] Syncing repository debian.org/bookworm: non-free
-...
+[xdeb-install] Syncing repository debian.org/testing: non-free
+[xdeb-install] Syncing repository debian.org/buster-backports: contrib
+[xdeb-install] Syncing repository debian.org/bullseye: non-free
+[xdeb-install] Syncing repository debian.org/sid: non-free
+[xdeb-install] Syncing repository debian.org/bullseye-backports: main
+[xdeb-install] Syncing repository debian.org/buster-backports: main
+[xdeb-install] Syncing repository debian.org/buster: main
+[xdeb-install] Syncing repository debian.org/bullseye: main
+[xdeb-install] Syncing repository debian.org/testing: main
+[xdeb-install] Syncing repository debian.org/bookworm: main
+[xdeb-install] Syncing repository debian.org/sid: main
 [xdeb-install] Syncing repository linuxmint.com/victoria: import
 [xdeb-install] Syncing repository linuxmint.com/vanessa: import
 [xdeb-install] Syncing repository linuxmint.com/vera: import
-[xdeb-install] Syncing repository linuxmint.com/vanessa: mai
-...
+[xdeb-install] Syncing repository linuxmint.com/vanessa: main
+[xdeb-install] Syncing repository linuxmint.com/faye: main
+[xdeb-install] Syncing repository linuxmint.com/victoria: main
+[xdeb-install] Syncing repository linuxmint.com/faye: import
+[xdeb-install] Syncing repository linuxmint.com/vera: main
+[xdeb-install] Syncing repository linuxmint.com/vanessa: backport
+[xdeb-install] Syncing repository linuxmint.com/vera: backport
+[xdeb-install] Syncing repository linuxmint.com/victoria: backport
+[xdeb-install] Syncing repository linuxmint.com/faye: upstream
+[xdeb-install] Syncing repository linuxmint.com/faye: backport
+[xdeb-install] Syncing repository linuxmint.com/vanessa: upstream
+[xdeb-install] Syncing repository linuxmint.com/victoria: upstream
+[xdeb-install] Syncing repository linuxmint.com/vera: upstream
 [xdeb-install] Syncing repository ubuntu.com/bionic: restricted
 [xdeb-install] Syncing repository ubuntu.com/focal: restricted
-[xdeb-install] Syncing repository ubuntu.com/jammy: restricted
+[xdeb-install] Syncing repository ubuntu.com/bionic: multiverse
 [xdeb-install] Syncing repository ubuntu.com/focal: multiverse
-...
+[xdeb-install] Syncing repository ubuntu.com/jammy: multiverse
+[xdeb-install] Syncing repository ubuntu.com/jammy: restricted
+[xdeb-install] Syncing repository ubuntu.com/focal: main
+[xdeb-install] Syncing repository ubuntu.com/bionic: main
+[xdeb-install] Syncing repository ubuntu.com/jammy: main
+[xdeb-install] Syncing repository ubuntu.com/focal: universe
+[xdeb-install] Syncing repository ubuntu.com/bionic: universe
+[xdeb-install] Syncing repository ubuntu.com/jammy: universe
 [xdeb-install] Syncing repository microsoft.com/current: vscode.yaml
 [xdeb-install] Syncing repository google.com/current: google-chrome.yaml
 [xdeb-install] Finished syncing: ~/.config/xdeb-install/repositories/x86_64
@@ -419,18 +459,18 @@ $ xdeb-install sync ubuntu.com
 
 Output:
 ```
-[xdeb-install] Syncing lists: https://raw.githubusercontent.com/xdeb-org/xdeb-install-repositories/v1.0.0/repositories/x86_64/lists.yaml
-[xdeb-install] Syncing repository ubuntu.com/bionic: restricted
-[xdeb-install] Syncing repository ubuntu.com/focal: restricted
-[xdeb-install] Syncing repository ubuntu.com/jammy: restricted
+[xdeb-install] Syncing lists: https://raw.githubusercontent.com/xdeb-org/xdeb-install-repositories/v1.1.1/repositories/x86_64/lists.yaml
+[xdeb-install] Syncing repository ubuntu.com/jammy: main
+[xdeb-install] Syncing repository ubuntu.com/bionic: universe
 [xdeb-install] Syncing repository ubuntu.com/bionic: multiverse
+[xdeb-install] Syncing repository ubuntu.com/focal: main
+[xdeb-install] Syncing repository ubuntu.com/focal: restricted
 [xdeb-install] Syncing repository ubuntu.com/focal: multiverse
 [xdeb-install] Syncing repository ubuntu.com/jammy: multiverse
 [xdeb-install] Syncing repository ubuntu.com/bionic: main
-[xdeb-install] Syncing repository ubuntu.com/focal: main
-[xdeb-install] Syncing repository ubuntu.com/jammy: main
+[xdeb-install] Syncing repository ubuntu.com/jammy: restricted
+[xdeb-install] Syncing repository ubuntu.com/bionic: restricted
 [xdeb-install] Syncing repository ubuntu.com/focal: universe
-[xdeb-install] Syncing repository ubuntu.com/bionic: universe
 [xdeb-install] Syncing repository ubuntu.com/jammy: universe
 [xdeb-install] Finished syncing: ~/.config/xdeb-install/repositories/x86_64
 ```
