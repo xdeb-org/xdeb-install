@@ -34,7 +34,7 @@ XDEB_INSTALL_HAVE_PACKAGE = {
                 "buster": True,
                 "buster-backports": False,
                 "sid": True,
-                "testing": True,
+                "testing": False,
                 "testing-backports": False
             },
         },
