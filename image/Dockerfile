@@ -1,4 +1,4 @@
-FROM ghcr.io/void-linux/void-glibc-full:20231003R1
+FROM ghcr.io/void-linux/void-glibc-full:20231202R1
 
 RUN xbps-install -Syu \
     && xbps-install -y \
