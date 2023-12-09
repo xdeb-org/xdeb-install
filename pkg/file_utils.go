@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"net/http"
 	"os"
 	"path/filepath"
 
@@ -107,7 +106,7 @@ func writeFileCompressed(path string, data []byte) (string, error) {
 func DownloadFile(path string, baseRequestUrl string, followRedirects bool, compress bool) (string, error) {
 	requestUrl := baseRequestUrl
 
-	client := &http.Client{}
+	client := NewHttpClient()
 	resp, err := client.Get(requestUrl)
 
 	if err != nil {

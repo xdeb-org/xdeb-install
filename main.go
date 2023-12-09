@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"net/http"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -309,7 +308,7 @@ func prepare(context *cli.Context) error {
 			// find latest release tag
 			urlPrefix = fmt.Sprintf("%s/latest", xdeb.XDEB_URL)
 
-			client := &http.Client{}
+			client := xdeb.NewHttpClient()
 			resp, err := client.Get(urlPrefix)
 
 			if err != nil {

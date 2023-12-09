@@ -5,7 +5,6 @@ import (
 	"compress/gzip"
 	"fmt"
 	"io"
-	"net/http"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -78,14 +77,15 @@ func pullPackagesFile(urlPrefix string, dist string, component string, architect
 		urlPrefix, dist, component, architecture,
 	)
 
-	resp, err := http.Get(requestUrl)
+	client := NewHttpClient()
+	resp, err := client.Get(requestUrl)
 
 	if err != nil {
 		return nil, err
 	}
 
 	if resp.StatusCode != 200 {
-		resp, err = http.Get(fmt.Sprintf("%s.xz", requestUrl))
+		resp, err = client.Get(fmt.Sprintf("%s.xz", requestUrl))
 
 		if err != nil {
 			return nil, err
@@ -93,7 +93,7 @@ func pullPackagesFile(urlPrefix string, dist string, component string, architect
 	}
 
 	if resp.StatusCode != 200 {
-		resp, err = http.Get(fmt.Sprintf("%s.gz", requestUrl))
+		resp, err = client.Get(fmt.Sprintf("%s.gz", requestUrl))
 
 		if err != nil {
 			return nil, err
