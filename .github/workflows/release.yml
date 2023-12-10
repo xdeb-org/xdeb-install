@@ -120,6 +120,10 @@ jobs:
           name: bin
           path: bin
 
+      - uses: actions/setup-go@v4
+        with:
+          go-version-file: 'go.mod'
+
       - name: Generate changelog
         run: ./scripts/changelog.sh
 
