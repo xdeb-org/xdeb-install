@@ -43,5 +43,6 @@ func ExecuteCommand(workdir string, args ...string) error {
 		}
 	}
 
+	command.Env = append(command.Env, fmt.Sprintf("PATH=%s", os.Getenv("PATH")))
 	return command.Run()
 }
