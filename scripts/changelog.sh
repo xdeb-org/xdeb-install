@@ -8,7 +8,7 @@ mkdir -p bin
 echo "## What's Changed" > bin/changelog.md
 
 echo >> bin/changelog.md
-git log ${first_tag}..${second_tag} --pretty=format:"- %s: %h" >> bin/changelog.md
+git log ${first_tag}..${second_tag} --pretty=format:"- %s (%h)" >> bin/changelog.md
 echo >> bin/changelog.md
 echo >> bin/changelog.md
 
