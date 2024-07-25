@@ -10,8 +10,9 @@ Simple tool to automatically download, convert, and install DEB packages on [Voi
 
 Each release generates a test report which is uploaded to https://xdeb-org.github.io/xdeb-install.
 
-## Table of Contents
+# Table of Contents
 
+- [Known Limitations](#known-limitations)
 - [Help Page](#help-page)
 - [Installation](#installation)
   - [Using XBPS](#using-xbps)
@@ -31,6 +32,10 @@ Each release generates a test report which is uploaded to https://xdeb-org.githu
   - [From remote repositories](#from-remote-repositories)
   - [Directly from a URL](#directly-from-a-url)
   - [Directly from a local file](#directly-from-a-local-file)
+
+## Known Limitations
+
+Before reading any further, I would like to make you aware of some known limitations of this tool. Please take a look at [issue #19](https://github.com/xdeb-org/xdeb-install/issues/19) for details.
 
 ## Help Page
 
